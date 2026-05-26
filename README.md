@@ -1,0 +1,46 @@
+# BusPass Kiosk — Hi-fi Prototype
+
+Interactive hi-fi prototype for the **BusPass** smart bus station kiosk (HCI course). Seven screens aligned with user research: visual map mode, senior-friendly list mode, route detail, QR handoff to mobile, help center, and accessibility tools.
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open the URL shown in the terminal (usually `http://localhost:5173`). **Laptop:** fullscreen browser (≥1024px) — layout uses full width, map + sidebar side-by-side. **Kiosk demo:** portrait tablet also supported.
+
+## Screen map
+
+| Route | Screen |
+|-------|--------|
+| `/` | Home — language selection |
+| `/mode` | Mode selection (map vs list) |
+| `/map` | Interactive map + destination panel |
+| `/list` | Large-type route list |
+| `/route/:id` | Route detail + stops |
+| `/qr` | QR sync to phone |
+| `/trip` | Trip planner A→B (fast / cheap / few transfers) |
+| `/services` | Station amenities & quick support |
+| `/help` | Help center (6 topics) |
+| `/accessibility` | High contrast, TTS, voice, zoom |
+
+See [docs/PRODUCT_LAYERS.md](docs/PRODUCT_LAYERS.md) for the 3-layer product map (Information · Decision · Assistance).
+
+**HCI report demos:** [docs/HCI_SOLUTIONS.md](docs/HCI_SOLUTIONS.md) — E-ink kiosk (`/eink`), haptic QR (`/qr`), NFC pay (`/pay`), risk critique (`/hci`).
+
+## Features (prototype)
+
+- User-friendly design: **white + green** palette, Inter font, soft shadows
+- Mock routes & destinations (HCMC — Lê Lợi / Nguyễn Huệ station)
+- **Real map** (OpenStreetMap via Leaflet + Carto dark tiles), centered on Lê Lợi – Nguyễn Huệ
+- Simulated live bus movement on map (GPS mock)
+- 60s idle auto-reset to home
+- 3-minute QR screen countdown
+- i18n: Vietnamese, English, Chinese, Korean
+- Accessibility: high contrast, large text, magnifier, screen reader (Web Speech API), voice search (Chrome)
+
+## Stack
+
+React 19, TypeScript, Vite, Tailwind CSS v4, React Router, qrcode.react, Lucide icons.
