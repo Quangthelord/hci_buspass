@@ -30,7 +30,7 @@ Dựa trên kết quả **Formative Testing** (Paper Prototype), nhóm phát tri
 | Bước | Mô tả | URL demo |
 |------|--------|----------|
 | 1. Tra cứu trực quan | Chạm điểm đích trên bản đồ, đường neon, ETA linh hoạt | `/map` |
-| 2. Đồng bộ lộ trình | Quét QR, đẩy chuyến sang điện thoại | `/qr` → `/app` |
+| 2. Đồng bộ lộ trình | Quét QR → mở `/m?r=&d=` trên điện thoại | `/qr` → quét → `/m` → `/app` |
 | 3. Chờ đợi thảnh thơi | Máy trong túi, rung ~500m | `/app/approaching` |
 | 4. Lên xe & thanh toán | NFC/BLE, pop-up màn hình khóa | `/app/payment` hoặc `/pay` |
 | 5. Xuống bến an toàn | Rung dài + danh sách trạm | `/app/get-off` |

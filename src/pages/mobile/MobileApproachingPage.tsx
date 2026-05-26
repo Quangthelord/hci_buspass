@@ -1,15 +1,14 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { PhoneFrame } from '../../components/PhoneFrame'
+import { MobileShell } from '../../components/mobile/MobileShell'
 import { HapticWave } from '../../components/HapticWave'
-import { useKiosk } from '../../context/KioskContext'
-import { getRoute } from '../../data/mockData'
+import { useSyncTripFromUrl } from '../../hooks/useSyncTripFromUrl'
+import { buildAppPath } from '../../lib/tripUrl'
 
 /** Tính năng 3 — Vòng nhận thức ngoại vi (Hình 4.3) */
 export function MobileApproachingPage() {
-  const navigate = useNavigate()
-  const { lang, selectedRouteId } = useKiosk()
-  const route = getRoute(selectedRouteId ?? '19')
+  const { query, route, lang, queryString } = useSyncTripFromUrl()
   const isVi = lang === 'vi'
 
   useEffect(() => {
@@ -17,8 +16,8 @@ export function MobileApproachingPage() {
   }, [])
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-green-50 p-8">
-      <p className="mb-4 text-sm text-warning-orange">📷 Hình 4.3 — Haptic approaching</p>
+    <MobileShell>
+      <p className="px-4 pb-2 text-center text-sm text-warning-orange">📷 Hình 4.3 — Haptic approaching</p>
       <PhoneFrame>
         <div className="flex min-h-[520px] flex-col items-center justify-center p-6 text-center">
           <HapticWave />
@@ -26,7 +25,7 @@ export function MobileApproachingPage() {
             {isVi ? 'Xe đang tiến vào trạm' : 'Bus approaching stop'}
           </h1>
           <p className="mt-2 text-3xl font-bold text-white">
-            {isVi ? 'Tuyến' : 'Route'} {route?.number}
+            {isVi ? 'Tuyến' : 'Route'} {route?.number ?? '—'}
           </p>
           <p className="mt-4 text-sm text-gray-500">
             {isVi ? 'Rung nhẹ theo nhịp · ~500m' : 'Gentle pulse · ~500m away'}
@@ -36,9 +35,16 @@ export function MobileApproachingPage() {
           </p>
         </div>
       </PhoneFrame>
-      <button type="button" onClick={() => navigate('/app')} className="mt-6 text-gray-500 underline">
-        ← {isVi ? 'Về App hub' : 'Back to hub'}
-      </button>
-    </div>
+      {query && (
+        <div className="mt-6 flex justify-center gap-4 pb-8 text-sm">
+          <Link to={buildAppPath(query)} className="text-gray-500 underline">
+            ← {isVi ? 'Về App hub' : 'Back to hub'}
+          </Link>
+          <Link to={`/m?${queryString}`} className="text-neon-green underline">
+            {isVi ? 'Chi tiết' : 'Details'}
+          </Link>
+        </div>
+      )}
+    </MobileShell>
   )
 }

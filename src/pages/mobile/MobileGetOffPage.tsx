@@ -1,15 +1,14 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { PhoneFrame } from '../../components/PhoneFrame'
+import { MobileShell } from '../../components/mobile/MobileShell'
 import { HapticWave } from '../../components/HapticWave'
-import { useKiosk } from '../../context/KioskContext'
-import { getRoute } from '../../data/mockData'
+import { useSyncTripFromUrl } from '../../hooks/useSyncTripFromUrl'
+import { buildAppPath } from '../../lib/tripUrl'
 
 /** Tính năng 5 — Rung nhắc xuống bến (Hình 4.5) */
 export function MobileGetOffPage() {
-  const navigate = useNavigate()
-  const { lang, selectedRouteId } = useKiosk()
-  const route = getRoute(selectedRouteId ?? '19')
+  const { query, route, lang, queryString } = useSyncTripFromUrl()
   const isVi = lang === 'vi'
   const stops = route?.stops ?? []
   const currentIdx = stops.findIndex((s) => s.isCurrent)
@@ -19,8 +18,8 @@ export function MobileGetOffPage() {
   }, [])
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-green-50 p-8">
-      <p className="mb-4 text-sm text-warning-orange">📷 Hình 4.5 — Get-off reminder</p>
+    <MobileShell>
+      <p className="px-4 pb-2 text-center text-sm text-warning-orange">📷 Hình 4.5 — Get-off reminder</p>
       <PhoneFrame>
         <div className="flex min-h-[520px] flex-col p-4">
           <p className="text-sm font-bold text-neon-green">BusPass · {isVi ? 'Theo dõi chuyến' : 'Trip'}</p>
@@ -53,16 +52,25 @@ export function MobileGetOffPage() {
                   >
                     {isPast ? '✓' : s.id}
                   </span>
-                  <span className={isNext ? 'font-bold' : ''}>{s.name}</span>
+                  <span className={isNext ? 'font-bold text-white' : 'text-gray-300'}>{s.name}</span>
                 </li>
               )
             })}
           </ul>
         </div>
       </PhoneFrame>
-      <button type="button" onClick={() => navigate('/app')} className="mt-6 text-gray-500 underline">
-        ← {isVi ? 'Về App hub' : 'Back to hub'}
-      </button>
-    </div>
+      {query && (
+        <div className="mt-6 flex justify-center gap-4 pb-8 text-sm">
+          <Link to={buildAppPath(query)} className="text-gray-500 underline">
+            ← {isVi ? 'Về App hub' : 'Back to hub'}
+          </Link>
+          {queryString && (
+            <Link to={`/m?${queryString}`} className="text-neon-green underline">
+              {isVi ? 'Chi tiết' : 'Details'}
+            </Link>
+          )}
+        </div>
+      )}
+    </MobileShell>
   )
 }

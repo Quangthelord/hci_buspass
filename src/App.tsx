@@ -1,23 +1,45 @@
+import { lazy, Suspense, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { KioskProvider } from './context/KioskContext'
+import { PageLoader } from './components/PageLoader'
 import { HomePage } from './pages/HomePage'
 import { ModeSelectionPage } from './pages/ModeSelectionPage'
-import { MapModePage } from './pages/MapModePage'
-import { ListModePage } from './pages/ListModePage'
-import { RouteDetailPage } from './pages/RouteDetailPage'
-import { QRSyncPage } from './pages/QRSyncPage'
-import { HelpPage } from './pages/HelpPage'
-import { AccessibilityPage } from './pages/AccessibilityPage'
-import { TripPlannerPage } from './pages/TripPlannerPage'
-import { ServicesPage } from './pages/ServicesPage'
-import { EinkKioskPage } from './pages/EinkKioskPage'
-import { ProximityPayPage } from './pages/ProximityPayPage'
-import { HciRisksPage } from './pages/HciRisksPage'
-import { Phase4OverviewPage } from './pages/Phase4OverviewPage'
-import { MobileAppHubPage } from './pages/mobile/MobileAppHubPage'
-import { MobileApproachingPage } from './pages/mobile/MobileApproachingPage'
-import { MobilePaymentPage } from './pages/mobile/MobilePaymentPage'
-import { MobileGetOffPage } from './pages/mobile/MobileGetOffPage'
+
+const MapModePage = lazy(() => import('./pages/MapModePage').then((m) => ({ default: m.MapModePage })))
+const ListModePage = lazy(() => import('./pages/ListModePage').then((m) => ({ default: m.ListModePage })))
+const RouteDetailPage = lazy(() => import('./pages/RouteDetailPage').then((m) => ({ default: m.RouteDetailPage })))
+const QRSyncPage = lazy(() => import('./pages/QRSyncPage').then((m) => ({ default: m.QRSyncPage })))
+const TripPlannerPage = lazy(() => import('./pages/TripPlannerPage').then((m) => ({ default: m.TripPlannerPage })))
+const HelpPage = lazy(() => import('./pages/HelpPage').then((m) => ({ default: m.HelpPage })))
+const AccessibilityPage = lazy(() =>
+  import('./pages/AccessibilityPage').then((m) => ({ default: m.AccessibilityPage })),
+)
+const ServicesPage = lazy(() => import('./pages/ServicesPage').then((m) => ({ default: m.ServicesPage })))
+const EinkKioskPage = lazy(() => import('./pages/EinkKioskPage').then((m) => ({ default: m.EinkKioskPage })))
+const ProximityPayPage = lazy(() => import('./pages/ProximityPayPage').then((m) => ({ default: m.ProximityPayPage })))
+const HciRisksPage = lazy(() => import('./pages/HciRisksPage').then((m) => ({ default: m.HciRisksPage })))
+const Phase4OverviewPage = lazy(() =>
+  import('./pages/Phase4OverviewPage').then((m) => ({ default: m.Phase4OverviewPage })),
+)
+const MobileTripPage = lazy(() =>
+  import('./pages/mobile/MobileTripPage').then((m) => ({ default: m.MobileTripPage })),
+)
+const MobileAppHubPage = lazy(() =>
+  import('./pages/mobile/MobileAppHubPage').then((m) => ({ default: m.MobileAppHubPage })),
+)
+const MobileApproachingPage = lazy(() =>
+  import('./pages/mobile/MobileApproachingPage').then((m) => ({ default: m.MobileApproachingPage })),
+)
+const MobilePaymentPage = lazy(() =>
+  import('./pages/mobile/MobilePaymentPage').then((m) => ({ default: m.MobilePaymentPage })),
+)
+const MobileGetOffPage = lazy(() =>
+  import('./pages/mobile/MobileGetOffPage').then((m) => ({ default: m.MobileGetOffPage })),
+)
+
+function LazyPage({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>
+}
 
 export default function App() {
   return (
@@ -25,23 +47,143 @@ export default function App() {
       <KioskProvider>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/eink" element={<EinkKioskPage />} />
-          <Route path="/hci" element={<HciRisksPage />} />
-          <Route path="/pay" element={<ProximityPayPage />} />
-          <Route path="/trip" element={<TripPlannerPage />} />
-          <Route path="/services" element={<ServicesPage />} />
           <Route path="/mode" element={<ModeSelectionPage />} />
-          <Route path="/map" element={<MapModePage />} />
-          <Route path="/list" element={<ListModePage />} />
-          <Route path="/route/:routeId" element={<RouteDetailPage />} />
-          <Route path="/qr" element={<QRSyncPage />} />
-          <Route path="/phase4" element={<Phase4OverviewPage />} />
-          <Route path="/app" element={<MobileAppHubPage />} />
-          <Route path="/app/approaching" element={<MobileApproachingPage />} />
-          <Route path="/app/payment" element={<MobilePaymentPage />} />
-          <Route path="/app/get-off" element={<MobileGetOffPage />} />
-          <Route path="/help" element={<HelpPage />} />
-          <Route path="/accessibility" element={<AccessibilityPage />} />
+          <Route
+            path="/map"
+            element={
+              <LazyPage>
+                <MapModePage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/list"
+            element={
+              <LazyPage>
+                <ListModePage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/route/:routeId"
+            element={
+              <LazyPage>
+                <RouteDetailPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/qr"
+            element={
+              <LazyPage>
+                <QRSyncPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/trip"
+            element={
+              <LazyPage>
+                <TripPlannerPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <LazyPage>
+                <ServicesPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <LazyPage>
+                <HelpPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/accessibility"
+            element={
+              <LazyPage>
+                <AccessibilityPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/eink"
+            element={
+              <LazyPage>
+                <EinkKioskPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/pay"
+            element={
+              <LazyPage>
+                <ProximityPayPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/hci"
+            element={
+              <LazyPage>
+                <HciRisksPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/phase4"
+            element={
+              <LazyPage>
+                <Phase4OverviewPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/m"
+            element={
+              <LazyPage>
+                <MobileTripPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/app"
+            element={
+              <LazyPage>
+                <MobileAppHubPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/app/approaching"
+            element={
+              <LazyPage>
+                <MobileApproachingPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/app/payment"
+            element={
+              <LazyPage>
+                <MobilePaymentPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/app/get-off"
+            element={
+              <LazyPage>
+                <MobileGetOffPage />
+              </LazyPage>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </KioskProvider>

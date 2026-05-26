@@ -1,53 +1,66 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { Check, Smartphone } from 'lucide-react'
+import { Check, Copy, Smartphone } from 'lucide-react'
 import { KioskLayout } from '../components/KioskLayout'
 import { KioskNavBar } from '../components/KioskNavBar'
 import { HapticTimeline } from '../components/HapticTimeline'
 import { DirectionalAudioDemo } from '../components/DirectionalAudioDemo'
 import { useKiosk, stationName } from '../context/KioskContext'
 import { STATION, getRoute } from '../data/mockData'
+import { buildTripUrl, tripQueryToSearchParams } from '../lib/tripUrl'
 import { tr } from '../i18n/translations'
 
 export function QRSyncPage() {
   const navigate = useNavigate()
   const { lang, selectedRouteId, destination, startQrCountdown, qrCountdown, resetSession } = useKiosk()
   const [remoteActive, setRemoteActive] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const route = getRoute(selectedRouteId ?? '19')
+
+  const tripUrl = useMemo(
+    () =>
+      buildTripUrl({
+        r: route?.id ?? '19',
+        d: destination?.id,
+        s: STATION.id,
+        lang,
+      }),
+    [route?.id, destination?.id, lang],
+  )
+
+  const openOnPhone = () => {
+    window.open(tripUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const copyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(tripUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* ignore */
+    }
+  }
 
   useEffect(() => {
     startQrCountdown()
   }, [startQrCountdown])
 
-  const payload = useMemo(() => {
-    const data = {
-      route: route?.number ?? '19',
-      destination: destination?.id ?? null,
-      destinationName: destination ? (lang === 'vi' ? destination.nameVi : destination.nameEn) : null,
-      station: STATION.id,
-      eta: route?.etaRange ?? '5',
-      ts: Date.now(),
-      url: `https://buspass.vn/trip?r=${route?.id}&s=${STATION.id}`,
-      remote: true,
-    }
-    return JSON.stringify(data)
-  }, [route, destination, lang])
-
   const steps =
     lang === 'vi'
       ? [
-          'Mở camera hoặc app QR trên điện thoại',
-          'Quét mã QR — Không cần cài app',
-          'Cho phép thông báo & rung (haptic)',
-          'Cất điện thoại — Dùng Remote UI hoặc chờ rung/loa ghế',
+          'Mở camera trên điện thoại',
+          'Quét mã QR — Trình duyệt mở trang chi tiết chuyến',
+          'Xem tuyến, ETA, trạm dừng trên điện thoại',
+          'Tiếp tục — Rung / thanh toán / nhắc xuống bến',
         ]
       : [
-          'Open camera or QR scanner',
-          'Scan — No app install required',
-          'Allow notifications & haptics',
-          'Pocket phone — Remote UI or wait for haptic/seat audio',
+          'Open phone camera',
+          'Scan QR — Browser opens trip details',
+          'View route, ETA, stops on your phone',
+          'Continue — Haptic / pay / get-off alerts',
         ]
 
   return (
@@ -58,7 +71,9 @@ export function QRSyncPage() {
           📱 {tr('qrTitle', lang)}
         </h1>
         <p className="mb-4 text-center text-sm text-gray-500">
-          {lang === 'vi' ? 'Giải pháp B — Vùng nhận thức ngoại vi' : 'Solution B — Peripheral awareness'}
+          {lang === 'vi'
+            ? 'Quét QR mở link thật trên điện thoại (không cần cài app)'
+            : 'Scan QR to open a real link on your phone (no app install)'}
         </p>
 
         {qrCountdown !== null && (
@@ -68,12 +83,37 @@ export function QRSyncPage() {
           </p>
         )}
 
-        <div className="mx-auto rounded-2xl border-2 border-neon-green bg-white p-6 neon-border">
-          <QRCodeSVG value={payload} size={280} level="M" includeMargin />
-          <div className="mt-4 text-left text-sm text-white">
-            <p className="font-bold">Tuyến {route?.number} · {stationName(lang)}</p>
-            <p className="text-slate-600">{tr('qrBenefits', lang)}</p>
+        <div className="mx-auto w-full max-w-md rounded-2xl border-2 border-neon-green bg-white p-6 neon-border">
+          <QRCodeSVG value={tripUrl} size={280} level="M" includeMargin className="mx-auto" />
+          <div className="mt-4 text-center text-sm">
+            <p className="font-bold text-neon-green">
+              Tuyến {route?.number} · {stationName(lang)}
+            </p>
+            {destination && (
+              <p className="text-gray-600">
+                → {lang === 'vi' ? destination.nameVi : destination.nameEn}
+              </p>
+            )}
+            <p className="mt-1 text-gray-500">{tr('qrBenefits', lang)}</p>
           </div>
+          <div className="mt-4 flex gap-2">
+            <button
+              type="button"
+              onClick={copyUrl}
+              className="btn-kiosk flex flex-1 items-center justify-center gap-1 rounded-lg border border-gray-200 py-2 text-xs text-gray-600"
+            >
+              <Copy className="h-4 w-4" />
+              {copied ? (lang === 'vi' ? 'Đã copy' : 'Copied') : lang === 'vi' ? 'Copy link' : 'Copy link'}
+            </button>
+            <button
+              type="button"
+              onClick={openOnPhone}
+              className="btn-kiosk flex-1 rounded-lg bg-neon-green/10 py-2 text-xs font-semibold text-neon-green"
+            >
+              {lang === 'vi' ? 'Mở trên máy này' : 'Open here'}
+            </button>
+          </div>
+          <p className="mt-2 break-all text-center text-[10px] text-gray-400">{tripUrl}</p>
         </div>
 
         <div className="mx-auto mt-8 grid w-full max-w-4xl gap-6 lg:grid-cols-2">
@@ -84,16 +124,14 @@ export function QRSyncPage() {
         <div className="mx-auto mt-8 w-full max-w-lg rounded-xl border border-neon-cyan/40 bg-kiosk-panel p-6">
           <h3 className="mb-3 flex items-center gap-2 font-bold text-neon-cyan">
             <Smartphone className="h-5 w-5" />
-            {lang === 'vi' ? 'Remote UI — Điện thoại làm bàn điều khiển' : 'Remote UI — Phone as controller'}
+            {lang === 'vi' ? 'Demo trên cùng máy' : 'Same-device demo'}
           </h3>
-          <p className="mb-4 text-sm text-gray-500">
-            {lang === 'vi'
-              ? 'Giải pháp Rủi ro 1: Không cần chạm màn hình kiosk sau khi quét'
-              : 'Risk 1 fix: No need to touch kiosk screen after scan'}
-          </p>
           <button
             type="button"
-            onClick={() => setRemoteActive(true)}
+            onClick={() => {
+              setRemoteActive(true)
+              openOnPhone()
+            }}
             className={`w-full rounded-lg border py-3 font-semibold ${
               remoteActive
                 ? 'border-neon-green bg-neon-green/10 text-neon-green'
@@ -102,21 +140,12 @@ export function QRSyncPage() {
           >
             {remoteActive
               ? lang === 'vi'
-                ? '✓ Đã liên kết — Điều khiển từ điện thoại'
-                : '✓ Linked — Control from phone'
+                ? '✓ Đã mở trang mobile'
+                : '✓ Mobile page opened'
               : lang === 'vi'
                 ? 'Mô phỏng: Đã quét QR'
                 : 'Simulate: Scanned QR'}
           </button>
-          {remoteActive && (
-            <button
-              type="button"
-              onClick={() => navigate('/trip')}
-              className="mt-4 w-full rounded border border-gray-200 py-2 text-sm"
-            >
-              {lang === 'vi' ? 'Đổi điểm đến' : 'Change destination'}
-            </button>
-          )}
         </div>
 
         <ol className="mx-auto mt-8 max-w-lg space-y-2 text-left">
@@ -131,11 +160,19 @@ export function QRSyncPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <button
             type="button"
-            onClick={() => navigate('/app')}
+            onClick={() => {
+              const params = tripQueryToSearchParams({
+                r: route?.id ?? '19',
+                d: destination?.id,
+                s: STATION.id,
+                lang,
+              })
+              navigate(`/m?${params.toString()}`)
+            }}
             className="btn-kiosk flex items-center gap-2 rounded-xl bg-neon-green px-6 py-3 font-bold text-white"
           >
             <Check className="h-5 w-5" />
-            {tr('scannedDone', lang)} → App
+            {lang === 'vi' ? 'Xem trên mobile (tab này)' : 'Mobile view (this tab)'}
           </button>
           <button
             type="button"

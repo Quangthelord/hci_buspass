@@ -1,19 +1,18 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { PhoneFrame } from '../../components/PhoneFrame'
-import { useKiosk } from '../../context/KioskContext'
-import { getRoute } from '../../data/mockData'
+import { MobileShell } from '../../components/mobile/MobileShell'
+import { useSyncTripFromUrl } from '../../hooks/useSyncTripFromUrl'
+import { buildAppPath } from '../../lib/tripUrl'
 
 /** Tính năng 4 — Thanh toán rảnh tay (Hình 4.4) */
 export function MobilePaymentPage() {
-  const navigate = useNavigate()
-  const { lang, selectedRouteId } = useKiosk()
-  const route = getRoute(selectedRouteId ?? '19')
+  const { query, route, lang } = useSyncTripFromUrl()
   const isVi = lang === 'vi'
   const fare = route?.fare ?? 7000
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#1a1a2e] p-8">
-      <p className="mb-4 text-sm text-warning-orange">📷 Hình 4.4 — Lock screen payment</p>
+    <MobileShell className="bg-[#1a1a2e]">
+      <p className="px-4 pb-2 text-center text-sm text-warning-orange">📷 Hình 4.4 — Lock screen payment</p>
       <PhoneFrame>
         <div className="relative min-h-[520px] bg-gradient-to-b from-slate-900 to-black p-4">
           <p className="mt-12 text-center text-5xl font-light text-white/30">09:41</p>
@@ -26,7 +25,7 @@ export function MobilePaymentPage() {
             <p className="text-center text-2xl font-bold text-white">
               {fare.toLocaleString('vi-VN')}đ
             </p>
-            <p className="mt-1 text-center text-sm text-gray-600">
+            <p className="mt-1 text-center text-sm text-gray-400">
               {isVi ? 'Tuyến' : 'Route'} {route?.number} · NFC/BLE
             </p>
           </div>
@@ -35,9 +34,11 @@ export function MobilePaymentPage() {
           </p>
         </div>
       </PhoneFrame>
-      <button type="button" onClick={() => navigate('/app')} className="mt-6 text-gray-500 underline">
-        ← {isVi ? 'Về App hub' : 'Back to hub'}
-      </button>
-    </div>
+      {query && (
+        <Link to={buildAppPath(query)} className="mt-6 block pb-8 text-center text-gray-400 underline">
+          ← {isVi ? 'Về App hub' : 'Back to hub'}
+        </Link>
+      )}
+    </MobileShell>
   )
 }

@@ -11,6 +11,29 @@ npm run dev
 
 Open the URL shown in the terminal (usually `http://localhost:5173`). **Laptop:** fullscreen browser (≥1024px) — layout uses full width, map + sidebar side-by-side. **Kiosk demo:** portrait tablet also supported.
 
+## Deploy on Vercel
+
+1. Push this repo to GitHub ([hci_buspass](https://github.com/Quangthelord/hci_buspass)).
+2. Open [vercel.com/new](https://vercel.com/new) → **Import** the repository.
+3. Vercel auto-detects **Vite** — keep defaults:
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+   - **Install Command:** `npm install`
+4. Click **Deploy**.
+
+`vercel.json` already configures SPA routing (all paths → `index.html`) and cache headers for static assets.
+
+**CLI (optional):**
+
+```bash
+npm i -g vercel
+vercel
+```
+
+Production URL will look like `https://hci-buspass.vercel.app`. Share `/`, `/map`, `/list`, etc. — deep links work after deploy.
+
+**QR handoff (2 devices):** Kiosk `/qr` shows a URL like `/m?r=19&d=miendong&lang=vi`. Scan with phone camera → opens trip details on mobile → continue to `/app/*` journey phases.
+
 ## Screen map
 
 | Route | Screen |
@@ -21,6 +44,8 @@ Open the URL shown in the terminal (usually `http://localhost:5173`). **Laptop:*
 | `/list` | Large-type route list |
 | `/route/:id` | Route detail + stops |
 | `/qr` | QR sync to phone |
+| `/m` | **Mobile trip details** (after QR scan — `?r=&d=&lang=`) |
+| `/app` | Mobile hub — haptic journey phases |
 | `/trip` | Trip planner A→B (fast / cheap / few transfers) |
 | `/services` | Station amenities & quick support |
 | `/help` | Help center (6 topics) |
