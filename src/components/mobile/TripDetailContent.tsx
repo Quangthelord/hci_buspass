@@ -62,7 +62,7 @@ export function TripDetailContent({
         <h2 className="mb-2 font-bold text-neon-green">
           📍 {tr('allStops', lang)} ({route.stops.length})
         </h2>
-        <ul className="max-h-48 space-y-2 overflow-y-auto">
+        <ul className="space-y-2">
           {route.stops.map((s) => (
             <li
               key={s.id}

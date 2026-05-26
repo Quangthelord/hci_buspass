@@ -26,7 +26,7 @@ export function MobileTripPage() {
   }
 
   const content = (
-    <div className="p-4 pb-8">
+    <div className="p-4 pb-10">
       <div className="mb-4 flex items-center gap-2">
         <Bus className="h-6 w-6 text-neon-green" />
         <div>

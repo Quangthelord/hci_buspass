@@ -6,7 +6,7 @@ export function PhoneFrame({ children, label }: { children: ReactNode; label?: s
   const showFrame = useShowPhoneFrame()
 
   if (!showFrame) {
-    return <div className="min-h-screen w-full bg-[#0f172a] text-white">{children}</div>
+    return <div className="w-full min-h-dvh bg-[#0f172a] text-white">{children}</div>
   }
 
   return (
@@ -14,7 +14,9 @@ export function PhoneFrame({ children, label }: { children: ReactNode; label?: s
       {label && <p className="mb-3 text-sm text-gray-500">{label}</p>}
       <div className="relative w-[320px] rounded-[2.5rem] border-4 border-gray-200 bg-black p-3 shadow-2xl">
         <div className="absolute left-1/2 top-2 h-5 w-24 -translate-x-1/2 rounded-full bg-slate-800" />
-        <div className="mt-6 overflow-hidden rounded-[1.75rem] bg-[#0f172a]">{children}</div>
+        <div className="mt-6 max-h-[70vh] overflow-y-auto rounded-[1.75rem] bg-[#0f172a] overscroll-contain">
+          {children}
+        </div>
         <div className="mx-auto mt-2 h-1 w-28 rounded-full bg-gray-200" />
       </div>
     </div>

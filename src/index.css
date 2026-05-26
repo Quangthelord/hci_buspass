@@ -32,6 +32,23 @@ body {
   overflow: hidden;
 }
 
+/* Trang mobile sau quét QR — cho phép cuộn toàn trang */
+html.mobile-scroll,
+body.mobile-scroll,
+#root.mobile-scroll {
+  height: auto;
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-scroll-pad {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+}
+
 .kiosk-root {
   width: 100%;
   height: 100%;
