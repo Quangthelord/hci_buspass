@@ -56,15 +56,33 @@ body {
   overflow: hidden;
 }
 
-/* Kiosk shell — touch-only full-screen mode */
+/* Kiosk shell — full-screen mode */
 body.kiosk-mode {
   overflow: hidden;
   user-select: none;
-  cursor: none;
 }
 
-body.kiosk-mode .admin-hotspot {
-  cursor: none;
+/* Real touch kiosk — hide cursor; laptop/mouse keeps normal pointer */
+@media (hover: none) and (pointer: coarse) {
+  body.kiosk-mode,
+  body.kiosk-mode .admin-hotspot {
+    cursor: none;
+  }
+}
+
+@media (hover: hover), (pointer: fine) {
+  body.kiosk-mode button,
+  body.kiosk-mode a,
+  body.kiosk-mode input,
+  body.kiosk-mode select,
+  body.kiosk-mode textarea,
+  body.kiosk-mode [role="button"],
+  body.kiosk-mode [role="tab"],
+  body.kiosk-mode label,
+  body.kiosk-mode .kiosk-menu-card,
+  body.kiosk-mode .kiosk-screensaver {
+    cursor: pointer;
+  }
 }
 
 /* Kiosk bezel — presentation frame on laptop/desktop */

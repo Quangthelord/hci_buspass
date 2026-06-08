@@ -1,0 +1,292 @@
+/* MyTransport.SG — Variant A scoped styles */
+.mt-sg-root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--mt-bg, #f5f5f5);
+  color: var(--mt-text, #212121);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mt-sg-header {
+  background: linear-gradient(180deg, #009b3a 0%, #007a2e 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mt-sg-brand {
+  letter-spacing: -0.02em;
+}
+
+.mt-sg-search {
+  background: #fff;
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mt-sg-search:focus-within {
+  box-shadow: 0 2px 16px rgba(0, 155, 58, 0.25);
+}
+
+.mt-sg-tabs {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.mt-sg-tab {
+  position: relative;
+  color: #9e9e9e;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mt-sg-tab--active {
+  color: #009b3a;
+}
+
+.mt-sg-tab--active::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: #009b3a;
+}
+
+.mt-sg-stop-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: #d32f2f;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mt-sg-service-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.5rem;
+  border-radius: 8px;
+  background: #009b3a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.125rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.mt-sg-arrival-row {
+  background: #fff;
+  border-bottom: 1px solid #eeeeee;
+  transition: background 0.15s;
+}
+
+.mt-sg-arrival-row:hover,
+.mt-sg-arrival-row:focus-visible {
+  background: #f1f8f4;
+}
+
+.mt-sg-load-bar {
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+.mt-sg-load-bar--seats {
+  background: #00a651;
+}
+
+.mt-sg-load-bar--standing {
+  background: #f9a825;
+}
+
+.mt-sg-load-bar--limited {
+  background: #e53935;
+}
+
+.mt-sg-arrival-time {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+}
+
+.mt-sg-arrival-time--seats {
+  color: #00a651;
+}
+
+.mt-sg-arrival-time--standing {
+  color: #f57f17;
+}
+
+.mt-sg-arrival-time--limited {
+  color: #e53935;
+}
+
+.mt-sg-timeline {
+  position: relative;
+  height: 2.5rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, #e8f5e9 0%, #f5f5f5 100%);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mt-sg-timeline-grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 49px,
+    rgba(0, 0, 0, 0.06) 49px,
+    rgba(0, 0, 0, 0.06) 50px
+  );
+}
+
+.mt-sg-timeline-bus {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #1976d2;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.45);
+  z-index: 1;
+}
+
+.mt-sg-timeline-bus--fade {
+  opacity: 0.45;
+}
+
+.mt-sg-legend {
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.75rem;
+  color: #757575;
+}
+
+.mt-sg-legend-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.mt-sg-bottom-nav {
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.mt-sg-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: #9e9e9e;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mt-sg-nav-item--active {
+  color: #009b3a;
+}
+
+/* Route detail — map + bottom sheet */
+.mt-sg-map {
+  background: linear-gradient(160deg, #c8e6c9 0%, #e3f2fd 45%, #bbdefb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.mt-sg-map-route {
+  position: absolute;
+  inset: 15% 10%;
+  border-radius: 12px;
+  border: 3px solid rgba(25, 118, 210, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.mt-sg-map-bus {
+  position: absolute;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #1976d2;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  animation: mt-sg-pulse 2s ease-in-out infinite;
+}
+
+@keyframes mt-sg-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(25, 118, 210, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.mt-sg-sheet {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+}
+
+.mt-sg-sheet-handle {
+  width: 2.5rem;
+  height: 4px;
+  border-radius: 2px;
+  background: #bdbdbd;
+  margin: 0.75rem auto 0;
+}
+
+.mt-sg-stop-marker {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #1976d2;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mt-sg-stop-marker--current {
+  background: #009b3a;
+  box-shadow: 0 0 0 3px rgba(0, 155, 58, 0.25);
+}
+
+.mt-sg-stop-marker--end {
+  background: #d32f2f;
+}

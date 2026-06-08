@@ -4,7 +4,7 @@ import { VARIANTS, type VariantId } from '../lib/variantConfig'
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const
 
 const ACCENTS: Record<VariantId, string> = {
-  Variant_1_CivicLight: '#16a34a',
+  Variant_1_CivicLight: '#009B3A',
   Variant_2_DarkTransit: '#00B4D8',
   Variant_3_WarmWayfinding: '#D97706',
   Variant_4_MetroMinimal: '#2563EB',

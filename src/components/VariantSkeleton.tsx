@@ -4,7 +4,7 @@ const SCHEMES: Record<
   VariantId,
   { bg: string; accent: string; card: string; label: string }
 > = {
-  Variant_1_CivicLight: { bg: '#ffffff', accent: '#16a34a', card: '#f3f4f6', label: 'Civic Light' },
+  Variant_1_CivicLight: { bg: '#f5f5f5', accent: '#009b3a', card: '#ffffff', label: 'Civic Light' },
   Variant_2_DarkTransit: { bg: '#1A1A2E', accent: '#00B4D8', card: '#16213E', label: 'Dark Transit' },
   Variant_3_WarmWayfinding: { bg: '#F5F0E8', accent: '#D97706', card: '#FFFBF5', label: 'Warm Wayfinding' },
   Variant_4_MetroMinimal: { bg: '#F1F5F9', accent: '#2563EB', card: '#FFFFFF', label: 'Metro Minimal' },
