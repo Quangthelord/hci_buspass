@@ -7,6 +7,8 @@ export interface KioskFlowValue {
   phase: KioskPhase
   pickedVariant: VariantId | null
   pickVariant: (id: VariantId) => void
+  /** Quay về màn chọn giao diện A–E */
+  goToMenu: () => void
 }
 
 const KioskFlowContext = createContext<KioskFlowValue | null>(null)

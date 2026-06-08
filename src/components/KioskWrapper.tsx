@@ -93,6 +93,16 @@ export function KioskWrapper({
     [resetIdle],
   )
 
+  const goToMenu = useCallback(() => {
+    const variantId = getActiveTaskVariant()
+    if (variantId) abandonTask(variantId)
+    stopRealtimeSimulator()
+    resetKioskBodyTheme()
+    setPickedVariant(null)
+    setPhase('menu')
+    resetIdle()
+  }, [resetIdle])
+
   useEffect(() => {
     const clock = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(clock)
@@ -128,7 +138,7 @@ export function KioskWrapper({
 
   useEffect(() => () => stopRealtimeSimulator(), [])
 
-  const flowValue = { phase, pickedVariant, pickVariant }
+  const flowValue = { phase, pickedVariant, pickVariant, goToMenu }
 
   useKioskMisclickTracker(phase === 'active')
 

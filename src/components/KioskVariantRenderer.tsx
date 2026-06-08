@@ -1,6 +1,7 @@
 import { Component, type ReactNode } from 'react'
 import type { VariantId } from '../lib/variantConfig'
 import { VARIANT_COMPONENTS } from '../variants'
+import { VariantHomeButton } from './VariantHomeButton'
 
 interface Props {
   variantId: VariantId
@@ -37,8 +38,9 @@ export function KioskVariantRenderer({ variantId, userId }: Props) {
 
   return (
     <VariantErrorBoundary key={variantId}>
-      <div className="kiosk-variant-root">
+      <div className="kiosk-variant-root relative">
         <VariantComponent stationId="ben-thanh" userId={userId} />
+        <VariantHomeButton />
       </div>
     </VariantErrorBoundary>
   )
