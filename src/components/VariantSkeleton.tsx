@@ -6,7 +6,7 @@ const SCHEMES: Record<
 > = {
   Variant_1_CivicLight: { bg: '#f5f5f5', accent: '#009b3a', card: '#ffffff', label: 'Civic Light' },
   Variant_2_DarkTransit: { bg: '#F0F2F5', accent: '#37b24d', card: '#ffffff', label: 'Citymapper' },
-  Variant_3_WarmWayfinding: { bg: '#F5F0E8', accent: '#D97706', card: '#FFFBF5', label: 'Warm Wayfinding' },
+  Variant_3_WarmWayfinding: { bg: '#F5F5F5', accent: '#00703C', card: '#FFFFFF', label: 'TransPerth' },
   Variant_4_MetroMinimal: { bg: '#F0F0F0', accent: '#F26722', card: '#FFFFFF', label: 'Moovit' },
   Variant_5_HighContrast: { bg: '#FFFFFF', accent: '#000000', card: '#F5F5F5', label: 'High Contrast' },
   Variant_6_BusPassSignature: { bg: '#F7F5F0', accent: '#2563EB', card: '#FFFFFF', label: 'BusPass Signature' },

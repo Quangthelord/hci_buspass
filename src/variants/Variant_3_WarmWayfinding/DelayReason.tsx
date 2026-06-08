@@ -1,13 +1,45 @@
 import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
-import { STATUS_PILL, WARM } from './constants'
-import type { EtaContext, UncertaintyStatus } from './etaContext'
+import type { BusRouteData } from '../../data/busRoutes'
+import { STATUS_PILL } from './constants'
+import { getEtaContext, type UncertaintyStatus } from './etaContext'
 
+/** TransPerth-style "MORE INFO" link for journey interruptions. */
+export function TpInterruptionLink({ route }: { route: BusRouteData }) {
+  const [open, setOpen] = useState(false)
+  const ctx = getEtaContext(route)
+  const pill = STATUS_PILL[ctx.status as UncertaintyStatus]
+
+  return (
+    <span>
+      <button
+        type="button"
+        className="tp-link-blue"
+        onClick={(e) => {
+          e.stopPropagation()
+          setOpen((v) => !v)
+        }}
+      >
+        MORE INFO
+      </button>
+      {open && (
+        <span
+          className="mt-1 block rounded px-2 py-1.5 text-left text-xs leading-relaxed"
+          style={{ backgroundColor: pill.bg, color: pill.text }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {ctx.incidentDetails}
+        </span>
+      )}
+    </span>
+  )
+}
+
+/** Standalone delay panel for arrival lists (legacy export kept for compatibility). */
 export function DelayReason({
   context,
   onExpand,
 }: {
-  context: EtaContext
+  context: ReturnType<typeof getEtaContext>
   onExpand?: () => void
 }) {
   const [open, setOpen] = useState(false)
@@ -29,41 +61,21 @@ export function DelayReason({
           {pill.label}
         </span>
         {context.reason && (
-          <p className="text-base leading-snug" style={{ color: WARM.secondary }}>
-            {context.reason}
-          </p>
-        )}
-        {!context.reason && context.status === 'on_time' && (
-          <p className="text-base leading-snug" style={{ color: WARM.muted }}>
-            Không có sự cố trên tuyến
-          </p>
-        )}
-        {!context.reason && context.status === 'unknown' && (
-          <p className="text-base leading-snug" style={{ color: WARM.muted }}>
-            Tín hiệu GPS tạm thời không ổn định
-          </p>
+          <p className="text-sm leading-snug text-[#555]">{context.reason}</p>
         )}
       </div>
 
       <button
         type="button"
         onClick={toggle}
-        className="mt-2 flex items-center gap-1 text-base font-medium"
-        style={{ color: WARM.primary }}
+        className="tp-link-blue mt-1 text-sm"
         aria-expanded={open}
       >
-        Xem thêm
-        <ChevronDown
-          className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
-          aria-hidden
-        />
+        MORE INFO
       </button>
 
       {open && (
-        <p
-          className="mt-2 rounded-lg px-3 py-2.5 text-base leading-relaxed"
-          style={{ backgroundColor: WARM.bg, color: WARM.text }}
-        >
+        <p className="mt-2 rounded px-3 py-2 text-sm leading-relaxed text-[#333] bg-[#F5F5F5]">
           {context.incidentDetails}
         </p>
       )}

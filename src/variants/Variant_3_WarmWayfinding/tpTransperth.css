@@ -1,0 +1,563 @@
+/* TransPerth — Variant C */
+.tp-root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', sans-serif;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+.tp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #00703c;
+  color: #fff;
+  padding: 0.875rem 1rem;
+  min-height: 3.25rem;
+}
+
+.tp-header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.tp-header-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ── Bottom nav ── */
+.tp-bottom-nav {
+  display: flex;
+  background: #00703c;
+  padding: 0.5rem 0 0.375rem;
+  flex-shrink: 0;
+}
+
+.tp-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.tp-nav-item--active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.tp-nav-dot {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ── Yellow CTA ── */
+.tp-btn-yellow {
+  display: block;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ffd54f 0%, #ffc20e 55%, #ffb300 100%);
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.tp-btn-yellow:active {
+  filter: brightness(0.96);
+}
+
+.tp-btn-now {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2px;
+  background: #00703c;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ── Cards with yellow chevron ── */
+.tp-card-row {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.tp-card-row:active {
+  background: #fafafa;
+}
+
+.tp-card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.tp-card-icon {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 2px;
+  color: #555;
+}
+
+.tp-card-chevron {
+  display: flex;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #ffd54f 0%, #ffc20e 100%);
+  color: #1a1a1a;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* ── Planner ── */
+.tp-planner-fields {
+  background: #00703c;
+  padding: 0 1rem 1rem;
+}
+
+.tp-field {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 2px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.tp-field-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.tp-field-actions {
+  display: flex;
+  gap: 0.5rem;
+  color: #00703c;
+}
+
+.tp-depart-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.tp-depart-field {
+  flex: 1;
+  background: #fff;
+  border-radius: 2px;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #333;
+}
+
+.tp-action-bar {
+  display: flex;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.tp-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.75rem;
+  border: none;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #555;
+  cursor: pointer;
+}
+
+.tp-action-btn + .tp-action-btn {
+  border-left: 1px solid #e0e0e0;
+}
+
+/* ── Journey result card ── */
+.tp-journey-card {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.tp-journey-body {
+  flex: 1;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.tp-journey-flow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.25rem;
+  margin-bottom: 0.625rem;
+}
+
+.tp-flow-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.tp-flow-icon {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #555;
+}
+
+.tp-flow-bus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tp-flow-bus-num {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.tp-flow-line {
+  width: 1.5rem;
+  height: 1px;
+  background: #ccc;
+  margin-bottom: 0.75rem;
+}
+
+.tp-flow-walk-m {
+  font-size: 0.6875rem;
+  color: #666;
+}
+
+.tp-journey-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  color: #444;
+}
+
+.tp-journey-interrupt {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.tp-link-blue {
+  color: #1565c0;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+/* ── Map ── */
+.tp-map-wrap {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.tp-map-wrap--near {
+  flex: 1;
+  min-height: 240px;
+}
+
+.tp-map-wrap--journey {
+  height: 32vh;
+  min-height: 160px;
+}
+
+.tp-map-wrap--live {
+  flex: 1;
+  min-height: 280px;
+}
+
+.tp-map-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tp-search-bar {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border-radius: 2px;
+  padding: 0.625rem 0.875rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tp-stop-callout {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  display: flex;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+}
+
+/* ── Journey detail ── */
+.tp-journey-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tp-summary-pin {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}
+
+.tp-summary-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.tp-summary-icon {
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #555;
+}
+
+.tp-summary-conn {
+  width: 1.25rem;
+  height: 1px;
+  background: #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.tp-step-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.tp-step {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1rem 1rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tp-step-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.tp-step-line {
+  flex: 1;
+  width: 2px;
+  background: #e0e0e0;
+  min-height: 1rem;
+}
+
+.tp-step-num {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666;
+}
+
+.tp-step-icon-col {
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  padding-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.tp-step-title {
+  font-weight: 800;
+  font-size: 0.9375rem;
+  color: #333;
+}
+
+.tp-step-sub {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.tp-live-tag {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #1565c0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Live bus ── */
+.tp-live-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tp-live-badge {
+  background: #ff6600;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.tp-stop-card {
+  display: flex;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.tp-stop-card-body {
+  flex: 1;
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.tp-stop-arrival {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-left: 1px solid #e0e0e0;
+  min-width: 5.5rem;
+}
+
+.tp-arrival-mins {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.tp-arrival-time {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.tp-arrival-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ff6600;
+}

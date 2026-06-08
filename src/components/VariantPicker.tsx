@@ -6,7 +6,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const
 const ACCENTS: Record<VariantId, string> = {
   Variant_1_CivicLight: '#1565C0',
   Variant_2_DarkTransit: '#3CB44A',
-  Variant_3_WarmWayfinding: '#D97706',
+  Variant_3_WarmWayfinding: '#00703C',
   Variant_4_MetroMinimal: '#F26722',
   Variant_5_HighContrast: '#000000',
   Variant_6_BusPassSignature: '#2563EB',
