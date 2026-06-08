@@ -25,6 +25,10 @@ export const VARIANT_ID = 'Variant_6_BusPassSignature' as const
 export interface BusPassSignatureProps {
   stationId?: string
   userId?: string
+  initialRouteId?: string
+  initialDestination?: string
+  onSyncRequest?: (route: BusRouteData) => void
+  onDestinationPick?: (destination: string, route?: BusRouteData) => void
 }
 
 function getArrivalMinutes(route: BusRouteData): number {
@@ -34,13 +38,17 @@ function getArrivalMinutes(route: BusRouteData): number {
 export default function BusPassSignaturePage({
   stationId = 'ben-thanh',
   userId = 'participant-01',
+  initialRouteId,
+  initialDestination,
+  onSyncRequest,
+  onDestinationPick,
 }: BusPassSignatureProps) {
   useMobileScroll()
   useDayNightTheme()
 
   const [now, setNow] = useState(new Date())
-  const [query, setQuery] = useState('')
-  const [selectedRouteId, setSelectedRouteId] = useState(TASK_ROUTE_ID)
+  const [query, setQuery] = useState(initialDestination ?? '')
+  const [selectedRouteId, setSelectedRouteId] = useState(initialRouteId ?? TASK_ROUTE_ID)
   const [showMoreArrivals, setShowMoreArrivals] = useState(false)
   const taskStarted = useRef(false)
   const taskDone = useRef(false)
@@ -172,13 +180,12 @@ export default function BusPassSignaturePage({
                   className="d6-suggestion-btn w-full rounded-lg px-4 py-3 text-left font-semibold"
                   onClick={() => {
                     handleInteraction(`destination-${loc}`, () => setQuery(loc))
-                    if (loc === TASK_DESTINATION) {
-                      const taskRoute = findTaskRoute(liveRoutes)
-                      if (taskRoute) {
-                        setSelectedRouteId(taskRoute.id)
-                        tryCompleteTask(taskRoute)
-                      }
+                    const taskRoute = loc === TASK_DESTINATION ? findTaskRoute(liveRoutes) : undefined
+                    if (taskRoute) {
+                      setSelectedRouteId(taskRoute.id)
+                      tryCompleteTask(taskRoute)
                     }
+                    onDestinationPick?.(loc, taskRoute)
                   }}
                 >
                   {loc}
@@ -250,6 +257,20 @@ export default function BusPassSignaturePage({
               }
             >
               {showMoreArrivals ? 'Ẩn bớt' : 'Xem thêm chuyến'}
+            </button>
+          )}
+
+          {onSyncRequest && primaryRoute && (
+            <button
+              type="button"
+              className="btn-kiosk mx-4 mb-4 shrink-0 rounded-xl bg-neon-green py-4 text-lg font-bold text-white"
+              onClick={() =>
+                handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
+                  route: primaryRoute,
+                })
+              }
+            >
+              ĐỒNG BỘ VÀO ĐIỆN THOẠI 📱
             </button>
           )}
         </aside>

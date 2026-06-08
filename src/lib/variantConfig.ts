@@ -6,7 +6,7 @@ export const VARIANTS = [
   { id: 'Variant_2_DarkTransit', label: 'B — Dark Transit', description: 'Citymapper style' },
   { id: 'Variant_3_WarmWayfinding', label: 'C — TransPerth', description: 'TransPerth — Places, Stops Near Me, journey planner' },
   { id: 'Variant_4_MetroMinimal', label: 'D — Moovit', description: 'Moovit — bản đồ gần đây + chỉ đường từng bước' },
-  { id: 'Variant_6_BusPassSignature', label: 'E — BusPass System', description: 'Hệ thống BusPass gốc — map hybrid, senior mode, flow đầy đủ' },
+  { id: 'Variant_6_BusPassSignature', label: 'E — BusPass System', description: 'BusPass gốc — 7 trang: Home, Mode, Map/List, Route, QR, Help' },
 ] as const
 
 export type VariantId = (typeof VARIANTS)[number]['id']
