@@ -790,6 +790,238 @@ body.d6-night .d6-arrival-card {
   border: 2px solid #d4c5b0;
 }
 
+/* Map mode — bản đồ Leaflet full-bleed */
+.d6-map-page {
+  overflow: hidden;
+}
+
+.d6-header--compact .d6-station-name {
+  font-size: 22px;
+}
+
+.d6-header--compact .d6-clock {
+  font-size: 22px;
+}
+
+.d6-search-strip {
+  background: var(--color-surface);
+  border-color: #d4c5b0;
+}
+
+body.d6-night .d6-search-strip {
+  background: #1c1c2e;
+  border-color: #3f3f5a;
+}
+
+body.d6-night .d6-search-icon {
+  color: #94a3b8;
+}
+
+.d6-suggestions-dropdown {
+  background: var(--color-surface);
+  border-color: #d4c5b0;
+}
+
+.d6-suggestions-dropdown .d6-suggestion-btn {
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 0;
+}
+
+.d6-suggestions-dropdown .d6-suggestion-btn:last-child {
+  border-bottom: none;
+}
+
+.d6-suggestions-dropdown .d6-suggestion-btn:hover,
+.d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
+  background: #eff6ff;
+}
+
+body.d6-night .d6-suggestions-dropdown {
+  background: #252538;
+  border-color: #3f3f5a;
+}
+
+body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn {
+  border-bottom-color: #3f3f5a;
+  color: #e2e8f0;
+}
+
+body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:hover,
+body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
+  background: #1e3a5f;
+  color: #7dd3fc;
+}
+
+.d6-map-layout {
+  min-height: 0;
+}
+
+.d6-map-stage {
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.d6-map-stage-inner {
+  min-height: 100%;
+}
+
+.d6-leaflet.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #0f172a;
+  font-family: var(--font-sans);
+}
+
+.d6-leaflet .leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #64748b !important;
+  font-size: 10px;
+  margin: 0 8px 8px 0 !important;
+  border-radius: 6px;
+  padding: 2px 6px !important;
+}
+
+.d6-leaflet .leaflet-control-attribution a {
+  color: #38bdf8 !important;
+}
+
+.d6-leaflet .leaflet-popup-content-wrapper {
+  background: #252538;
+  color: #e2e8f0;
+  border: 1px solid #3f3f5a;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.d6-leaflet .leaflet-popup-tip {
+  background: #252538;
+}
+
+.d6-map-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 2px solid #3f3f5a;
+  background: rgba(37, 37, 56, 0.92);
+  color: #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.d6-map-control-btn:hover,
+.d6-map-control-btn:focus-visible {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.d6-map-badge {
+  background: rgba(37, 37, 56, 0.9);
+  border: 1px solid #3f3f5a;
+  color: #94a3b8;
+}
+
+.d6-map-station {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d6-map-station-core {
+  width: 14px;
+  height: 14px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.25);
+}
+
+.d6-map-station::before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #38bdf8;
+  border-radius: 50%;
+  opacity: 0.55;
+  animation: d6-station-pulse 2.4s ease-in-out infinite;
+}
+
+.d6-map-stop {
+  width: 12px;
+  height: 12px;
+  background: #475569;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+}
+
+.d6-map-stop--dest {
+  width: 20px;
+  height: 20px;
+  background: #38bdf8;
+  border-color: #7dd3fc;
+  box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.3);
+}
+
+.d6-map-bus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: #1e3a5f;
+  border: 2px solid #38bdf8;
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.d6-map-bus--urgent {
+  border-color: #f87171;
+  background: #7f1d1d;
+  animation: d6-bus-pulse-fast 0.8s ease-in-out infinite;
+}
+
+.d6-aside--panel {
+  background: var(--color-surface);
+}
+
+body.d6-night .d6-aside--panel {
+  background: #1c1c2e;
+}
+
+.d6-btn-sync {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+}
+
+.d6-btn-sync:hover,
+.d6-btn-sync:focus-visible {
+  filter: brightness(1.08);
+}
+
+@keyframes d6-station-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.85;
+  }
+}
+
 .d6-map-panel {
   background: var(--color-bg-kiosk);
 }
@@ -852,6 +1084,30 @@ body.d6-night .d6-arrival-card--active {
 .d6-status-pill--delayed {
   background: #fef2f2;
   color: #7c2d12;
+}
+
+body.d6-night .d6-status-pill--ontime {
+  background: #14532d;
+  color: #86efac;
+}
+
+body.d6-night .d6-status-pill--delayed {
+  background: #450a0a;
+  color: #fca5a5;
+}
+
+body.d6-night .d6-arrival-eta {
+  color: #38bdf8;
+}
+
+body.d6-night .d6-eta-dot {
+  background: #38bdf8;
+}
+
+body.d6-night .d6-link-btn {
+  background: #252538;
+  border-color: #38bdf8;
+  color: #7dd3fc;
 }
 
 .d6-link-btn {

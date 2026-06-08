@@ -14,7 +14,7 @@ import { useMobileScroll } from '../hooks/useMobileScroll'
 import { useDayNightTheme } from '../lib/useDayNightTheme'
 import { useAdaptiveMode } from '../lib/useAdaptiveMode'
 import { useUrgencyPulse } from '../lib/useUrgencyPulse'
-import { NeonRouteMap } from '../components/d6/NeonRouteMap'
+import { D6LeafletMap } from '../components/d6/D6LeafletMap'
 import { ArrivalCard } from '../components/d6/ArrivalCard'
 import { SeniorModePrompt } from '../components/d6/SeniorModePrompt'
 import { UrgencyArrivalBanner } from '../components/d6/UrgencyArrivalBanner'
@@ -138,11 +138,10 @@ export default function BusPassSignaturePage({
   const timeStr = formatTime24(now)
 
   return (
-    <div className="d6-root flex min-h-dvh flex-col font-sans">
+    <div className="d6-root d6-map-page flex min-h-dvh flex-col font-sans">
       <UrgencyArrivalBanner visible={isArriving} />
 
-      {/* Header */}
-      <header className="d6-header flex shrink-0 items-start justify-between gap-4 border-b px-5 py-4">
+      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-4 border-b px-4 py-3">
         <div>
           <p className="d6-header-label font-bold uppercase tracking-wide">Trạm</p>
           <h1 className="d6-station-name font-bold">{stationName}</h1>
@@ -152,10 +151,12 @@ export default function BusPassSignaturePage({
         </time>
       </header>
 
-      {/* Search */}
-      <div className="shrink-0 border-b px-5 py-4">
+      <div className="d6-search-strip relative z-20 shrink-0 border-b px-4 py-3">
         <label className="d6-search-label relative block">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" strokeWidth={2} />
+          <Search
+            className="d6-search-icon pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2"
+            strokeWidth={2}
+          />
           <input
             type="search"
             value={query}
@@ -171,13 +172,13 @@ export default function BusPassSignaturePage({
             autoComplete="off"
           />
         </label>
-        {query.trim() && (
-          <ul className="mt-2 space-y-1">
+        {query.trim() && suggestions.length > 0 && (
+          <ul className="d6-suggestions-dropdown absolute left-4 right-4 top-full z-30 mt-1 max-h-48 overflow-y-auto rounded-xl border-2 shadow-lg">
             {suggestions.map((loc) => (
               <li key={loc}>
                 <button
                   type="button"
-                  className="d6-suggestion-btn w-full rounded-lg px-4 py-3 text-left font-semibold"
+                  className="d6-suggestion-btn w-full px-4 py-3 text-left font-semibold"
                   onClick={() => {
                     handleInteraction(`destination-${loc}`, () => setQuery(loc))
                     const taskRoute = loc === TASK_DESTINATION ? findTaskRoute(liveRoutes) : undefined
@@ -196,22 +197,22 @@ export default function BusPassSignaturePage({
         )}
       </div>
 
-      {/* Map + arrivals split */}
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="d6-map-panel min-h-[42vh] flex-1 p-4 lg:min-h-0">
-          <NeonRouteMap
+      <div className="d6-map-layout flex min-h-0 flex-1 flex-col lg:flex-row">
+        <section className="d6-map-stage relative min-h-[58vh] flex-[7] lg:min-h-0">
+          <D6LeafletMap
             route={primaryRoute}
+            destinationKeyword={query}
             urgencyLevel={urgencyLevel}
-            simplified={adaptive.seniorMode}
+            busProgress={0.18 + urgencyLevel * 0.08}
           />
         </section>
 
-        <aside className="d6-aside flex w-full shrink-0 flex-col border-t lg:w-80 lg:border-l lg:border-t-0">
-          <h2 className="d6-aside-title shrink-0 px-4 pb-2 pt-4 font-bold uppercase tracking-wide">
+        <aside className="d6-aside d6-aside--panel flex w-full shrink-0 flex-col border-t lg:max-w-[340px] lg:flex-[3] lg:border-l lg:border-t-0">
+          <h2 className="d6-aside-title shrink-0 px-4 pb-2 pt-3 font-bold uppercase tracking-wide">
             Xe sắp đến
           </h2>
 
-          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-4">
+          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-3">
             <ArrivalCard
               route={primaryRoute}
               destination={getRouteDestination(primaryRoute)}
@@ -246,33 +247,33 @@ export default function BusPassSignaturePage({
               ))}
           </div>
 
-          {moreArrivals.length > 0 && (
-            <button
-              type="button"
-              className="d6-link-btn mx-4 mb-4 min-h-14 shrink-0 rounded-xl border-2 px-4 py-3 font-bold"
-              onClick={() =>
-                handleInteraction('more-arrivals', () =>
-                  setShowMoreArrivals((v) => !v),
-                )
-              }
-            >
-              {showMoreArrivals ? 'Ẩn bớt' : 'Xem thêm chuyến'}
-            </button>
-          )}
+          <div className="d6-aside-actions shrink-0 space-y-2 px-4 pb-4">
+            {moreArrivals.length > 0 && (
+              <button
+                type="button"
+                className="d6-link-btn min-h-12 w-full rounded-xl border-2 px-4 py-3 font-bold"
+                onClick={() =>
+                  handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
+                }
+              >
+                {showMoreArrivals ? 'Ẩn bớt' : 'Xem thêm chuyến'}
+              </button>
+            )}
 
-          {onSyncRequest && primaryRoute && (
-            <button
-              type="button"
-              className="btn-kiosk mx-4 mb-4 shrink-0 rounded-xl bg-neon-green py-4 text-lg font-bold text-white"
-              onClick={() =>
-                handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
-                  route: primaryRoute,
-                })
-              }
-            >
-              ĐỒNG BỘ VÀO ĐIỆN THOẠI 📱
-            </button>
-          )}
+            {onSyncRequest && primaryRoute && (
+              <button
+                type="button"
+                className="d6-btn-sync w-full rounded-xl py-4 text-lg font-bold"
+                onClick={() =>
+                  handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
+                    route: primaryRoute,
+                  })
+                }
+              >
+                ĐỒNG BỘ VÀO ĐIỆN THOẠI 📱
+              </button>
+            )}
+          </div>
         </aside>
       </div>
 
