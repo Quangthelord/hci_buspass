@@ -5,18 +5,24 @@ export function MobileHapticStatus({
   lang,
   level,
   isArriving,
+  isAlerting,
   distanceM,
   armed,
+  alertStopped,
   canVibrate,
   onArm,
+  onStop,
 }: {
   lang: 'vi' | 'en' | 'zh' | 'ko'
   level: UrgencyLevel
   isArriving: boolean
+  isAlerting: boolean
   distanceM: number
   armed: boolean
+  alertStopped: boolean
   canVibrate: boolean
   onArm: () => void
+  onStop: () => void
 }) {
   const isVi = lang === 'vi'
 
@@ -24,7 +30,7 @@ export function MobileHapticStatus({
     return (
       <div className="mb-4 rounded-xl border-2 border-neon-green bg-white p-4 text-center">
         <p className="text-sm font-semibold text-gray-700">
-          {isVi ? 'Bật rung khi xe đến trạm' : 'Enable haptic when bus arrives'}
+          {isVi ? 'Bật rung + tiếng kêu khi xe đến trạm' : 'Enable haptic + beep when bus arrives'}
         </p>
         <p className="mt-1 text-xs text-gray-500">
           {isVi
@@ -47,29 +53,51 @@ export function MobileHapticStatus({
     )
   }
 
-  if (isArriving) {
+  if (isAlerting || isArriving) {
     return (
       <div
         className="mb-4 rounded-xl border-2 border-warning-orange bg-warning-orange/15 p-4 text-center"
         role="alert"
+        aria-live="assertive"
       >
         <HapticWave />
         <p className="mt-2 text-base font-bold text-warning-orange">
-          {isVi ? 'Xe đang vào trạm!' : 'Bus is arriving!'}
+          {isArriving
+            ? isVi
+              ? 'Xe đang vào trạm!'
+              : 'Bus is arriving!'
+            : isVi
+              ? 'Xe sắp đến!'
+              : 'Bus approaching!'}
         </p>
-        <p className="text-xs text-gray-600">{isVi ? 'Đang rung mạnh' : 'Strong vibration active'}</p>
+        <p className="mt-1 text-xs text-gray-600">
+          {isVi ? 'Đang rung dài + tiếng kêu' : 'Long vibration + beeping'}
+          {!isArriving && ` · ~${distanceM}m`}
+        </p>
+        <button
+          type="button"
+          onClick={onStop}
+          className="btn-kiosk mt-4 w-full rounded-lg border-2 border-warning-orange bg-white py-3 text-base font-bold text-warning-orange"
+        >
+          {isVi ? '■ DỪNG RUNG' : '■ STOP ALERT'}
+        </button>
       </div>
     )
   }
 
-  if (level >= 2) {
+  if (alertStopped) {
     return (
-      <div className="mb-4 rounded-xl border-2 border-neon-green bg-neon-green/10 p-3 text-center">
-        <HapticWave />
-        <p className="mt-1 text-sm font-semibold text-neon-green">
-          {isVi ? 'Xe sắp đến · Đang rung' : 'Bus approaching · Vibrating'}
+      <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3 text-center">
+        <p className="text-xs text-gray-600">
+          {isVi ? 'Đã dừng cảnh báo rung' : 'Alert stopped'}
         </p>
-        <p className="text-xs text-gray-500">~{distanceM}m</p>
+        <button
+          type="button"
+          onClick={onArm}
+          className="mt-2 text-xs font-semibold text-neon-green underline"
+        >
+          {isVi ? 'Bật lại' : 'Turn back on'}
+        </button>
       </div>
     )
   }

@@ -52,10 +52,13 @@ export function MobileAppHubPage() {
         lang={lang}
         level={haptic.level}
         isArriving={haptic.isArriving}
+        isAlerting={haptic.isAlerting}
         distanceM={haptic.distanceM}
         armed={haptic.armed}
+        alertStopped={haptic.alertStopped}
         canVibrate={haptic.canVibrate}
         onArm={haptic.armHaptic}
+        onStop={haptic.stopAlert}
       />
 
       <Link

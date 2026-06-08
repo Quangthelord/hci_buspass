@@ -49,10 +49,13 @@ export function MobileTripPage() {
         lang={lang}
         level={haptic.level}
         isArriving={haptic.isArriving}
+        isAlerting={haptic.isAlerting}
         distanceM={haptic.distanceM}
         armed={haptic.armed}
+        alertStopped={haptic.alertStopped}
         canVibrate={haptic.canVibrate}
         onArm={haptic.armHaptic}
+        onStop={haptic.stopAlert}
       />
 
       <TripDetailContent route={route} dest={dest} lang={lang} />
@@ -66,7 +69,7 @@ export function MobileTripPage() {
       </Link>
 
       <p className="mt-4 text-center text-xs text-gray-400">
-        {isVi ? 'Rung tự động khi xe gần trạm (~500m)' : 'Auto haptic when bus is ~500m away'}
+        {isVi ? 'Rung dài + tiếng kêu khi xe gần trạm — bấm Dừng để tắt' : 'Long haptic + beep near stop — tap Stop to silence'}
       </p>
     </div>
   )
