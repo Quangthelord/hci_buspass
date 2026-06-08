@@ -2,7 +2,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Bus, ChevronRight, MapPin } from 'lucide-react'
 import { PhoneFrame } from '../../components/PhoneFrame'
 import { MobileShell } from '../../components/mobile/MobileShell'
+import { MobileHapticStatus } from '../../components/mobile/MobileHapticStatus'
+import { useShowPhoneFrame } from '../../hooks/useShowPhoneFrame'
 import { useSyncTripFromUrl } from '../../hooks/useSyncTripFromUrl'
+import { useTripHaptic } from '../../hooks/useTripHaptic'
 import { buildAppPath } from '../../lib/tripUrl'
 import { stationName } from '../../context/KioskContext'
 
@@ -15,7 +18,9 @@ const PHASES = [
 export function MobileAppHubPage() {
   const navigate = useNavigate()
   const { query, route, dest, lang, queryString } = useSyncTripFromUrl()
+  const showFrame = useShowPhoneFrame()
   const isVi = lang === 'vi'
+  const haptic = useTripHaptic(query?.r ?? '01')
 
   if (!route || !query) {
     return (
@@ -43,9 +48,15 @@ export function MobileAppHubPage() {
       <p className="mt-2 text-sm text-gray-400">
         ETA {route.etaRange} {isVi ? 'phút' : 'min'}
       </p>
-      <p className="mt-4 rounded-lg bg-neon-green/10 p-3 text-sm text-neon-green">
-        {isVi ? '✓ Lộ trình đã đồng bộ — Cất máy vào túi' : '✓ Trip synced — Pocket your phone'}
-      </p>
+      <MobileHapticStatus
+        lang={lang}
+        level={haptic.level}
+        isArriving={haptic.isArriving}
+        distanceM={haptic.distanceM}
+        armed={haptic.armed}
+        canVibrate={haptic.canVibrate}
+        onArm={haptic.armHaptic}
+      />
 
       <Link
         to={queryString ? `/m?${queryString}` : '/m'}
@@ -80,10 +91,14 @@ export function MobileAppHubPage() {
   )
 
   return (
-    <MobileShell badge={isVi ? 'Ứng dụng di động — Sau QR' : 'Mobile app — After QR'}>
-      <PhoneFrame label={isVi ? 'Context-Aware Haptic App' : 'Context-Aware Haptic App'}>
-        {content}
-      </PhoneFrame>
+    <MobileShell badge={showFrame ? (isVi ? 'Ứng dụng di động — Sau QR' : 'Mobile app — After QR') : undefined}>
+      {showFrame ? (
+        <PhoneFrame label={isVi ? 'Context-Aware Haptic App' : 'Context-Aware Haptic App'}>
+          {content}
+        </PhoneFrame>
+      ) : (
+        content
+      )}
       <div className="mt-6 flex justify-center gap-4 pb-8 text-sm">
         <button type="button" onClick={() => navigate('/qr')} className="text-gray-500 underline">
           ← Kiosk QR

@@ -77,6 +77,7 @@ export const DESTINATIONS: Destination[] = [
   { id: 'dam-sen', nameVi: 'Công viên Đầm Sen', nameEn: 'Dam Sen Park', icon: '🌳', distanceKm: 7.8, lat: 10.7674, lng: 106.6383, routes: ['36', '93'] },
   { id: 'cho-ray', nameVi: 'Bệnh viện Chợ Rẫy', nameEn: 'Cho Ray Hospital', icon: '🏥', distanceKm: 2.5, lat: 10.7575, lng: 106.659, routes: ['05', '19'] },
   { id: 'ueh', nameVi: 'Đại học Kinh tế UEH', nameEn: 'UEH University', icon: '🎓', distanceKm: 0.4, lat: 10.7769, lng: 106.701, routes: ['05', '19'] },
+  { id: 'suoi-tien', nameVi: 'Suối Tiên', nameEn: 'Suoi Tien', icon: '🎢', distanceKm: 12.4, lat: 10.866, lng: 106.803, routes: ['01'] },
 ]
 
 export const ROUTES: BusRoute[] = [

@@ -10,7 +10,8 @@ import {
   Smartphone,
 } from 'lucide-react'
 import type { BusRouteData } from '../../data/busRoutes'
-import { buildTripUrl } from '../../lib/tripUrl'
+import { QrOriginSetup } from '../../components/mobile/QrOriginSetup'
+import { buildTripUrl, destinationIdFromName } from '../../lib/tripUrl'
 import { HELP_CATEGORIES, HELP_CONTENT, HELP_TITLES, tr } from '../../i18n/translations'
 import type { BpLang } from './constants'
 
@@ -361,13 +362,23 @@ export function BpQrScreen({
   onBack: () => void
 }) {
   const [countdown, setCountdown] = useState(180)
+  const [originVersion, setOriginVersion] = useState(0)
 
   useEffect(() => {
     const t = setInterval(() => setCountdown((c) => (c > 0 ? c - 1 : 0)), 1000)
     return () => clearInterval(t)
   }, [])
 
-  const tripUrl = buildTripUrl({ r: route.id, s: stationId, lang })
+  const tripQuery = useMemo(
+    () => ({
+      r: route.id,
+      d: destinationIdFromName(destination),
+      s: stationId,
+      lang,
+    }),
+    [route.id, destination, stationId, lang],
+  )
+  const tripUrl = useMemo(() => buildTripUrl(tripQuery), [tripQuery, originVersion])
 
   return (
     <div className="bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-6 py-5">
@@ -380,13 +391,16 @@ export function BpQrScreen({
           {tr('resetIn', lang)} {Math.floor(countdown / 60)}:{String(countdown % 60).padStart(2, '0')}
         </p>
       )}
+      <QrOriginSetup lang={lang} sampleQuery={tripQuery} onSaved={() => setOriginVersion((v) => v + 1)} />
+
       <div className="mx-auto w-full max-w-sm rounded-xl border-2 border-neon-green bg-white p-5">
-        <QRCodeSVG value={tripUrl} size={220} level="M" includeMargin className="mx-auto" />
+        <QRCodeSVG value={tripUrl} size={240} level="H" includeMargin className="mx-auto" />
         <div className="mt-4 text-center text-sm">
           <p className="font-bold text-neon-green">
             Tuyến {route.id} · {destination}
           </p>
           <p className="mt-1 text-gray-500">{tr('qrBenefits', lang)}</p>
+          <p className="mt-2 break-all text-[10px] text-gray-400">{tripUrl}</p>
         </div>
       </div>
       <ol className="mx-auto mt-5 max-w-md space-y-1.5 text-sm">

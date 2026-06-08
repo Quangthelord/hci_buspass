@@ -9,6 +9,52 @@ export interface TripQuery {
 }
 
 const LANGS: Lang[] = ['vi', 'en', 'zh', 'ko']
+const QR_ORIGIN_KEY = 'buspass-qr-origin'
+
+/** Ánh xạ tên điểm đến HCI → id query `d`. */
+const DESTINATION_IDS: Record<string, string> = {
+  'suoi-tien': 'suoi-tien',
+  'suối tiên': 'suoi-tien',
+  'ben-thanh': 'ben-thanh',
+  'bến thành': 'ben-thanh',
+}
+
+export function destinationIdFromName(name: string): string | undefined {
+  const key = name.trim().toLowerCase()
+  return DESTINATION_IDS[key] ?? (key ? key.replace(/\s+/g, '-') : undefined)
+}
+
+export function getStoredQrOrigin(): string | null {
+  if (typeof window === 'undefined') return null
+  return sessionStorage.getItem(QR_ORIGIN_KEY)
+}
+
+export function setStoredQrOrigin(origin: string) {
+  if (typeof window === 'undefined') return
+  sessionStorage.setItem(QR_ORIGIN_KEY, origin.replace(/\/$/, ''))
+}
+
+/** Origin để điện thoại quét QR mở được (ưu tiên LAN IP, không dùng localhost). */
+export function getScannableOrigin(): string {
+  const env = import.meta.env.VITE_QR_ORIGIN as string | undefined
+  if (env?.trim()) return env.trim().replace(/\/$/, '')
+
+  if (typeof window !== 'undefined') {
+    const stored = getStoredQrOrigin()
+    if (stored) return stored
+
+    const { protocol, hostname, port } = window.location
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `${protocol}//${hostname}${port ? `:${port}` : ''}`
+    }
+  }
+
+  return typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+}
+
+export function isLocalOnlyOrigin(origin = getScannableOrigin()): boolean {
+  return /localhost|127\.0\.0\.1/.test(origin)
+}
 
 export function parseTripQuery(searchParams: URLSearchParams): TripQuery | null {
   const r = searchParams.get('r')
@@ -36,8 +82,7 @@ export function buildTripUrl(
   query: TripQuery,
   options?: { origin?: string; path?: string },
 ): string {
-  const origin =
-    options?.origin ?? (typeof window !== 'undefined' ? window.location.origin : 'https://localhost:5173')
+  const origin = (options?.origin ?? getScannableOrigin()).replace(/\/$/, '')
   const path = options?.path ?? '/m'
   const params = tripQueryToSearchParams({
     ...query,

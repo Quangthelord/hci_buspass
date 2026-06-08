@@ -8,7 +8,8 @@ import { HapticTimeline } from '../components/HapticTimeline'
 import { DirectionalAudioDemo } from '../components/DirectionalAudioDemo'
 import { useKiosk, stationName } from '../context/KioskContext'
 import { STATION, getRoute } from '../data/mockData'
-import { buildTripUrl, tripQueryToSearchParams } from '../lib/tripUrl'
+import { QrOriginSetup } from '../components/mobile/QrOriginSetup'
+import { buildTripUrl, destinationIdFromName, tripQueryToSearchParams } from '../lib/tripUrl'
 import { tr } from '../i18n/translations'
 
 export function QRSyncPage() {
@@ -16,19 +17,21 @@ export function QRSyncPage() {
   const { lang, selectedRouteId, destination, startQrCountdown, qrCountdown, resetSession } = useKiosk()
   const [remoteActive, setRemoteActive] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [originVersion, setOriginVersion] = useState(0)
 
   const route = getRoute(selectedRouteId ?? '19')
 
-  const tripUrl = useMemo(
-    () =>
-      buildTripUrl({
-        r: route?.id ?? '19',
-        d: destination?.id,
-        s: STATION.id,
-        lang,
-      }),
+  const tripQuery = useMemo(
+    () => ({
+      r: route?.id ?? '01',
+      d: destination?.id ?? destinationIdFromName('Suối Tiên'),
+      s: STATION.id,
+      lang,
+    }),
     [route?.id, destination?.id, lang],
   )
+
+  const tripUrl = useMemo(() => buildTripUrl(tripQuery), [tripQuery, originVersion])
 
   const openOnPhone = () => {
     window.open(tripUrl, '_blank', 'noopener,noreferrer')
@@ -83,8 +86,14 @@ export function QRSyncPage() {
           </p>
         )}
 
+        <QrOriginSetup
+          lang={lang === 'vi' ? 'vi' : 'en'}
+          sampleQuery={tripQuery}
+          onSaved={() => setOriginVersion((v) => v + 1)}
+        />
+
         <div className="mx-auto w-full max-w-md rounded-2xl border-2 border-neon-green bg-white p-6 neon-border">
-          <QRCodeSVG value={tripUrl} size={280} level="M" includeMargin className="mx-auto" />
+          <QRCodeSVG value={tripUrl} size={280} level="H" includeMargin className="mx-auto" />
           <div className="mt-4 text-center text-sm">
             <p className="font-bold text-neon-green">
               Tuyến {route?.number} · {stationName(lang)}
