@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { logClick, logHesitation } from './telemetry'
+import { logHesitation } from './telemetry'
 
 const HESITATION_MS = 3000
 const STORAGE_KEY = 'buspass_senior_mode'
@@ -61,9 +61,9 @@ export function useAdaptiveMode(variantId?: string): AdaptiveModeState {
     [maybeShowPrompt, variantId],
   )
 
+  /** Streak only — telemetry misclick is logged by useKioskMisclickTracker. */
   const recordMisclick = useCallback(
     (target: string) => {
-      if (variantId) logClick(variantId, target, false)
       setMisclickStreak((prev) => {
         const sameTarget = lastTouchTarget.current === target
         const next = sameTarget ? prev + 1 : 1

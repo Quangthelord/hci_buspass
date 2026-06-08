@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { KioskProvider } from './context/KioskContext'
 import { PageLoader } from './components/PageLoader'
 import AdminPage from './app/admin/page'
+import KioskLayout from './app/layout'
 import BusPassSignaturePage from './app/page'
 import { HomePage } from './pages/HomePage'
 import { ModeSelectionPage } from './pages/ModeSelectionPage'
@@ -53,7 +54,11 @@ export default function App() {
           <Route path="/kiosk" element={<HomePage />} />
           <Route
             path="/signature"
-            element={<BusPassSignaturePage stationId="ben-thanh" userId="participant-01" />}
+            element={
+              <KioskLayout>
+                <BusPassSignaturePage stationId="ben-thanh" userId="participant-01" />
+              </KioskLayout>
+            }
           />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/mode" element={<ModeSelectionPage />} />

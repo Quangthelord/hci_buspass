@@ -20,9 +20,9 @@ function playChime() {
   }
 }
 
-export function useUrgencyPulse(enabled = true, activeRouteId = '08') {
+export function useUrgencyPulse(enabled = true, activeRouteId = '01') {
   const { distanceM, urgencyLevel, busDeparted } = useMockRealtime(
-    enabled ? activeRouteId : '08',
+    enabled ? activeRouteId : '01',
   )
   const lastLevel = useRef<UrgencyLevel>(0)
   const lastDeparted = useRef(false)

@@ -1,25 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { busRoutesData, type BusRouteData } from '../../data/busRoutes'
+import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../../data/busRoutes'
 import { formatTime24 } from '../../lib/formatVi'
 import { completeTask, logClick, startTask } from '../../lib/telemetry'
-import { matchesTaskDestination } from '../../lib/taskGoal'
+import { getRouteDestination, matchesTaskDestination } from '../../lib/taskGoal'
 import { useMobileScroll } from '../../hooks/useMobileScroll'
 import { AccessibleBusRow } from './AccessibleBusRow'
 import { RouteDetail } from './RouteDetail'
 import { getArrivalMinutes } from './busStatus'
-import { A11Y, BOARD_DISPLAY, BODY_STYLE, TOUCH_MIN, VARIANT_ID } from './constants'
+import { A11Y, BOARD_ROUTE_IDS, BODY_STYLE, TOUCH_MIN, VARIANT_ID } from './constants'
 
 export interface Variant5Props {
   stationId?: string
   userId?: string
-}
-
-function getBoardEntries(): { route: BusRouteData; destination: string; minutes: number | null }[] {
-  return BOARD_DISPLAY.map((row) => ({
-    route: busRoutesData.routes.find((r) => r.id === row.routeId)!,
-    destination: row.destination,
-    minutes: row.minutes,
-  })).filter((e) => e.route)
 }
 
 function getStationName(stationId: string): string {
@@ -32,6 +24,7 @@ export default function Variant5HighContrast({
   userId = 'participant-01',
 }: Variant5Props) {
   useMobileScroll()
+  const liveRoutes = useLiveBusRoutes()
   const [now, setNow] = useState(new Date())
   const [selectedRoute, setSelectedRoute] = useState<BusRouteData | null>(null)
   const [plannerOpen, setPlannerOpen] = useState(false)
@@ -55,23 +48,35 @@ export default function Variant5HighContrast({
     logClick(VARIANT_ID, target, isHit)
   }
 
-  const openRoute = (route: BusRouteData, displayDestination?: string) => {
+  const openRoute = (route: BusRouteData) => {
     ensureTaskStart()
     trackClick(`bus-row-${route.id}`, true)
     setSelectedRoute(route)
-    if (matchesTaskDestination(route, displayDestination)) {
+    if (matchesTaskDestination(route)) {
       completeTask(VARIANT_ID, true)
     }
   }
 
-  const boardEntries = useMemo(() => getBoardEntries(), [])
+  const boardEntries = useMemo(
+    () =>
+      BOARD_ROUTE_IDS.map((id) => {
+        const route = liveRoutes.find((r) => r.id === id)
+        if (!route) return null
+        return {
+          route,
+          destination: getRouteDestination(route),
+          minutes: getArrivalMinutes(route),
+        }
+      }).filter((e): e is NonNullable<typeof e> => e !== null),
+    [liveRoutes],
+  )
 
   const plannerRoutes = useMemo(
     () =>
-      [...busRoutesData.routes]
+      [...liveRoutes]
         .filter((r) => r.stops[0]?.name === stationName)
         .sort((a, b) => (getArrivalMinutes(a) ?? 99) - (getArrivalMinutes(b) ?? 99)),
-    [stationName],
+    [liveRoutes, stationName],
   )
 
   const timeStr = formatTime24(now)
@@ -131,7 +136,6 @@ export default function Variant5HighContrast({
       className="flex min-h-dvh flex-col font-sans"
       style={{ backgroundColor: A11Y.bg, color: A11Y.text, ...BODY_STYLE }}
     >
-      {/* 1. Station header */}
       <header
         className="border-b-2 px-5 py-6"
         style={{ borderColor: A11Y.border }}
@@ -150,7 +154,6 @@ export default function Variant5HighContrast({
       </header>
 
       <main className="flex flex-1 flex-col px-5 py-6">
-        {/* 2. Numbered bus list */}
         <h2
           className="border-b-2 pb-3"
           style={{ borderColor: A11Y.border, fontSize: '22px', marginBottom: '1rem' }}
@@ -166,12 +169,11 @@ export default function Variant5HighContrast({
               route={entry.route}
               destination={entry.destination}
               minutes={entry.minutes}
-              onSelect={() => openRoute(entry.route, entry.destination)}
+              onSelect={() => openRoute(entry.route)}
             />
           ))}
         </ol>
 
-        {/* 3. Primary CTA */}
         <button
           type="button"
           onClick={() => {

@@ -13,7 +13,7 @@ export function ModeSelectionPage() {
   return (
     <KioskLayout>
       <div className="kiosk-page-pad kiosk-scroll-pad px-6 py-6 lg:px-10">
-        <KioskNavBar backTo="/" showHome={false} className="mb-4" />
+        <KioskNavBar backTo="/kiosk" showHome={false} className="mb-4" />
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-neon-green neon-text">{tr('modeQuestion', lang)}</h1>
           <p className="mt-2 text-lg text-gray-500">{tr('modeQuestionSub', lang)}</p>

@@ -32,7 +32,7 @@ export function KioskWrapper({ children }: { children: ReactNode }) {
 
   const wakeSession = useCallback(() => {
     resetSessionId()
-    resetRealtimeSimulator('08')
+    resetRealtimeSimulator('01')
     setScreensaver(false)
     resetIdle()
   }, [resetIdle])

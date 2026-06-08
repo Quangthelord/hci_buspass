@@ -21,9 +21,5 @@ export const BODY_STYLE = {
 
 export const TOUCH_MIN = '56px' as const
 
-/** Curated display-board rows (high-readability kiosk layout). */
-export const BOARD_DISPLAY = [
-  { routeId: '08', destination: 'Suối Tiên', minutes: 3 },
-  { routeId: '01', destination: 'Bến xe miền Đông', minutes: 7 },
-  { routeId: '19', destination: 'Chợ Lớn', minutes: 12 },
-] as const
+/** Curated display-board route order (destinations + ETAs from live data). */
+export const BOARD_ROUTE_IDS = ['01', '02', '36'] as const

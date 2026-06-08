@@ -3,7 +3,13 @@ import { Search } from 'lucide-react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../data/busRoutes'
 import { formatTime24 } from '../lib/formatVi'
 import { completeTask, logClick, startTask } from '../lib/telemetry'
-import { matchesTaskDestination, TASK_DESTINATION } from '../lib/taskGoal'
+import {
+  findTaskRoute,
+  getRouteDestination,
+  matchesTaskDestination,
+  TASK_DESTINATION,
+  TASK_ROUTE_ID,
+} from '../lib/taskGoal'
 import { useMobileScroll } from '../hooks/useMobileScroll'
 import { useDayNightTheme } from '../lib/useDayNightTheme'
 import { useAdaptiveMode } from '../lib/useAdaptiveMode'
@@ -21,10 +27,6 @@ export interface BusPassSignatureProps {
   userId?: string
 }
 
-function getDestination(route: BusRouteData): string {
-  return route.stops[route.stops.length - 1]?.name ?? '—'
-}
-
 function getArrivalMinutes(route: BusRouteData): number {
   return route.stops[0].nextArrival + route.currentDelay
 }
@@ -38,7 +40,7 @@ export default function BusPassSignaturePage({
 
   const [now, setNow] = useState(new Date())
   const [query, setQuery] = useState('')
-  const [selectedRouteId, setSelectedRouteId] = useState('08')
+  const [selectedRouteId, setSelectedRouteId] = useState(TASK_ROUTE_ID)
   const [showMoreArrivals, setShowMoreArrivals] = useState(false)
   const taskStarted = useRef(false)
   const taskDone = useRef(false)
@@ -65,7 +67,7 @@ export default function BusPassSignaturePage({
     arrivals[0] ??
     liveRoutes[0]
 
-  const moreArrivals = arrivals.slice(1)
+  const moreArrivals = arrivals.filter((r) => r.id !== primaryRoute?.id)
 
   const suggestions = useMemo(() => filterLocations(query).slice(0, 5), [query])
 
@@ -94,12 +96,9 @@ export default function BusPassSignaturePage({
     logClick(VARIANT_ID, target, isHit)
   }
 
-  const tryCompleteTask = (route?: BusRouteData, displayDestination?: string) => {
-    if (taskDone.current) return
-    const goalMet = route
-      ? matchesTaskDestination(route, displayDestination)
-      : false
-    if (!goalMet) return
+  const tryCompleteTask = (route?: BusRouteData) => {
+    if (taskDone.current || !route) return
+    if (!matchesTaskDestination(route)) return
     completeTask(VARIANT_ID, true, {
       seniorModeActivated: adaptive.seniorMode,
       urgencyLevelAtComplete: urgencyLevel,
@@ -110,20 +109,22 @@ export default function BusPassSignaturePage({
   const handleInteraction = (
     target: string,
     action?: () => void,
-    goal?: { route: BusRouteData; displayDestination?: string },
+    goal?: { route: BusRouteData },
   ) => {
     ensureTaskStart()
     adaptive.recordTouch(target)
     trackClick(target, true)
     action?.()
     adaptive.recordSuccessfulInteraction()
-    if (goal) tryCompleteTask(goal.route, goal.displayDestination)
+    if (goal) tryCompleteTask(goal.route)
   }
 
-  const primaryDisplay = {
-    destination: primaryRoute.id === '08' ? 'Suối Tiên' : getDestination(primaryRoute),
-    minutes: primaryRoute.id === '08' ? 3 : getArrivalMinutes(primaryRoute),
-    onTime: primaryRoute.id === '08' ? true : primaryRoute.currentDelay === 0,
+  if (!primaryRoute) {
+    return (
+      <div className="d6-root flex min-h-dvh items-center justify-center font-sans">
+        <p className="font-bold">Đang tải dữ liệu tuyến…</p>
+      </div>
+    )
   }
 
   const timeStr = formatTime24(now)
@@ -172,9 +173,11 @@ export default function BusPassSignaturePage({
                   onClick={() => {
                     handleInteraction(`destination-${loc}`, () => setQuery(loc))
                     if (loc === TASK_DESTINATION) {
-                      const suoiTienRoute =
-                        liveRoutes.find((r) => matchesTaskDestination(r)) ?? primaryRoute
-                      tryCompleteTask(suoiTienRoute, TASK_DESTINATION)
+                      const taskRoute = findTaskRoute(liveRoutes)
+                      if (taskRoute) {
+                        setSelectedRouteId(taskRoute.id)
+                        tryCompleteTask(taskRoute)
+                      }
                     }
                   }}
                 >
@@ -204,15 +207,15 @@ export default function BusPassSignaturePage({
           <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-4">
             <ArrivalCard
               route={primaryRoute}
-              destination={primaryDisplay.destination}
-              minutes={primaryDisplay.minutes}
-              onTime={primaryDisplay.onTime}
+              destination={getRouteDestination(primaryRoute)}
+              minutes={getArrivalMinutes(primaryRoute)}
+              onTime={primaryRoute.currentDelay === 0}
               active
               onSelect={() =>
                 handleInteraction(
                   `arrival-primary-${primaryRoute.id}`,
                   () => setSelectedRouteId(primaryRoute.id),
-                  { route: primaryRoute, displayDestination: primaryDisplay.destination },
+                  { route: primaryRoute },
                 )
               }
             />
@@ -222,14 +225,14 @@ export default function BusPassSignaturePage({
                 <ArrivalCard
                   key={route.id}
                   route={route}
-                  destination={getDestination(route)}
+                  destination={getRouteDestination(route)}
                   minutes={getArrivalMinutes(route)}
                   onTime={route.currentDelay === 0}
                   onSelect={() =>
                     handleInteraction(
                       `arrival-${route.id}`,
                       () => setSelectedRouteId(route.id),
-                      { route, displayDestination: getDestination(route) },
+                      { route },
                     )
                   }
                 />

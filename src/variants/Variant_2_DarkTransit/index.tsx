@@ -37,7 +37,7 @@ export default function Variant2DarkTransit({
     [liveRoutes, routeId],
   )
 
-  const destination = getDestination(route)
+  const destination = route ? getDestination(route) : '—'
 
   const ensureTaskStart = () => {
     if (!taskStarted.current) {
@@ -54,7 +54,7 @@ export default function Variant2DarkTransit({
     ensureTaskStart()
     trackClick('bottom-sheet-expand', true)
     setSheetExpanded(true)
-    if (!taskDone && matchesTaskDestination(route)) {
+    if (route && !taskDone && matchesTaskDestination(route)) {
       completeTask(VARIANT_ID, true)
       setTaskDone(true)
     }
@@ -73,6 +73,17 @@ export default function Variant2DarkTransit({
     document.body.classList.add('variant-dark-transit')
     return () => document.body.classList.remove('variant-dark-transit')
   }, [])
+
+  if (!route) {
+    return (
+      <div
+        className="flex h-dvh items-center justify-center font-sans"
+        style={{ backgroundColor: DARK.bg, color: DARK.text }}
+      >
+        <p>Đang tải dữ liệu tuyến…</p>
+      </div>
+    )
+  }
 
   return (
     <div

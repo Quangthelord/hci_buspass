@@ -41,7 +41,7 @@ let state: RealtimeSnapshot = {
   distanceM: 1000,
   urgencyLevel: 1,
   busDeparted: false,
-  activeRouteId: '08',
+  activeRouteId: '01',
 }
 
 let tickTimer: ReturnType<typeof setInterval> | null = null
@@ -86,7 +86,7 @@ function maybeAddDelay() {
   emit()
 }
 
-export function startRealtimeSimulator(activeRouteId = '08') {
+export function startRealtimeSimulator(activeRouteId = '01') {
   state.activeRouteId = activeRouteId
   if (!tickTimer) {
     tickTimer = setInterval(tickDistance, TICK_MS)
@@ -106,7 +106,7 @@ export function stopRealtimeSimulator() {
   departedTimer = null
 }
 
-export function resetRealtimeSimulator(activeRouteId = '08') {
+export function resetRealtimeSimulator(activeRouteId = '01') {
   state = {
     routes: cloneRoutes(),
     station: raw.station,

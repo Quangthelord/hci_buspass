@@ -1,4 +1,5 @@
-import { busRoutesData, type BusRouteData } from '../../data/busRoutes'
+import type { BusRouteData } from '../../data/busRoutes'
+import { getRealtimeRoutes } from '../../lib/mockRealtime'
 
 export interface RouteOption {
   id: string
@@ -33,13 +34,13 @@ function buildOption(route: BusRouteData, destination: string, recommended: bool
 
 /** Returns 2–3 route options; adds indirect alternatives when only one direct route exists. */
 export function getRouteOptions(destination: string): RouteOption[] {
-  const direct = busRoutesData.routes
+  const direct = getRealtimeRoutes()
     .map((r) => buildOption(r, destination, false))
     .filter((o): o is RouteOption => o !== null)
     .sort((a, b) => a.travelTimeMin - b.travelTimeMin)
 
   if (direct.length === 0) {
-    const fallback = busRoutesData.routes.find((r) => r.id === '01')!
+    const fallback = getRealtimeRoutes().find((r) => r.id === '01')!
     const destStop = fallback.stops[fallback.stops.length - 1]
     return [
       {
@@ -59,7 +60,7 @@ export function getRouteOptions(destination: string): RouteOption[] {
 
   if (options.length < 3) {
     const used = new Set(options.map((o) => o.id))
-    const extras = busRoutesData.routes
+    const extras = getRealtimeRoutes()
       .filter((r) => !used.has(r.id) && r.stops[0]?.name === 'Bến Thành')
       .slice(0, 3 - options.length)
 

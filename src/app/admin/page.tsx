@@ -183,7 +183,7 @@ export default function AdminPage() {
             </div>
             {summaries
               .filter((s) => s.stats.sessionCount > 0)
-              .slice(0, 3)
+              .slice(0, 6)
               .map((s) => (
                 <div key={s.id} className="rounded-xl bg-slate-800 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-400">{s.label}</p>

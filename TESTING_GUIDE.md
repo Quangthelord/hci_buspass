@@ -49,7 +49,7 @@ Mỗi sự kiện lưu trong `localStorage` (`buspass_telemetry`):
 | `hesitation` | Chạm rồi dừng ≥3 giây |
 | `step_complete` | Hoàn thành bước (variant D) |
 | `task_complete` | Hoàn thành nhiệm vụ |
-| `task_abandon` | Bỏ dở (nếu có) |
+| `task_abandon` | Bỏ dở — tự ghi khi idle 60 giây (có `task_start` chưa hoàn thành) |
 
 Trường bổ sung: `sessionId`, `variantId`, `target`, `taskDurationMs`, `success`, `seniorModeActivated`, `urgencyLevelAtComplete`.
 
@@ -74,7 +74,9 @@ Trường bổ sung: `sessionId`, `variantId`, `target`, `taskDurationMs`, `succ
 - Có đọc được ETA / trạng thái trễ không?
 - Có nhận prompt chữ lớn không? (variant F, sau 3s do dự)
 
-**Sau mỗi phiên:** để kiosk idle **60 giây** → màn hình chờ tự bật lại.
+**Đáp án đúng:** Tuyến **01** (Bến Thành ↔ Suối Tiên) — `task_complete` chỉ ghi `success: true` khi người dùng tìm được tuyến này.
+
+**Sau mỗi phiên:** để kiosk idle **60 giây** → `task_abandon` (nếu chưa xong) + màn hình chờ tự bật lại.
 
 ## 5. Xuất dữ liệu sau test
 
@@ -101,4 +103,5 @@ Trường bổ sung: `sessionId`, `variantId`, `target`, `taskDurationMs`, `succ
 | `/` | Kiosk test (variant từ admin) |
 | `/admin` | Điều phối viên |
 | `/kiosk` | Luồng welcome gốc (ngôn ngữ) |
-| `/signature` | D6 trực tiếp (không qua A/B shell) |
+| `/map` | D6 trong kiosk shell (screensaver + telemetry) |
+| `/signature` | D6 trong kiosk shell (tương tự `/map`) |
