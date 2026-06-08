@@ -33,6 +33,8 @@ export default function Variant2DarkTransit({
   const [screen, setScreen] = useState<CmScreen>('home')
   const [query, setQuery] = useState('')
   const [destination, setDestination] = useState(TASK_DESTINATION)
+  const [activeMode, setActiveMode] = useState('bus')
+  const [pref, setPref] = useState<'bus' | 'mrt' | 'both'>('both')
   const [selectedRoute, setSelectedRoute] = useState<BusRouteData | null>(null)
   const taskStarted = useRef(false)
 
@@ -87,6 +89,7 @@ export default function Variant2DarkTransit({
         start={stationName}
         end={destination}
         suggestions={suggestions}
+        pref={pref}
         onBack={() => setScreen('home')}
         onSwap={() => {
           trackClick('swap-locations', true)
@@ -97,10 +100,15 @@ export default function Variant2DarkTransit({
           setDestination(q)
           trackClick('planner-destination', true)
         }}
+        onPrefChange={(p) => {
+          setPref(p)
+          trackClick(`pref-${p}`, true)
+        }}
         onSearchFocus={() => {
           ensureTaskStart()
           trackClick('planner-search', true)
         }}
+        onClearEnd={() => setDestination('')}
       />,
     )
   }
@@ -134,12 +142,14 @@ export default function Variant2DarkTransit({
     <CmHomeScreen
       query={query}
       stationName={stationName}
+      activeMode={activeMode}
       onQueryChange={(q) => {
         setQuery(q)
         trackClick('home-search', true)
       }}
       onSearchSubmit={() => goToPlanner(query.trim() || TASK_DESTINATION)}
       onModeSelect={(mode) => {
+        setActiveMode(mode)
         trackClick(`mode-${mode}`, true)
         if (mode === 'bus' || mode === 'all') goToPlanner(TASK_DESTINATION)
       }}
