@@ -5,7 +5,7 @@ export const VARIANTS = [
   { id: 'Variant_1_CivicLight', label: 'A — Civic Light', description: 'Singapore MyTransport.SG style' },
   { id: 'Variant_2_DarkTransit', label: 'B — Dark Transit', description: 'Citymapper style' },
   { id: 'Variant_3_WarmWayfinding', label: 'C — Warm Wayfinding', description: 'Transperth — transparency in uncertainty' },
-  { id: 'Variant_4_MetroMinimal', label: 'D — Metro Minimal', description: 'Moovit — step-by-step + focus map' },
+  { id: 'Variant_4_MetroMinimal', label: 'D — Moovit', description: 'Moovit — bản đồ gần đây + chỉ đường từng bước' },
   { id: 'Variant_5_HighContrast', label: 'E — High Contrast', description: 'WCAG AAA — inclusive by default' },
   { id: 'Variant_6_BusPassSignature', label: 'F — BusPass Signature', description: 'D6 — hybrid legibility map + adaptive senior mode' },
 ] as const
