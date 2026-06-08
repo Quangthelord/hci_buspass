@@ -11,6 +11,30 @@
   --color-kiosk-muted: #6b7280;
   --color-kiosk-text: #1f2937;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* D6 BusPass Signature Design System */
+  --color-bg-kiosk: #f7f5f0;
+  --color-bg-app-day: #ffffff;
+  --color-bg-app-night: #1c1c2e;
+  --color-primary: #2563eb;
+  --color-neon-route: #00e5ff;
+  --color-alert: #ff6b35;
+  --color-surface: #ffffff;
+  --color-road-muted: #d4c5b0;
+  --font-kiosk-min: 18px;
+  --font-senior-min: 24px;
+}
+
+:root {
+  --color-bg-kiosk: #f7f5f0;
+  --color-bg-app-day: #ffffff;
+  --color-bg-app-night: #1c1c2e;
+  --color-primary: #2563eb;
+  --color-neon-route: #00e5ff;
+  --color-alert: #ff6b35;
+  --color-surface: #ffffff;
+  --font-kiosk-min: 18px;
+  --font-senior-min: 24px;
 }
 
 * {
@@ -30,6 +54,101 @@ body {
   background: #ffffff;
   color: var(--color-kiosk-text);
   overflow: hidden;
+}
+
+/* Kiosk shell — touch-only full-screen mode */
+body.kiosk-mode {
+  overflow: hidden;
+  user-select: none;
+  cursor: none;
+}
+
+body.kiosk-mode .kiosk-shell {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body.kiosk-mode .admin-hotspot {
+  cursor: none;
+}
+
+/* Kiosk bezel — presentation frame on laptop/desktop */
+.kiosk-bezel-outer {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  padding: 1.5rem;
+}
+
+.kiosk-bezel-screen {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 14px solid #1a1a1a;
+  box-shadow:
+    0 0 0 2px #333,
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    inset 0 0 40px rgba(0, 0, 0, 0.25);
+  background: #000;
+}
+
+.kiosk-bezel-screen--portrait {
+  width: min(100%, calc((100vh - 3rem) * 1080 / 1920));
+  height: min(calc(100vh - 3rem), calc(100vw * 1920 / 1080));
+}
+
+.kiosk-bezel-screen--landscape {
+  width: min(100%, calc((100vh - 3rem) * 1920 / 1080));
+  height: min(calc(100vh - 3rem), calc(100vw * 1080 / 1920));
+}
+
+.kiosk-bezel-content {
+  background: var(--color-bg-kiosk, #f7f5f0);
+}
+
+.kiosk-screensaver {
+  background: linear-gradient(180deg, #1c1c2e 0%, #0f0f1a 100%);
+  color: #e2e8f0;
+  border: none;
+  cursor: pointer;
+}
+
+.kiosk-screensaver-label {
+  color: #94a3b8;
+  letter-spacing: 0.12em;
+}
+
+.kiosk-screensaver-station {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.kiosk-screensaver-time {
+  font-size: clamp(3rem, 10vw, 5rem);
+  color: #00e5ff;
+}
+
+.kiosk-screensaver-cta {
+  margin-top: 1rem;
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  color: #94a3b8;
+  animation: kiosk-cta-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes kiosk-cta-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Trang mobile sau quét QR — cho phép cuộn toàn trang */
@@ -375,8 +494,347 @@ body.a11y-magnifier-300 {
   }
 }
 
+/* Variant 2 — Dark Transit map animations */
+@keyframes dark-map-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.35);
+  }
+}
+
+.dark-map-bus-pulse {
+  transform-origin: 220px 340px;
+  animation: dark-map-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dark-route-move {
+  0% {
+    left: 8%;
+  }
+  100% {
+    left: 75%;
+  }
+}
+
+.dark-route-vehicle {
+  animation: dark-route-move 6s ease-in-out infinite alternate;
+}
+
 /* E-ink mode — vẫn tông trắng/xanh, dễ đọc ngoài trời */
 .eink-mode {
   background: #fafafa !important;
   color: #1a1a1a !important;
+}
+
+/* ── D6 BusPass Signature ── */
+body.d6-day {
+  background: var(--color-bg-app-day);
+  color: #1e293b;
+}
+
+body.d6-night {
+  background: var(--color-bg-app-night);
+  color: #e2e8f0;
+}
+
+.d6-root {
+  background: var(--color-bg-kiosk);
+  color: #1e293b;
+  font-size: var(--font-kiosk-min);
+  letter-spacing: 0.02em;
+  min-height: 100dvh;
+}
+
+body.d6-night .d6-root {
+  background: var(--color-bg-app-night);
+  color: #e2e8f0;
+}
+
+.d6-header {
+  border-color: #d4c5b0;
+  background: var(--color-surface);
+}
+
+body.d6-night .d6-header,
+body.d6-night .d6-aside,
+body.d6-night .d6-search-input,
+body.d6-night .d6-arrival-card {
+  background: #252538;
+  border-color: #3f3f5a;
+  color: #e2e8f0;
+}
+
+.d6-station-name {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.d6-clock {
+  font-size: 24px;
+}
+
+.d6-header-label {
+  font-size: var(--font-kiosk-min);
+  color: #64748b;
+}
+
+.d6-search-input {
+  font-size: 20px;
+  min-height: 56px;
+  border-color: #d4c5b0;
+  background: var(--color-surface);
+  color: inherit;
+}
+
+.d6-search-input:focus {
+  border-color: var(--color-primary);
+}
+
+.d6-suggestion-btn {
+  min-height: 56px;
+  background: var(--color-surface);
+  border: 2px solid #d4c5b0;
+}
+
+.d6-map-panel {
+  background: var(--color-bg-kiosk);
+}
+
+body.d6-night .d6-map-panel {
+  background: var(--color-bg-app-night);
+}
+
+.d6-aside {
+  background: var(--color-surface);
+  border-color: #d4c5b0;
+}
+
+.d6-aside-title {
+  font-size: var(--font-kiosk-min);
+  color: #64748b;
+}
+
+.d6-arrival-card {
+  background: var(--color-surface);
+  border-color: #d4c5b0;
+  min-height: 56px;
+}
+
+.d6-arrival-card--active {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+}
+
+body.d6-night .d6-arrival-card--active {
+  background: #1e3a5f;
+}
+
+.d6-arrival-route {
+  font-size: 20px;
+}
+
+.d6-arrival-eta {
+  font-size: 28px;
+  color: var(--color-primary);
+}
+
+.d6-eta-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.d6-status-pill {
+  font-size: var(--font-kiosk-min);
+}
+
+.d6-status-pill--ontime {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.d6-status-pill--delayed {
+  background: #fef2f2;
+  color: #7c2d12;
+}
+
+.d6-link-btn {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.d6-btn-primary {
+  background: #000000;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  font-size: var(--font-kiosk-min);
+}
+
+.d6-btn-secondary {
+  background: var(--color-surface);
+  color: #1e293b;
+  font-weight: 700;
+  border: 2px solid #d4c5b0;
+  border-radius: 0.75rem;
+  font-size: var(--font-kiosk-min);
+}
+
+.d6-senior-prompt {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+}
+
+.d6-senior-prompt-text {
+  font-size: 20px;
+}
+
+.d6-urgency-banner {
+  background: var(--color-alert);
+  color: #ffffff;
+  font-size: 22px;
+  animation: d6-banner-flash 1s ease-in-out infinite;
+}
+
+/* Neon map */
+.neon-map-bg {
+  fill: var(--color-bg-kiosk);
+}
+
+body.d6-night .neon-map-bg {
+  fill: var(--color-bg-app-night);
+}
+
+.neon-road-line {
+  stroke: var(--color-road-muted, #d4c5b0);
+}
+
+.neon-route-line {
+  stroke: var(--color-neon-route);
+  filter: drop-shadow(0 0 4px var(--color-neon-route));
+}
+
+.neon-route-line--bright {
+  filter: drop-shadow(0 0 8px var(--color-neon-route));
+  stroke-width: 4px;
+}
+
+.neon-route-line--flash {
+  animation: d6-route-flash 0.6s ease-in-out infinite;
+}
+
+.neon-stop-marker {
+  fill: #ffffff;
+  stroke: var(--color-primary);
+  stroke-width: 2;
+}
+
+body.d6-night .neon-stop-marker {
+  fill: #252538;
+}
+
+.neon-stop-label {
+  fill: #64748b;
+}
+
+.neon-bus-dot {
+  fill: var(--color-primary);
+}
+
+.neon-bus-marker {
+  offset-path: path('M 40 200 Q 100 160 160 140 T 280 100 T 340 70');
+  offset-distance: 0%;
+  animation: neon-bus-travel 10s linear infinite;
+}
+
+.neon-bus-marker--pulse-slow .neon-bus-dot {
+  animation: d6-bus-pulse-slow 2s ease-in-out infinite;
+}
+
+.neon-bus-marker--pulse-fast .neon-bus-dot {
+  animation: d6-bus-pulse-fast 0.8s ease-in-out infinite;
+}
+
+.neon-bus-marker--alert .neon-bus-dot {
+  fill: var(--color-alert);
+  animation: d6-bus-pulse-fast 0.5s ease-in-out infinite;
+}
+
+@keyframes neon-bus-travel {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes d6-bus-pulse-slow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes d6-bus-pulse-fast {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes d6-route-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes d6-banner-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* Senior mode — adaptive scaling */
+body.d6-senior-mode .d6-root,
+body.d6-senior-mode .d6-root * {
+  font-size: max(var(--font-senior-min), 1em) !important;
+}
+
+body.d6-senior-mode .d6-station-name {
+  font-size: 32px !important;
+}
+
+body.d6-senior-mode .d6-arrival-eta {
+  font-size: 36px !important;
+}
+
+body.d6-senior-mode button,
+body.d6-senior-mode .d6-search-input,
+body.d6-senior-mode .d6-arrival-card,
+body.d6-senior-mode .d6-suggestion-btn,
+body.d6-senior-mode .d6-link-btn {
+  min-height: 64px !important;
 }

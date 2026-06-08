@@ -1,0 +1,77 @@
+{
+  "station": {
+    "id": "ben-thanh",
+    "name": "Bến Thành",
+    "lat": 10.772,
+    "lng": 106.698
+  },
+  "routes": [
+    {
+      "id": "01",
+      "name": "Tuyến 01 — Bến Thành ↔ Suối Tiên",
+      "color": "#2563eb",
+      "currentDelay": 2,
+      "delayReason": "Ùn tắc nhẹ tại Ngã tư Hàng Xanh",
+      "stops": [
+        { "id": "bt-01", "name": "Bến Thành", "lat": 10.772, "lng": 106.698, "nextArrival": 4, "nextNextArrival": 14 },
+        { "id": "bt-02", "name": "Nguyễn Thị Minh Khai", "lat": 10.775, "lng": 106.69, "nextArrival": 6, "nextNextArrival": 16 },
+        { "id": "bt-03", "name": "Công viên Tao Đàn", "lat": 10.778, "lng": 106.692, "nextArrival": 8, "nextNextArrival": 18 },
+        { "id": "bt-04", "name": "Đại học Bách Khoa", "lat": 10.773, "lng": 106.661, "nextArrival": 18, "nextNextArrival": 28 },
+        { "id": "bt-05", "name": "Suối Tiên", "lat": 10.866, "lng": 106.803, "nextArrival": 35, "nextNextArrival": 50 }
+      ]
+    },
+    {
+      "id": "02",
+      "name": "Tuyến 02 — Bến Thành ↔ Công viên Phần Lăng",
+      "color": "#dc2626",
+      "currentDelay": 0,
+      "delayReason": null,
+      "stops": [
+        { "id": "02-01", "name": "Bến Thành", "lat": 10.772, "lng": 106.698, "nextArrival": 3, "nextNextArrival": 12 },
+        { "id": "02-02", "name": "Chợ Lớn", "lat": 10.754, "lng": 106.651, "nextArrival": 12, "nextNextArrival": 22 },
+        { "id": "02-03", "name": "Bà Hom", "lat": 10.748, "lng": 106.635, "nextArrival": 18, "nextNextArrival": 30 },
+        { "id": "02-04", "name": "Công viên Phần Lăng", "lat": 10.8, "lng": 106.68, "nextArrival": 28, "nextNextArrival": 40 }
+      ]
+    },
+    {
+      "id": "08",
+      "name": "Tuyến 08 — Bến Thành ↔ Đại học Quốc gia",
+      "color": "#7c3aed",
+      "currentDelay": 5,
+      "delayReason": "Mưa nhẹ — xe chạy chậm",
+      "stops": [
+        { "id": "08-01", "name": "Bến Thành", "lat": 10.772, "lng": 106.698, "nextArrival": 7, "nextNextArrival": 17 },
+        { "id": "08-02", "name": "Nhà Thờ Đức Bà", "lat": 10.7798, "lng": 106.699, "nextArrival": 9, "nextNextArrival": 19 },
+        { "id": "08-03", "name": "Dinh Độc Lập", "lat": 10.7769, "lng": 106.6955, "nextArrival": 11, "nextNextArrival": 21 },
+        { "id": "08-04", "name": "Đại học Quốc gia", "lat": 10.87, "lng": 106.803, "nextArrival": 40, "nextNextArrival": 55 }
+      ]
+    },
+    {
+      "id": "19",
+      "name": "Tuyến 19 — Bến xe Miền Đông ↔ Chợ Lớn",
+      "color": "#16a34a",
+      "currentDelay": 3,
+      "delayReason": "Ùn tắc tại Ngã tư Cách Mạng Tháng 8",
+      "stops": [
+        { "id": "19-01", "name": "Bến xe Miền Đông", "lat": 10.8146, "lng": 106.709, "nextArrival": 15, "nextNextArrival": 25 },
+        { "id": "19-02", "name": "Ngã tư Hàng Xanh", "lat": 10.801, "lng": 106.71, "nextArrival": 20, "nextNextArrival": 30 },
+        { "id": "19-03", "name": "Lê Lợi - Nguyễn Huệ", "lat": 10.7739, "lng": 106.7045, "nextArrival": 28, "nextNextArrival": 38 },
+        { "id": "19-04", "name": "Chợ Bến Thành", "lat": 10.772, "lng": 106.698, "nextArrival": 32, "nextNextArrival": 42 },
+        { "id": "19-05", "name": "Chợ Lớn", "lat": 10.754, "lng": 106.651, "nextArrival": 45, "nextNextArrival": 58 }
+      ]
+    },
+    {
+      "id": "36",
+      "name": "Tuyến 36 — Bến Thành ↔ Khu CN Tân Thuận",
+      "color": "#ea580c",
+      "currentDelay": 8,
+      "delayReason": "Kẹt xe tại An Sương",
+      "stops": [
+        { "id": "36-01", "name": "Bến Thành", "lat": 10.772, "lng": 106.698, "nextArrival": 8, "nextNextArrival": 18 },
+        { "id": "36-02", "name": "Nhà Thờ Đức Bà", "lat": 10.7798, "lng": 106.699, "nextArrival": 10, "nextNextArrival": 20 },
+        { "id": "36-03", "name": "An Sương", "lat": 10.845, "lng": 106.61, "nextArrival": 25, "nextNextArrival": 35 },
+        { "id": "36-04", "name": "Khu CN Tân Thuận", "lat": 10.757, "lng": 106.73, "nextArrival": 38, "nextNextArrival": 50 }
+      ]
+    }
+  ]
+}

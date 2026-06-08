@@ -2,8 +2,11 @@ import { lazy, Suspense, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { KioskProvider } from './context/KioskContext'
 import { PageLoader } from './components/PageLoader'
+import AdminPage from './app/admin/page'
+import BusPassSignaturePage from './app/page'
 import { HomePage } from './pages/HomePage'
 import { ModeSelectionPage } from './pages/ModeSelectionPage'
+import { VariantTestPage } from './pages/VariantTestPage'
 
 const MapModePage = lazy(() => import('./pages/MapModePage').then((m) => ({ default: m.MapModePage })))
 const ListModePage = lazy(() => import('./pages/ListModePage').then((m) => ({ default: m.ListModePage })))
@@ -46,7 +49,13 @@ export default function App() {
     <BrowserRouter>
       <KioskProvider>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<VariantTestPage />} />
+          <Route path="/kiosk" element={<HomePage />} />
+          <Route
+            path="/signature"
+            element={<BusPassSignaturePage stationId="ben-thanh" userId="participant-01" />}
+          />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/mode" element={<ModeSelectionPage />} />
           <Route
             path="/map"

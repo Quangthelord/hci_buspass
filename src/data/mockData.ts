@@ -60,7 +60,7 @@ export const STATION = {
   id: 'le-loi-nguyen-hue',
   nameVi: 'Trạm Lê Lợi - Nguyễn Huệ',
   nameEn: 'Le Loi - Nguyen Hue Station',
-  routeCount: 5,
+  routeCount: 6,
   lat: 10.7739,
   lng: 106.7045,
 }
@@ -72,10 +72,10 @@ export const DESTINATIONS: Destination[] = [
   { id: 'ben-thanh', nameVi: 'Chợ Bến Thành', nameEn: 'Ben Thanh Market', icon: '🏛️', distanceKm: 0.9, lat: 10.772, lng: 106.698, routes: ['19', '36'] },
   { id: 'notre-dame', nameVi: 'Nhà Thờ Đức Bà', nameEn: 'Notre-Dame Cathedral', icon: '⛪', distanceKm: 0.7, lat: 10.7798, lng: 106.699, routes: ['36', '93'] },
   { id: 'independence', nameVi: 'Dinh Độc Lập', nameEn: 'Independence Palace', icon: '🏛️', distanceKm: 0.5, lat: 10.7769, lng: 106.6955, routes: ['05', '19'] },
-  { id: 'airport', nameVi: 'Sân bay Tân Sơn Nhất', nameEn: 'Tan Son Nhat Airport', icon: '✈️', distanceKm: 6.5, lat: 10.8188, lng: 106.652, routes: ['152', '109'] },
-  { id: 'miendong', nameVi: 'Bến xe Miền Đông', nameEn: 'Mien Dong Bus Terminal', icon: '🚌', distanceKm: 5.2, lat: 10.8146, lng: 106.709, routes: ['19', '52'] },
-  { id: 'dam-sen', nameVi: 'Công viên Đầm Sen', nameEn: 'Dam Sen Park', icon: '🌳', distanceKm: 7.8, lat: 10.7674, lng: 106.6383, routes: ['11', '38'] },
-  { id: 'cho-ray', nameVi: 'Bệnh viện Chợ Rẫy', nameEn: 'Cho Ray Hospital', icon: '🏥', distanceKm: 2.5, lat: 10.7575, lng: 106.659, routes: ['04', '38'] },
+  { id: 'airport', nameVi: 'Sân bay Tân Sơn Nhất', nameEn: 'Tan Son Nhat Airport', icon: '✈️', distanceKm: 6.5, lat: 10.8188, lng: 106.652, routes: ['152', '150'] },
+  { id: 'miendong', nameVi: 'Bến xe Miền Đông', nameEn: 'Mien Dong Bus Terminal', icon: '🚌', distanceKm: 5.2, lat: 10.8146, lng: 106.709, routes: ['19', '93'] },
+  { id: 'dam-sen', nameVi: 'Công viên Đầm Sen', nameEn: 'Dam Sen Park', icon: '🌳', distanceKm: 7.8, lat: 10.7674, lng: 106.6383, routes: ['36', '93'] },
+  { id: 'cho-ray', nameVi: 'Bệnh viện Chợ Rẫy', nameEn: 'Cho Ray Hospital', icon: '🏥', distanceKm: 2.5, lat: 10.7575, lng: 106.659, routes: ['05', '19'] },
   { id: 'ueh', nameVi: 'Đại học Kinh tế UEH', nameEn: 'UEH University', icon: '🎓', distanceKm: 0.4, lat: 10.7769, lng: 106.701, routes: ['05', '19'] },
 ]
 
@@ -226,6 +226,35 @@ export const ROUTES: BusRoute[] = [
       { id: 5, name: 'Bến Thành', isTerminal: true },
     ],
   },
+  {
+    id: '152',
+    number: '152',
+    nameVi: 'Tuyến 152',
+    nameEn: 'Route 152',
+    type: 'express',
+    from: 'Lê Lợi - Nguyễn Huệ',
+    to: 'Sân bay Tân Sơn Nhất',
+    via: ['Cộng Hòa', 'Trường Sơn'],
+    etaMinutes: 22,
+    etaRange: '20-30',
+    traffic: 'congested',
+    firstTrip: '05:00',
+    lastTrip: '23:00',
+    interval: '15-20 phút',
+    fare: 12000,
+    fareStudent: 6000,
+    vehicles: [
+      { id: 1, distanceKm: 2.5, etaMinutes: 18, status: 'near' },
+      { id: 2, distanceKm: 5.0, etaMinutes: 25, status: 'far' },
+    ],
+    alert: 'Tắc nhẹ đường Trường Sơn — xe chạy chậm hơn dự kiến',
+    stops: [
+      { id: 1, name: 'Lê Lợi - Nguyễn Huệ', isCurrent: true },
+      { id: 2, name: 'Cộng Hòa' },
+      { id: 3, name: 'Trường Sơn' },
+      { id: 4, name: 'Cổng sân bay nội địa', isTerminal: true },
+    ],
+  },
 ]
 
 export const LIVE_BUSES: BusVehicle[] = [
@@ -234,7 +263,15 @@ export const LIVE_BUSES: BusVehicle[] = [
   { id: 'b3', routeId: '05', lat: 10.775, lng: 106.699, label: '05' },
   { id: 'b4', routeId: '150', lat: 10.769, lng: 106.71, label: '150' },
   { id: 'b5', routeId: '93', lat: 10.778, lng: 106.705, label: '93' },
+  { id: 'b6', routeId: '152', lat: 10.792, lng: 106.668, label: '152' },
 ]
+
+/** Tuyến phù hợp với điểm đến (khớp theo id hoặc số tuyến). */
+export function getMatchingRoutesForDestination(dest: Destination): BusRoute[] {
+  return ROUTES.filter(
+    (r) => dest.routes.includes(r.id) || dest.routes.includes(r.number),
+  ).sort((a, b) => a.etaMinutes - b.etaMinutes)
+}
 
 export function getRoute(id: string): BusRoute | undefined {
   return ROUTES.find((r) => r.id === id)

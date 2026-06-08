@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open the URL shown in the terminal (usually `http://localhost:5173`). **Laptop:** fullscreen browser (≥1024px) — layout uses full width, map + sidebar side-by-side. **Kiosk demo:** portrait tablet also supported.
+Open the URL shown in the terminal (usually `http://localhost:5173`). **Kiosk A/B test:** open `/` — dark bezel frame, screensaver, 6 UI variants. **Admin:** `/admin` (PIN `2025`) or triple-tap top-right corner. See **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** for full moderator instructions.
 
 ## Deploy on Vercel
 
