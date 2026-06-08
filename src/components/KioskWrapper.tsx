@@ -7,6 +7,7 @@ import {
   type KioskOrientation,
 } from '../lib/kioskDisplay'
 import { resetRealtimeSimulator, stopRealtimeSimulator } from '../lib/mockRealtime'
+import { resetKioskBodyTheme } from '../lib/kioskTheme'
 import { abandonTask, getActiveTaskVariant, resetSessionId } from '../lib/telemetry'
 
 const IDLE_MS = 60_000
@@ -32,9 +33,11 @@ export function KioskWrapper({ children }: { children: ReactNode }) {
 
   const wakeSession = useCallback(() => {
     resetSessionId()
+    resetKioskBodyTheme()
     resetRealtimeSimulator('01')
     setScreensaver(false)
     resetIdle()
+    window.dispatchEvent(new CustomEvent('kiosk:wake'))
   }, [resetIdle])
 
   useEffect(() => {

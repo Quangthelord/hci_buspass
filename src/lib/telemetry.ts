@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'buspass_telemetry'
 const SESSION_ID_KEY = 'buspass_sessionId'
+export const SESSION_VARIANT_KEY = 'buspass_sessionVariant'
 
 export type SessionEventType =
   | 'task_start'
@@ -55,8 +56,17 @@ export function getSessionId(): string {
 export function resetSessionId(): string {
   const id = crypto.randomUUID()
   sessionStorage.setItem(SESSION_ID_KEY, id)
+  sessionStorage.removeItem(SESSION_VARIANT_KEY)
   activeTask = null
   return id
+}
+
+export function getSessionVariant(): string | null {
+  return sessionStorage.getItem(SESSION_VARIANT_KEY)
+}
+
+export function setSessionVariant(variantId: string) {
+  sessionStorage.setItem(SESSION_VARIANT_KEY, variantId)
 }
 
 export function getActiveTaskVariant(): string | null {

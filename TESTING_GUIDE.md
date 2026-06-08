@@ -20,9 +20,12 @@ Tài liệu dành cho **điều phối viên** chạy phiên thử nghiệm kios
 
 ### Bắt đầu phiên người tham gia
 
-1. Người tham gia **chạm** màn hình chờ
-2. Hệ thống tạo **sessionId** mới và tải variant đã chọn
-3. Giao nhiệm vụ (xem mục 4)
+1. Người tham gia **chạm** màn hình chờ ("Chạm để bắt đầu")
+2. Màn hình **menu 6 giao diện** (A–F) hiện ra — người tham gia (hoặc điều phối viên) **chạm chọn một phiên bản**
+3. Hệ thống tạo **sessionId** mới và tải giao diện đã chọn
+4. Giao nhiệm vụ (xem mục 4)
+
+> Admin vẫn có thể chọn variant trước tại `/admin` để tham khảo; tại kiosk, người tham gia luôn chọn lại qua menu sau màn hình chờ.
 
 > **Mẹo:** Gán `participant-01`, `participant-02`, … trong `sessionStorage.buspass_userId` (DevTools) trước phiên nếu cần đối chiếu dữ liệu.
 

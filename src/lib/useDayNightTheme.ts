@@ -23,6 +23,10 @@ export function useDayNightTheme() {
     document.documentElement.dataset.theme = mode
     document.body.classList.toggle('d6-night', mode === 'night')
     document.body.classList.toggle('d6-day', mode === 'day')
+    return () => {
+      document.body.classList.remove('d6-night', 'd6-day')
+      delete document.documentElement.dataset.theme
+    }
   }, [mode])
 
   return mode
