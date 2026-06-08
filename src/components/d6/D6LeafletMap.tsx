@@ -10,8 +10,8 @@ import 'leaflet/dist/leaflet.css'
 const OSM_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
 
-/** Dark basemap — hài hòa với theme d6-night */
-const TILE_DARK = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+/** Bản đồ sáng — đồng bộ tone kiosk trắng/xanh lá */
+const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
 
 function stationIcon() {
   return L.divIcon({
@@ -96,25 +96,25 @@ export function D6LeafletMap({
 
   const visiblePositions = positions.slice(0, destIndex + 1)
   const busPos = lerpAlongLine(visiblePositions, busProgress)
-  const lineColor = route.id === '01' ? '#38bdf8' : route.color
+  const lineColor = route.id === '01' ? '#16a34a' : route.color
   const urgent = urgencyLevel >= 2
 
   const station = busRoutesData.station
 
   return (
     <div className="d6-map-stage-inner relative h-full w-full">
-      <div className="d6-map-controls absolute left-3 top-3 z-[1000] flex flex-col gap-2">
+      <div className="d6-map-controls absolute left-2 top-2 z-[1000] flex flex-col gap-1.5">
         <MapBtn onClick={() => map?.zoomIn()} aria-label="Phóng to">
-          <Plus className="h-5 w-5" />
+          <Plus className="h-4 w-4" />
         </MapBtn>
         <MapBtn onClick={() => map?.zoomOut()} aria-label="Thu nhỏ">
-          <Minus className="h-5 w-5" />
+          <Minus className="h-4 w-4" />
         </MapBtn>
         <MapBtn
           onClick={() => map?.fitBounds(L.latLngBounds(visiblePositions), { padding: [48, 48] })}
           aria-label="Căn tuyến"
         >
-          <Compass className="h-5 w-5" />
+          <Compass className="h-4 w-4" />
         </MapBtn>
       </div>
 
@@ -126,7 +126,7 @@ export function D6LeafletMap({
         attributionControl
       >
         <MapRefBridge onMap={onMapReady} />
-        <TileLayer url={TILE_DARK} attribution={OSM_ATTR} maxZoom={19} />
+        <TileLayer url={TILE_LIGHT} attribution={OSM_ATTR} maxZoom={19} />
         <FitRoute positions={visiblePositions} />
 
         {visiblePositions.length >= 2 && (
@@ -144,9 +144,9 @@ export function D6LeafletMap({
             <Polyline
               positions={visiblePositions}
               pathOptions={{
-                color: '#7dd3fc',
+                color: '#86efac',
                 weight: 12,
-                opacity: 0.2,
+                opacity: 0.35,
                 lineCap: 'round',
                 lineJoin: 'round',
               }}
@@ -156,7 +156,7 @@ export function D6LeafletMap({
 
         <Marker position={[station.lat, station.lng]} icon={stationIcon()} zIndexOffset={800}>
           <Popup>
-            <strong className="text-sky-400">BẠN Ở ĐÂY</strong>
+            <strong className="text-neon-green">BẠN Ở ĐÂY</strong>
             <br />
             {station.name}
           </Popup>
@@ -174,7 +174,7 @@ export function D6LeafletMap({
             >
               <Popup>
                 <strong>{stop.name}</strong>
-                {isDest && <div className="text-xs text-sky-400">Điểm đến</div>}
+                {isDest && <div className="text-xs text-neon-green">Điểm đến</div>}
               </Popup>
             </Marker>
           )
@@ -189,7 +189,7 @@ export function D6LeafletMap({
         </Marker>
       </MapContainer>
 
-      <div className="d6-map-badge absolute bottom-3 right-3 z-[1000] rounded-lg px-3 py-1.5 text-xs font-semibold">
+      <div className="d6-map-badge absolute bottom-2 right-2 z-[1000] rounded-lg px-2.5 py-1 text-[10px] font-semibold">
         Tuyến {route.id} · OpenStreetMap
       </div>
     </div>

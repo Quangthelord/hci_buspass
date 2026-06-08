@@ -16,25 +16,25 @@
   --color-bg-kiosk: #f7f5f0;
   --color-bg-app-day: #ffffff;
   --color-bg-app-night: #1c1c2e;
-  --color-primary: #2563eb;
-  --color-neon-route: #00e5ff;
+  --color-primary: #16a34a;
+  --color-neon-route: #22c55e;
   --color-alert: #ff6b35;
   --color-surface: #ffffff;
   --color-road-muted: #d4c5b0;
-  --font-kiosk-min: 18px;
-  --font-senior-min: 24px;
+  --font-kiosk-min: 16px;
+  --font-senior-min: 22px;
 }
 
 :root {
   --color-bg-kiosk: #f7f5f0;
   --color-bg-app-day: #ffffff;
   --color-bg-app-night: #1c1c2e;
-  --color-primary: #2563eb;
-  --color-neon-route: #00e5ff;
+  --color-primary: #16a34a;
+  --color-neon-route: #22c55e;
   --color-alert: #ff6b35;
   --color-surface: #ffffff;
-  --font-kiosk-min: 18px;
-  --font-senior-min: 24px;
+  --font-kiosk-min: 16px;
+  --font-senior-min: 22px;
 }
 
 * {
@@ -759,12 +759,12 @@ body.d6-night .d6-arrival-card {
 }
 
 .d6-station-name {
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.2;
 }
 
 .d6-clock {
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .d6-header-label {
@@ -773,19 +773,20 @@ body.d6-night .d6-arrival-card {
 }
 
 .d6-search-input {
-  font-size: 20px;
-  min-height: 56px;
-  border-color: #d4c5b0;
+  font-size: 16px;
+  min-height: 44px;
+  border-color: #bbf7d0;
   background: var(--color-surface);
   color: inherit;
 }
 
 .d6-search-input:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-neon-green);
 }
 
 .d6-suggestion-btn {
-  min-height: 56px;
+  min-height: 44px;
+  font-size: 15px;
   background: var(--color-surface);
   border: 2px solid #d4c5b0;
 }
@@ -795,12 +796,82 @@ body.d6-night .d6-arrival-card {
   overflow: hidden;
 }
 
+/* Trang bản đồ luôn tone sáng — đồng bộ kiosk trắng/xanh lá */
+.d6-map-page--light,
+body.d6-night .d6-map-page--light {
+  background: var(--color-bg-kiosk) !important;
+  color: #1e293b !important;
+}
+
+body.d6-night .d6-map-page--light .d6-header,
+body.d6-night .d6-map-page--light .d6-search-strip,
+body.d6-night .d6-map-page--light .d6-search-input,
+body.d6-night .d6-map-page--light .d6-aside--panel,
+body.d6-night .d6-map-page--light .d6-arrival-card {
+  background: #ffffff !important;
+  border-color: #bbf7d0 !important;
+  color: #1e293b !important;
+}
+
+body.d6-night .d6-map-page--light .d6-header-label,
+body.d6-night .d6-map-page--light .d6-aside-title {
+  color: #6b7280 !important;
+}
+
+body.d6-night .d6-map-page--light .d6-search-icon {
+  color: #16a34a !important;
+}
+
+body.d6-night .d6-map-page--light .d6-suggestions-dropdown {
+  background: #ffffff !important;
+  border-color: #bbf7d0 !important;
+}
+
+body.d6-night .d6-map-page--light .d6-suggestions-dropdown .d6-suggestion-btn {
+  color: #1e293b !important;
+  border-bottom-color: #e5e7eb !important;
+}
+
+body.d6-night .d6-map-page--light .d6-suggestions-dropdown .d6-suggestion-btn:hover,
+body.d6-night .d6-map-page--light .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+}
+
+body.d6-night .d6-map-page--light .d6-arrival-eta {
+  color: #16a34a !important;
+}
+
+body.d6-night .d6-map-page--light .d6-eta-dot {
+  background: #16a34a !important;
+}
+
+body.d6-night .d6-map-page--light .d6-status-pill--ontime {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+}
+
+body.d6-night .d6-map-page--light .d6-status-pill--delayed {
+  background: #fef2f2 !important;
+  color: #7c2d12 !important;
+}
+
+body.d6-night .d6-map-page--light .d6-link-btn {
+  background: #ffffff !important;
+  border-color: #16a34a !important;
+  color: #16a34a !important;
+}
+
 .d6-header--compact .d6-station-name {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .d6-header--compact .d6-clock {
-  font-size: 22px;
+  font-size: 17px;
+}
+
+.d6-header--compact .d6-header-label {
+  font-size: 11px;
 }
 
 .d6-search-strip {
@@ -834,7 +905,7 @@ body.d6-night .d6-search-icon {
 
 .d6-suggestions-dropdown .d6-suggestion-btn:hover,
 .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
-  background: #eff6ff;
+  background: #f0fdf4;
 }
 
 body.d6-night .d6-suggestions-dropdown {
@@ -858,7 +929,7 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
 }
 
 .d6-map-stage {
-  background: #0f172a;
+  background: #f0fdf4;
   overflow: hidden;
 }
 
@@ -869,59 +940,59 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
 .d6-leaflet.leaflet-container {
   height: 100%;
   width: 100%;
-  background: #0f172a;
+  background: #f1f5f9;
   font-family: var(--font-sans);
 }
 
 .d6-leaflet .leaflet-control-attribution {
-  background: rgba(15, 23, 42, 0.85) !important;
-  color: #64748b !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #6b7280 !important;
   font-size: 10px;
-  margin: 0 8px 8px 0 !important;
+  margin: 0 6px 6px 0 !important;
   border-radius: 6px;
   padding: 2px 6px !important;
 }
 
 .d6-leaflet .leaflet-control-attribution a {
-  color: #38bdf8 !important;
+  color: #16a34a !important;
 }
 
 .d6-leaflet .leaflet-popup-content-wrapper {
-  background: #252538;
-  color: #e2e8f0;
-  border: 1px solid #3f3f5a;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .d6-leaflet .leaflet-popup-tip {
-  background: #252538;
+  background: #ffffff;
 }
 
 .d6-map-control-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 2px solid #3f3f5a;
-  background: rgba(37, 37, 56, 0.92);
-  color: #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 2px solid #bbf7d0;
+  background: rgba(255, 255, 255, 0.95);
+  color: #16a34a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
 .d6-map-control-btn:hover,
 .d6-map-control-btn:focus-visible {
-  border-color: #38bdf8;
-  color: #38bdf8;
+  border-color: #16a34a;
+  background: #f0fdf4;
 }
 
 .d6-map-badge {
-  background: rgba(37, 37, 56, 0.9);
-  border: 1px solid #3f3f5a;
-  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #bbf7d0;
+  color: #6b7280;
 }
 
 .d6-map-station {
@@ -934,54 +1005,54 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
 }
 
 .d6-map-station-core {
-  width: 14px;
-  height: 14px;
-  background: #38bdf8;
+  width: 12px;
+  height: 12px;
+  background: #16a34a;
   border-radius: 50%;
-  box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.25);
 }
 
 .d6-map-station::before {
   content: '';
   position: absolute;
-  width: 30px;
-  height: 30px;
-  border: 2px solid #38bdf8;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #22c55e;
   border-radius: 50%;
-  opacity: 0.55;
+  opacity: 0.5;
   animation: d6-station-pulse 2.4s ease-in-out infinite;
 }
 
 .d6-map-stop {
-  width: 12px;
-  height: 12px;
-  background: #475569;
-  border: 2px solid #94a3b8;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border: 2px solid #86efac;
   border-radius: 50%;
 }
 
 .d6-map-stop--dest {
-  width: 20px;
-  height: 20px;
-  background: #38bdf8;
-  border-color: #7dd3fc;
-  box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.3);
+  width: 18px;
+  height: 18px;
+  background: #16a34a;
+  border-color: #15803d;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.25);
 }
 
 .d6-map-bus {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: 8px;
-  background: #1e3a5f;
-  border: 2px solid #38bdf8;
-  color: #e2e8f0;
-  font-size: 11px;
+  min-width: 32px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 2px solid #16a34a;
+  color: #15803d;
+  font-size: 10px;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .d6-map-bus--urgent {
@@ -1042,34 +1113,35 @@ body.d6-night .d6-map-panel {
 
 .d6-arrival-card {
   background: var(--color-surface);
-  border-color: #d4c5b0;
-  min-height: 56px;
+  border-color: #bbf7d0;
+  min-height: 48px;
+  padding: 0.75rem !important;
 }
 
 .d6-arrival-card--active {
-  border-color: var(--color-primary);
-  background: #eff6ff;
+  border-color: var(--color-neon-green);
+  background: #f0fdf4;
 }
 
 body.d6-night .d6-arrival-card--active {
-  background: #1e3a5f;
+  background: #f0fdf4;
 }
 
 .d6-arrival-route {
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .d6-arrival-eta {
-  font-size: 28px;
-  color: var(--color-primary);
+  font-size: 22px;
+  color: var(--color-neon-green);
 }
 
 .d6-eta-dot {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: var(--color-neon-green);
 }
 
 .d6-status-pill {
@@ -1097,23 +1169,24 @@ body.d6-night .d6-status-pill--delayed {
 }
 
 body.d6-night .d6-arrival-eta {
-  color: #38bdf8;
+  color: #22c55e;
 }
 
 body.d6-night .d6-eta-dot {
-  background: #38bdf8;
+  background: #22c55e;
 }
 
 body.d6-night .d6-link-btn {
   background: #252538;
-  border-color: #38bdf8;
-  color: #7dd3fc;
+  border-color: #22c55e;
+  color: #86efac;
 }
 
 .d6-link-btn {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-neon-green);
+  color: var(--color-neon-green);
   background: var(--color-surface);
+  font-size: 15px;
 }
 
 .d6-btn-primary {
@@ -1145,8 +1218,22 @@ body.d6-night .d6-link-btn {
 .d6-urgency-banner {
   background: var(--color-alert);
   color: #ffffff;
-  font-size: 22px;
+  font-size: 16px;
+  padding: 0.75rem 1rem !important;
   animation: d6-banner-flash 1s ease-in-out infinite;
+}
+
+/* BusPass flow — kích thước đồng nhất */
+.bp-flow {
+  font-size: var(--font-kiosk-min);
+}
+
+.bp-flow .btn-kiosk {
+  min-height: 44px;
+}
+
+.bp-flow-chrome {
+  pointer-events: auto;
 }
 
 /* Neon map */
@@ -1269,11 +1356,11 @@ body.d6-senior-mode .d6-root * {
 }
 
 body.d6-senior-mode .d6-station-name {
-  font-size: 32px !important;
+  font-size: 26px !important;
 }
 
 body.d6-senior-mode .d6-arrival-eta {
-  font-size: 36px !important;
+  font-size: 28px !important;
 }
 
 body.d6-senior-mode button,

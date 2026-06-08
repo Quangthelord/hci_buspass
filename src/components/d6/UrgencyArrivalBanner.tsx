@@ -3,7 +3,7 @@ export function UrgencyArrivalBanner({ visible }: { visible: boolean }) {
 
   return (
     <div
-      className="d6-urgency-banner fixed inset-x-4 top-20 z-50 rounded-xl px-6 py-5 text-center font-bold"
+      className="d6-urgency-banner fixed inset-x-3 top-16 z-50 rounded-lg text-center font-bold"
       role="alert"
     >
       Xe đang vào bến! Chuẩn bị xuống

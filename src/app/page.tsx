@@ -138,10 +138,10 @@ export default function BusPassSignaturePage({
   const timeStr = formatTime24(now)
 
   return (
-    <div className="d6-root d6-map-page flex min-h-dvh flex-col font-sans">
+    <div className="d6-root d6-map-page d6-map-page--light flex min-h-dvh flex-col font-sans">
       <UrgencyArrivalBanner visible={isArriving} />
 
-      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-4 border-b px-4 py-3">
+      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-3 border-b px-3 py-2">
         <div>
           <p className="d6-header-label font-bold uppercase tracking-wide">Trạm</p>
           <h1 className="d6-station-name font-bold">{stationName}</h1>
@@ -151,10 +151,10 @@ export default function BusPassSignaturePage({
         </time>
       </header>
 
-      <div className="d6-search-strip relative z-20 shrink-0 border-b px-4 py-3">
+      <div className="d6-search-strip relative z-20 shrink-0 border-b px-3 py-2">
         <label className="d6-search-label relative block">
           <Search
-            className="d6-search-icon pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2"
+            className="d6-search-icon pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
             strokeWidth={2}
           />
           <input
@@ -168,12 +168,12 @@ export default function BusPassSignaturePage({
               trackClick('search-input', true)
             }}
             onFocus={() => adaptive.recordTouch('search-focus')}
-            className="d6-search-input w-full rounded-xl border-2 py-3 pl-12 pr-4 font-semibold outline-none"
+            className="d6-search-input w-full rounded-lg border-2 py-2.5 pl-10 pr-3 font-semibold outline-none"
             autoComplete="off"
           />
         </label>
         {query.trim() && suggestions.length > 0 && (
-          <ul className="d6-suggestions-dropdown absolute left-4 right-4 top-full z-30 mt-1 max-h-48 overflow-y-auto rounded-xl border-2 shadow-lg">
+          <ul className="d6-suggestions-dropdown absolute left-3 right-3 top-full z-30 mt-1 max-h-40 overflow-y-auto rounded-lg border-2 shadow-lg">
             {suggestions.map((loc) => (
               <li key={loc}>
                 <button
@@ -198,7 +198,7 @@ export default function BusPassSignaturePage({
       </div>
 
       <div className="d6-map-layout flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="d6-map-stage relative min-h-[58vh] flex-[7] lg:min-h-0">
+        <section className="d6-map-stage relative min-h-[52vh] flex-[7] lg:min-h-0">
           <D6LeafletMap
             route={primaryRoute}
             destinationKeyword={query}
@@ -207,12 +207,12 @@ export default function BusPassSignaturePage({
           />
         </section>
 
-        <aside className="d6-aside d6-aside--panel flex w-full shrink-0 flex-col border-t lg:max-w-[340px] lg:flex-[3] lg:border-l lg:border-t-0">
-          <h2 className="d6-aside-title shrink-0 px-4 pb-2 pt-3 font-bold uppercase tracking-wide">
+        <aside className="d6-aside d6-aside--panel flex w-full shrink-0 flex-col border-t lg:max-w-[300px] lg:flex-[3] lg:border-l lg:border-t-0">
+          <h2 className="d6-aside-title shrink-0 px-3 pb-1.5 pt-2 font-bold uppercase tracking-wide">
             Xe sắp đến
           </h2>
 
-          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-3">
+          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-2">
             <ArrivalCard
               route={primaryRoute}
               destination={getRouteDestination(primaryRoute)}
@@ -247,11 +247,11 @@ export default function BusPassSignaturePage({
               ))}
           </div>
 
-          <div className="d6-aside-actions shrink-0 space-y-2 px-4 pb-4">
+          <div className="d6-aside-actions shrink-0 space-y-1.5 px-3 pb-3">
             {moreArrivals.length > 0 && (
               <button
                 type="button"
-                className="d6-link-btn min-h-12 w-full rounded-xl border-2 px-4 py-3 font-bold"
+                className="d6-link-btn min-h-11 w-full rounded-lg border-2 px-3 py-2.5 font-bold"
                 onClick={() =>
                   handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
                 }
@@ -263,7 +263,7 @@ export default function BusPassSignaturePage({
             {onSyncRequest && primaryRoute && (
               <button
                 type="button"
-                className="d6-btn-sync w-full rounded-xl py-4 text-lg font-bold"
+                className="d6-btn-sync w-full rounded-lg py-3 text-base font-bold"
                 onClick={() =>
                   handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
                     route: primaryRoute,

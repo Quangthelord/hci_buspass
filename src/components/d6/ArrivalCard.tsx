@@ -22,7 +22,7 @@ export function ArrivalCard({
     <Tag
       type={onSelect ? 'button' : undefined}
       onClick={onSelect}
-      className={`d6-arrival-card w-full rounded-xl border-2 p-4 text-left transition-colors ${
+      className={`d6-arrival-card w-full rounded-lg border-2 text-left transition-colors ${
         active ? 'd6-arrival-card--active' : ''
       }`}
     >
