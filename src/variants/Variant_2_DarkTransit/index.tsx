@@ -1,19 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../../data/busRoutes'
-import { matchesTaskDestination } from '../../lib/taskGoal'
 import { completeTask, logClick, startTask } from '../../lib/telemetry'
+import { matchesTaskDestination, TASK_DESTINATION } from '../../lib/taskGoal'
 import { useMobileScroll } from '../../hooks/useMobileScroll'
-import { BottomSheet } from './BottomSheet'
-import { DarkMap } from './DarkMap'
-import { DARK, VARIANT_ID } from './constants'
+import type { CmScreen } from './constants'
+import { VARIANT_ID } from './constants'
+import { buildSuggestions } from './utils'
+import {
+  CmGoModeScreen,
+  CmHomeScreen,
+  CmPlannerScreen,
+  CmRouteDetailScreen,
+} from './CmScreens'
+import './cmMapper.css'
 
 export interface Variant2Props {
   stationId?: string
   userId?: string
 }
 
-function getDestination(route: BusRouteData): string {
-  return route.stops[route.stops.length - 1]?.name ?? '—'
+function getStationName(stationId: string): string {
+  if (busRoutesData.station.id === stationId) return busRoutesData.station.name
+  return busRoutesData.station.name
 }
 
 export default function Variant2DarkTransit({
@@ -21,23 +29,20 @@ export default function Variant2DarkTransit({
   userId = 'participant-01',
 }: Variant2Props) {
   useMobileScroll()
-  const liveRoutes = useLiveBusRoutes()
-  const [routeId, setRouteId] = useState('01')
-  const [sheetExpanded, setSheetExpanded] = useState(false)
-  const [taskDone, setTaskDone] = useState(false)
+
+  const [screen, setScreen] = useState<CmScreen>('home')
+  const [query, setQuery] = useState('')
+  const [destination, setDestination] = useState(TASK_DESTINATION)
+  const [selectedRoute, setSelectedRoute] = useState<BusRouteData | null>(null)
   const taskStarted = useRef(false)
 
-  const stationName = useMemo(() => {
-    if (busRoutesData.station.id === stationId) return busRoutesData.station.name
-    return busRoutesData.station.name
-  }, [stationId])
+  const stationName = getStationName(stationId)
+  const liveRoutes = useLiveBusRoutes()
 
-  const route = useMemo(
-    () => liveRoutes.find((r) => r.id === routeId) ?? liveRoutes[0],
-    [liveRoutes, routeId],
+  const suggestions = useMemo(
+    () => buildSuggestions(liveRoutes, destination || query),
+    [liveRoutes, destination, query],
   )
-
-  const destination = route ? getDestination(route) : '—'
 
   const ensureTaskStart = () => {
     if (!taskStarted.current) {
@@ -50,104 +55,99 @@ export default function Variant2DarkTransit({
     logClick(VARIANT_ID, target, isHit)
   }
 
-  const expandSheet = () => {
-    ensureTaskStart()
-    trackClick('bottom-sheet-expand', true)
-    setSheetExpanded(true)
-    if (route && !taskDone && matchesTaskDestination(route)) {
+  const tryComplete = (route: BusRouteData) => {
+    if (matchesTaskDestination(route)) {
       completeTask(VARIANT_ID, true)
-      setTaskDone(true)
     }
   }
 
-  const toggleSheet = () => {
-    if (sheetExpanded) {
-      trackClick('bottom-sheet-collapse', true)
-      setSheetExpanded(false)
-    } else {
-      expandSheet()
-    }
+  const selectRoute = (route: BusRouteData, source: string) => {
+    ensureTaskStart()
+    trackClick(source, true)
+    setSelectedRoute(route)
+    setScreen('routeDetail')
+    tryComplete(route)
   }
 
-  useEffect(() => {
-    document.body.classList.add('variant-dark-transit')
-    return () => document.body.classList.remove('variant-dark-transit')
-  }, [])
+  const goToPlanner = (dest?: string) => {
+    ensureTaskStart()
+    if (dest) setDestination(dest)
+    else if (query.trim()) setDestination(query.trim())
+    setScreen('planner')
+    trackClick('open-planner', true)
+  }
 
-  if (!route) {
-    return (
-      <div
-        className="flex h-dvh items-center justify-center font-sans"
-        style={{ backgroundColor: DARK.bg, color: DARK.text }}
-      >
-        <p>Đang tải dữ liệu tuyến…</p>
-      </div>
+  const shell = (child: ReactNode) => (
+    <div className="cm-root flex min-h-dvh flex-col bg-white">{child}</div>
+  )
+
+  if (screen === 'planner') {
+    return shell(
+      <CmPlannerScreen
+        start={stationName}
+        end={destination}
+        suggestions={suggestions}
+        onBack={() => setScreen('home')}
+        onSwap={() => {
+          trackClick('swap-locations', true)
+          setDestination(stationName)
+        }}
+        onSelectRoute={(r) => selectRoute(r, `suggested-${r.id}`)}
+        onEndChange={(q) => {
+          setDestination(q)
+          trackClick('planner-destination', true)
+        }}
+        onSearchFocus={() => {
+          ensureTaskStart()
+          trackClick('planner-search', true)
+        }}
+      />,
     )
   }
 
-  return (
-    <div
-      className="relative flex h-dvh w-full flex-col overflow-hidden font-sans font-normal"
-      style={{ backgroundColor: DARK.bg, color: DARK.text }}
-    >
-      {/* Map area */}
-      <div className="relative min-h-0 flex-1">
-        <div className="absolute inset-0">
-          <DarkMap routeColor={DARK.cyan} />
-        </div>
-
-        {/* Top overlay — station + route switcher */}
-        <div
-          className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between px-4 py-3"
-          style={{ background: 'linear-gradient(180deg, rgba(26,26,46,0.9) 0%, transparent 100%)' }}
-        >
-          <div>
-            <p className="text-xs" style={{ color: DARK.muted }}>
-              {stationName}
-            </p>
-            <p className="text-sm font-normal" style={{ color: DARK.text }}>
-              Dark Transit
-            </p>
-          </div>
-          <div className="flex gap-1">
-            {liveRoutes.slice(0, 4).map((r) => (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => {
-                  ensureTaskStart()
-                  trackClick(`route-tag-${r.id}`, true)
-                  setRouteId(r.id)
-                  if (!taskDone && matchesTaskDestination(r)) {
-                    completeTask(VARIANT_ID, true)
-                    setTaskDone(true)
-                  }
-                }}
-                className="rounded-md px-2 py-1 text-xs font-normal"
-                style={{
-                  backgroundColor: routeId === r.id ? DARK.cyan : DARK.card,
-                  color: routeId === r.id ? DARK.bg : DARK.text,
-                  boxShadow: routeId === r.id ? `0 0 8px ${DARK.cyan}` : 'none',
-                }}
-              >
-                {r.id}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <BottomSheet
-        route={route}
-        expanded={sheetExpanded}
-        onToggle={toggleSheet}
-        onSearchFocus={() => {
-          ensureTaskStart()
-          trackClick('journey-search', true)
+  if (screen === 'routeDetail' && selectedRoute) {
+    return shell(
+      <CmRouteDetailScreen
+        route={selectedRoute}
+        stationName={stationName}
+        onBack={() => setScreen('planner')}
+        onGo={() => {
+          trackClick('go-button', true)
+          setScreen('goMode')
         }}
-        onRouteSelect={(target) => trackClick(target, true)}
-        destination={destination}
-      />
-    </div>
+        onStopClick={(id) => trackClick(`stop-${id}`, true)}
+      />,
+    )
+  }
+
+  if (screen === 'goMode' && selectedRoute) {
+    return shell(
+      <CmGoModeScreen
+        route={selectedRoute}
+        onClose={() => setScreen('routeDetail')}
+        onStopClick={(id) => trackClick(`go-stop-${id}`, true)}
+      />,
+    )
+  }
+
+  return shell(
+    <CmHomeScreen
+      query={query}
+      stationName={stationName}
+      onQueryChange={(q) => {
+        setQuery(q)
+        trackClick('home-search', true)
+      }}
+      onSearchSubmit={() => goToPlanner(query.trim() || TASK_DESTINATION)}
+      onModeSelect={(mode) => {
+        trackClick(`mode-${mode}`, true)
+        if (mode === 'bus' || mode === 'all') goToPlanner(TASK_DESTINATION)
+      }}
+      onCommuteTap={() => goToPlanner(TASK_DESTINATION)}
+      onSearchFocus={() => {
+        ensureTaskStart()
+        trackClick('search-focus', true)
+      }}
+    />,
   )
 }
