@@ -49,12 +49,28 @@ let delayTimer: ReturnType<typeof setInterval> | null = null
 let departedTimer: ReturnType<typeof setTimeout> | null = null
 const listeners = new Set<() => void>()
 
+/** Immutable snapshot — only replaced on emit() so useSyncExternalStore stays stable between ticks. */
+function buildSnapshot(): RealtimeSnapshot {
+  return {
+    ...state,
+    station: { ...state.station },
+    routes: state.routes.map((r) => ({ ...r, stops: r.stops.map((s) => ({ ...s })) })),
+  }
+}
+
+let cachedSnapshot = buildSnapshot()
+
+function refreshSnapshot() {
+  cachedSnapshot = buildSnapshot()
+}
+
 function emit() {
+  refreshSnapshot()
   listeners.forEach((fn) => fn())
 }
 
 function getSnapshot(): RealtimeSnapshot {
-  return { ...state, routes: state.routes.map((r) => ({ ...r, stops: [...r.stops] })) }
+  return cachedSnapshot
 }
 
 function tickDistance() {
