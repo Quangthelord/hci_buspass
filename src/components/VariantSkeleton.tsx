@@ -8,8 +8,7 @@ const SCHEMES: Record<
   Variant_2_DarkTransit: { bg: '#F0F2F5', accent: '#37b24d', card: '#ffffff', label: 'Citymapper' },
   Variant_3_WarmWayfinding: { bg: '#F5F5F5', accent: '#00703C', card: '#FFFFFF', label: 'TransPerth' },
   Variant_4_MetroMinimal: { bg: '#F0F0F0', accent: '#F26722', card: '#FFFFFF', label: 'Moovit' },
-  Variant_5_HighContrast: { bg: '#FFFFFF', accent: '#000000', card: '#F5F5F5', label: 'High Contrast' },
-  Variant_6_BusPassSignature: { bg: '#F7F5F0', accent: '#2563EB', card: '#FFFFFF', label: 'BusPass Signature' },
+  Variant_6_BusPassSignature: { bg: '#F7F5F0', accent: '#2563EB', card: '#FFFFFF', label: 'BusPass System' },
 }
 
 export function VariantSkeleton({ variantId }: { variantId: VariantId }) {

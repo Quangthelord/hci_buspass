@@ -4,7 +4,7 @@ import { RouteTag } from './RouteTag'
 import { SearchBar } from './SearchBar'
 import { StopList } from './StopList'
 
-/** Shared scaffold layout used by all 6 variant placeholders. */
+/** Shared scaffold layout used by all variant placeholders. */
 export function VariantPlaceholder({
   variantId,
   title,

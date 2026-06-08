@@ -1,4 +1,4 @@
-# BusPass — Hướng dẫn test A/B (6 variants)
+# BusPass — Hướng dẫn test A/B (5 variants)
 
 Tài liệu dành cho **điều phối viên** chạy phiên thử nghiệm kiosk BusPass.
 
@@ -21,7 +21,7 @@ Tài liệu dành cho **điều phối viên** chạy phiên thử nghiệm kios
 ### Bắt đầu phiên người tham gia
 
 1. Người tham gia **chạm** màn hình chờ ("Chạm để bắt đầu")
-2. Màn hình **menu 6 giao diện** (A–F) hiện ra — người tham gia (hoặc điều phối viên) **chạm chọn một phiên bản**
+2. Màn hình **menu 5 giao diện** (A–E) hiện ra — người tham gia (hoặc điều phối viên) **chạm chọn một phiên bản**
 3. Hệ thống tạo **sessionId** mới và tải giao diện đã chọn
 4. Giao nhiệm vụ (xem mục 4)
 
@@ -36,9 +36,8 @@ Tài liệu dành cho **điều phối viên** chạy phiên thử nghiệm kios
 | A | Civic Light | Singapore — danh sách, sáng |
 | B | Dark Transit | Citymapper — tối, map |
 | C | Warm Wayfinding | Transperth — ấm, minh bạch ETA |
-| D | Metro Minimal | Moovit — từng bước, tập trung |
-| E | High Contrast | WCAG AAA — tương phản cao |
-| F | BusPass Signature | D6 — sản phẩm chính (mặc định) |
+| D | Moovit | Bản đồ gần đây + chỉ đường từng bước |
+| E | BusPass System | Hệ thống BusPass gốc (trước đây là F — mặc định) |
 
 ## 3. Metrics được ghi nhận
 

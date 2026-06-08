@@ -36,13 +36,6 @@ export const VARIANT_SDS: Record<VariantId, SdsDimension[]> = {
     { key: 'aesthetics', label: 'Thẩm mỹ', score: 5.8 },
     { key: 'satisfaction', label: 'Hài lòng', score: 6.0 },
   ],
-  Variant_5_HighContrast: [
-    { key: 'trust', label: 'Tin tưởng', score: 6.8 },
-    { key: 'simplicity', label: 'Đơn giản', score: 6.6 },
-    { key: 'clarity', label: 'Rõ ràng', score: 7.0 },
-    { key: 'aesthetics', label: 'Thẩm mỹ', score: 4.2 },
-    { key: 'satisfaction', label: 'Hài lòng', score: 6.5 },
-  ],
   Variant_6_BusPassSignature: [
     { key: 'trust', label: 'Tin tưởng', score: 6.7 },
     { key: 'simplicity', label: 'Đơn giản', score: 6.4 },

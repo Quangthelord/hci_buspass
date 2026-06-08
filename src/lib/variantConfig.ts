@@ -6,8 +6,7 @@ export const VARIANTS = [
   { id: 'Variant_2_DarkTransit', label: 'B — Dark Transit', description: 'Citymapper style' },
   { id: 'Variant_3_WarmWayfinding', label: 'C — TransPerth', description: 'TransPerth — Places, Stops Near Me, journey planner' },
   { id: 'Variant_4_MetroMinimal', label: 'D — Moovit', description: 'Moovit — bản đồ gần đây + chỉ đường từng bước' },
-  { id: 'Variant_5_HighContrast', label: 'E — High Contrast', description: 'WCAG AAA — inclusive by default' },
-  { id: 'Variant_6_BusPassSignature', label: 'F — BusPass Signature', description: 'D6 — hybrid legibility map + adaptive senior mode' },
+  { id: 'Variant_6_BusPassSignature', label: 'E — BusPass System', description: 'Hệ thống BusPass gốc — map hybrid, senior mode, flow đầy đủ' },
 ] as const
 
 export type VariantId = (typeof VARIANTS)[number]['id']
@@ -17,7 +16,7 @@ export function getActiveVariant(): VariantId | null {
   return VARIANTS.some((x) => x.id === v) ? (v as VariantId) : null
 }
 
-/** Resolved variant for kiosk render — defaults to D6 BusPass Signature. */
+/** Resolved variant for kiosk render — defaults to BusPass System (giao diện gốc). */
 export function getResolvedVariant(): VariantId {
   return getActiveVariant() ?? DEFAULT_VARIANT_ID
 }
