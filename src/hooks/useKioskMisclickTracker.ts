@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { logClick } from '../lib/telemetry'
+import { getSessionVariant, logClick } from '../lib/telemetry'
 import { getResolvedVariant } from '../lib/variantConfig'
 
 const INTERACTIVE =
@@ -18,10 +18,10 @@ export function useKioskMisclickTracker(enabled: boolean) {
 
     const onPointerDown = (e: PointerEvent) => {
       if (isInteractiveTarget(e.target)) return
-      const shell = document.querySelector('.kiosk-shell')
+      const shell = document.querySelector('.kiosk-active-pane')
       if (!shell?.contains(e.target as Node)) return
 
-      const variantId = getResolvedVariant()
+      const variantId = getSessionVariant() ?? getResolvedVariant()
       logClick(variantId, 'dead-zone', false)
       window.dispatchEvent(
         new CustomEvent('kiosk:misclick', { detail: { target: 'dead-zone', variantId } }),
