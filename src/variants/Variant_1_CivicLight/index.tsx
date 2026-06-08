@@ -1,17 +1,19 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../../data/busRoutes'
 import { completeTask, logClick, startTask } from '../../lib/telemetry'
 import { matchesTaskDestination } from '../../lib/taskGoal'
 import { useMobileScroll } from '../../hooks/useMobileScroll'
-import { MtHeader } from './MtHeader'
-import { MtSearchBar } from './MtSearchBar'
-import { MtTabBar, type Tab } from './MtTabBar'
-import { MtBusStopHeader } from './MtBusStopHeader'
-import { MtArrivalRow, MtOccupancyLegend } from './MtArrivalRow'
-import { MtBottomNav } from './MtBottomNav'
-import { RouteDetail } from './RouteDetail'
+import type { MtScreen, TransportMode } from './constants'
 import { VARIANT_ID } from './constants'
-import { getDestination } from './utils'
+import {
+  MtAnnouncementsScreen,
+  MtBusRouteScreen,
+  MtHomeScreen,
+  MtJourneyScreen,
+  MtLiveMapScreen,
+  MtMrtScreen,
+  MtNearYouScreen,
+} from './MtScreens'
 import './mtSg.css'
 
 export interface Variant1Props {
@@ -29,14 +31,20 @@ export default function Variant1CivicLight({
   userId = 'participant-01',
 }: Variant1Props) {
   useMobileScroll()
+
+  const [screen, setScreen] = useState<MtScreen>('home')
+  const [mode, setMode] = useState<TransportMode>('bus')
   const [query, setQuery] = useState('')
-  const [tab, setTab] = useState<Tab>('bus')
+  const [stopExpanded, setStopExpanded] = useState(true)
   const [selectedRoute, setSelectedRoute] = useState<BusRouteData | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [returnScreen, setReturnScreen] = useState<MtScreen>('home')
   const taskStarted = useRef(false)
 
   const stationName = getStationName(stationId)
   const liveRoutes = useLiveBusRoutes()
+
+  const routes = useMemo(() => [...liveRoutes], [liveRoutes, refreshKey])
 
   const ensureTaskStart = () => {
     if (!taskStarted.current) {
@@ -49,109 +57,145 @@ export default function Variant1CivicLight({
     logClick(VARIANT_ID, target, isHit)
   }
 
-  const openRouteDetail = (route: BusRouteData, source: string) => {
-    ensureTaskStart()
-    trackClick(source, true)
-    setSelectedRoute(route)
+  const tryComplete = (route: BusRouteData) => {
     if (matchesTaskDestination(route)) {
       completeTask(VARIANT_ID, true)
     }
   }
 
-  const routes = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    const list = [...liveRoutes]
-    if (!q) return list
-    return list.filter(
-      (r) =>
-        r.id.includes(q) ||
-        r.name.toLowerCase().includes(q) ||
-        getDestination(r).toLowerCase().includes(q) ||
-        r.stops.some((s) => s.name.toLowerCase().includes(q)),
-    )
-  }, [query, liveRoutes, refreshKey])
+  const selectRoute = (route: BusRouteData, source: string) => {
+    ensureTaskStart()
+    trackClick(source, true)
+    setSelectedRoute(route)
+    tryComplete(route)
+  }
 
-  if (selectedRoute) {
-    return (
-      <RouteDetail
-        route={selectedRoute}
-        onBack={() => {
-          trackClick('detail-back-close', true)
-          setSelectedRoute(null)
+  const openLiveMap = (route: BusRouteData, source: string) => {
+    ensureTaskStart()
+    trackClick(source, true)
+    setReturnScreen(screen)
+    setSelectedRoute(route)
+    setScreen('liveMap')
+    tryComplete(route)
+  }
+
+  const goHome = () => {
+    setScreen('home')
+    setMode('bus')
+  }
+
+  const onSearchFocus = () => {
+    ensureTaskStart()
+    trackClick('search-bar', true)
+  }
+
+  const onQueryChange = (q: string) => {
+    setQuery(q)
+    trackClick('search-input', true)
+    if (q.trim()) ensureTaskStart()
+  }
+
+  const shell = (child: ReactNode) => (
+    <div className="mt-sg-root flex min-h-dvh flex-col">{child}</div>
+  )
+
+  if (mode === 'mrt' && screen === 'home') {
+    return shell(<MtMrtScreen onBack={() => setMode('bus')} />)
+  }
+
+  if (screen === 'nearYou') {
+    return shell(
+      <MtNearYouScreen
+        stopName={stationName}
+        routes={routes}
+        query={query}
+        stopExpanded={stopExpanded}
+        onQueryChange={onQueryChange}
+        onClose={goHome}
+        onToggleStop={() => {
+          trackClick('stop-toggle', true)
+          setStopExpanded((e) => !e)
         }}
-        onStopClick={(target) => trackClick(target, true)}
-      />
+        onSelectRoute={(r) => openLiveMap(r, `near-select-${r.id}`)}
+        onViewMap={(r) => openLiveMap(r, `near-viewmap-${r.id}`)}
+        onRefresh={() => setRefreshKey((k) => k + 1)}
+        onSearchFocus={onSearchFocus}
+      />,
     )
   }
 
-  return (
-    <div
-      className="mt-sg-root flex min-h-dvh flex-col"
-      style={{ backgroundColor: '#F5F5F5', color: '#212121' }}
-    >
-      <MtHeader onRefresh={() => setRefreshKey((k) => k + 1)} />
+  if (screen === 'liveMap' && selectedRoute) {
+    return shell(
+      <MtLiveMapScreen
+        route={selectedRoute}
+        stopName={stationName}
+        onBack={() => setScreen(returnScreen === 'nearYou' ? 'nearYou' : 'home')}
+        onViewRoute={() => {
+          trackClick('view-bus-route', true)
+          setScreen('busRoute')
+        }}
+        onSelectRoute={() => selectRoute(selectedRoute, `livemap-service-${selectedRoute.id}`)}
+      />,
+    )
+  }
 
-      <div className="shrink-0 px-4 pb-2 pt-3">
-        <div
-          onPointerDown={() => {
-            ensureTaskStart()
-            trackClick('search-bar', true)
-          }}
-        >
-          <MtSearchBar
-            value={query}
-            onChange={(q) => {
-              setQuery(q)
-              trackClick('search-input', true)
-            }}
-            placeholder="Search destination (e.g. Suối Tiên)"
-          />
-        </div>
-      </div>
+  if (screen === 'busRoute' && selectedRoute) {
+    return shell(
+      <MtBusRouteScreen
+        route={selectedRoute}
+        onBack={() => setScreen('liveMap')}
+        onStopClick={(id) => trackClick(`stop-${id}`, true)}
+      />,
+    )
+  }
 
-      <MtTabBar active={tab} onChange={setTab} />
+  if (screen === 'announcements') {
+    return shell(<MtAnnouncementsScreen onBack={goHome} />)
+  }
 
-      {tab === 'bus' ? (
-        <>
-          <MtBusStopHeader stopName={stationName} />
+  if (screen === 'journey') {
+    return shell(
+      <MtJourneyScreen
+        query={query}
+        onQueryChange={onQueryChange}
+        onBack={goHome}
+        onSearchFocus={onSearchFocus}
+      />,
+    )
+  }
 
-          <div className="min-h-0 flex-1 overflow-y-auto bg-white">
-            {routes.length === 0 ? (
-              <p className="px-4 py-8 text-center text-[#757575]">No matching bus services</p>
-            ) : (
-              routes.map((route) => (
-                <MtArrivalRow
-                  key={route.id}
-                  route={route}
-                  onSelect={() => openRouteDetail(route, `arrival-row-${route.id}`)}
-                />
-              ))
-            )}
-          </div>
-
-          <MtOccupancyLegend />
-        </>
-      ) : (
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 bg-white px-6 text-center">
-          <p className="text-lg font-bold text-[#212121]">
-            {tab === 'mrt' ? 'MRT / LRT' : 'Journey Planner'}
-          </p>
-          <p className="text-sm text-[#757575]">
-            {tab === 'mrt'
-              ? 'Train network map — switch to Bus tab for this study task.'
-              : 'Plan multi-modal trips — use Bus tab to find services to Suối Tiên.'}
-          </p>
-          <button
-            type="button"
-            onClick={() => setTab('bus')}
-            className="mt-4 rounded-full bg-[#009B3A] px-6 py-2.5 text-sm font-bold text-white"
-          >
-            View Bus Arrivals
-          </button>
-        </div>
-      )}
-
-      <MtBottomNav />
-    </div>
+  return shell(
+    <MtHomeScreen
+      stopName={stationName}
+      routes={routes}
+      query={query}
+      mode={mode}
+      stopExpanded={stopExpanded}
+      onQueryChange={onQueryChange}
+      onModeChange={(m) => {
+        trackClick(`mode-${m}`, true)
+        setMode(m)
+      }}
+      onToggleStop={() => {
+        trackClick('stop-toggle', true)
+        setStopExpanded((e) => !e)
+      }}
+      onSelectRoute={(r) => openLiveMap(r, `home-select-${r.id}`)}
+      onViewMap={(r) => openLiveMap(r, `home-viewmap-${r.id}`)}
+      onNearYou={() => {
+        ensureTaskStart()
+        trackClick('near-you-drawer', true)
+        setScreen('nearYou')
+      }}
+      onAnnouncements={() => {
+        trackClick('announcements', true)
+        setScreen('announcements')
+      }}
+      onJourney={() => {
+        trackClick('journey-planner', true)
+        setScreen('journey')
+      }}
+      onSearchFocus={onSearchFocus}
+    />,
   )
 }

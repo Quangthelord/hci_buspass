@@ -8,8 +8,9 @@ export function getDestination(route: BusRouteData): string {
 export function getArrivalMinutes(route: BusRouteData, busIndex = 0): number {
   const stop = route.stops[0]
   if (!stop) return 0
-  const base = busIndex === 0 ? stop.nextArrival : stop.nextNextArrival
-  return Math.max(0, base + route.currentDelay)
+  const gap = Math.max(stop.nextNextArrival - stop.nextArrival, 5)
+  const bases = [stop.nextArrival, stop.nextNextArrival, stop.nextNextArrival + gap]
+  return Math.max(0, (bases[busIndex] ?? bases[2]) + route.currentDelay)
 }
 
 export function getLoadLevel(delay: number, busIndex: number): LoadLevel {
@@ -23,4 +24,21 @@ export function formatArrivalLabel(minutes: number): string {
   if (minutes <= 0) return 'Arr'
   if (minutes === 1) return '1 min'
   return `${minutes} min`
+}
+
+export function isDoubleDeck(routeId: string): boolean {
+  const n = parseInt(routeId, 10)
+  return Number.isFinite(n) ? n % 2 === 1 : false
+}
+
+export function filterRoutes(routes: BusRouteData[], query: string): BusRouteData[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return routes
+  return routes.filter(
+    (r) =>
+      r.id.includes(q) ||
+      r.name.toLowerCase().includes(q) ||
+      getDestination(r).toLowerCase().includes(q) ||
+      r.stops.some((s) => s.name.toLowerCase().includes(q)),
+  )
 }

@@ -1,292 +1,271 @@
-/* MyTransport.SG — Variant A scoped styles */
+/* MyTransport.SG — faithful Variant A styles */
 .mt-sg-root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: var(--mt-bg, #f5f5f5);
-  color: var(--mt-text, #212121);
+  background: #fff;
+  color: #212121;
   -webkit-font-smoothing: antialiased;
 }
 
-.mt-sg-header {
-  background: linear-gradient(180deg, #009b3a 0%, #007a2e 100%);
+/* ── White app header ── */
+.mt-sg-app-header {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mt-sg-logo-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #1565c0;
+}
+
+.mt-sg-logo-text {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #1565c0;
+  letter-spacing: -0.01em;
+}
+
+/* ── Announcements bar ── */
+.mt-sg-announce {
+  background: #fff3e0;
+  border-bottom: 1px solid #ffe0b2;
+}
+
+.mt-sg-announce-badge {
+  min-width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: #f44336;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.mt-sg-brand {
-  letter-spacing: -0.02em;
-}
-
-.mt-sg-search {
-  background: #fff;
-  border: none;
-  border-radius: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.mt-sg-search:focus-within {
-  box-shadow: 0 2px 16px rgba(0, 155, 58, 0.25);
-}
-
-.mt-sg-tabs {
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.mt-sg-tab {
-  position: relative;
-  color: #9e9e9e;
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-.mt-sg-tab--active {
-  color: #009b3a;
-}
-
-.mt-sg-tab--active::after {
-  content: '';
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: #009b3a;
-}
-
-.mt-sg-stop-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  background: #d32f2f;
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.875rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* ── Search pill ── */
+.mt-sg-search {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+}
+
+/* ── BUS / MRT mode toggle ── */
+.mt-sg-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.mt-sg-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.875rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background: #eeeeee;
+  color: #757575;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.mt-sg-mode-btn--active {
+  background: #fff;
+  color: #212121;
+  border-color: #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Service badge (dark grey) ── */
 .mt-sg-service-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.75rem;
-  height: 2.75rem;
+  min-width: 2.5rem;
+  height: 2.25rem;
   padding: 0 0.5rem;
-  border-radius: 8px;
-  background: #009b3a;
+  border-radius: 6px;
+  background: #424242;
   color: #fff;
-  font-weight: 700;
-  font-size: 1.125rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-}
-
-.mt-sg-arrival-row {
-  background: #fff;
-  border-bottom: 1px solid #eeeeee;
-  transition: background 0.15s;
-}
-
-.mt-sg-arrival-row:hover,
-.mt-sg-arrival-row:focus-visible {
-  background: #f1f8f4;
-}
-
-.mt-sg-load-bar {
-  height: 4px;
-  border-radius: 2px;
-  margin-top: 4px;
-}
-
-.mt-sg-load-bar--seats {
-  background: #00a651;
-}
-
-.mt-sg-load-bar--standing {
-  background: #f9a825;
-}
-
-.mt-sg-load-bar--limited {
-  background: #e53935;
-}
-
-.mt-sg-arrival-time {
   font-weight: 700;
   font-size: 1.0625rem;
-  line-height: 1.2;
 }
 
-.mt-sg-arrival-time--seats {
-  color: #00a651;
+/* ── Service arrival row ── */
+.mt-sg-service-row {
+  border-top: 1px solid #f0f0f0;
+  padding: 0.75rem 0;
 }
 
-.mt-sg-arrival-time--standing {
-  color: #f57f17;
-}
-
-.mt-sg-arrival-time--limited {
-  color: #e53935;
-}
-
-.mt-sg-timeline {
-  position: relative;
-  height: 2.5rem;
-  margin-top: 0.5rem;
-  background: linear-gradient(90deg, #e8f5e9 0%, #f5f5f5 100%);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.mt-sg-timeline-grid {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 49px,
-    rgba(0, 0, 0, 0.06) 49px,
-    rgba(0, 0, 0, 0.06) 50px
-  );
-}
-
-.mt-sg-timeline-bus {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  background: #1976d2;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.625rem;
-  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.45);
-  z-index: 1;
-}
-
-.mt-sg-timeline-bus--fade {
-  opacity: 0.45;
-}
-
-.mt-sg-legend {
-  background: #fff;
-  border-top: 1px solid #e0e0e0;
-  font-size: 0.75rem;
-  color: #757575;
-}
-
-.mt-sg-legend-dot {
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-.mt-sg-bottom-nav {
-  background: #fafafa;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.mt-sg-nav-item {
+.mt-sg-arrival-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.125rem;
-  padding: 0.5rem;
+  min-width: 3.5rem;
+}
+
+.mt-sg-arrival-col--faded {
+  opacity: 0.55;
+}
+
+.mt-sg-bus-icon-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.mt-sg-load-under {
+  width: 2rem;
+  height: 3px;
+  border-radius: 1px;
+  margin-top: 2px;
+}
+
+.mt-sg-load-under--seats { background: #4caf50; }
+.mt-sg-load-under--standing { background: #ffc107; }
+.mt-sg-load-under--limited { background: #f44336; }
+
+.mt-sg-arrival-time {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #212121;
+}
+
+/* ── Bus stop card ── */
+.mt-sg-stop-card {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.mt-sg-stop-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  width: 100%;
   border: none;
-  background: transparent;
-  color: #9e9e9e;
-  font-size: 0.6875rem;
-  font-weight: 600;
+  background: #fff;
+  text-align: left;
   cursor: pointer;
 }
 
-.mt-sg-nav-item--active {
-  color: #009b3a;
+/* ── Yellow Near You drawer ── */
+.mt-sg-near-you-drawer {
+  background: #ffc107;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 
-/* Route detail — map + bottom sheet */
+/* ── Yellow full-screen header ── */
+.mt-sg-yellow-header {
+  background: #ffd54f;
+  color: #212121;
+}
+
+/* ── Map areas ── */
 .mt-sg-map {
-  background: linear-gradient(160deg, #c8e6c9 0%, #e3f2fd 45%, #bbdefb 100%);
+  background: linear-gradient(180deg, #e8f4e8 0%, #dceefb 40%, #c5dff5 100%);
   position: relative;
   overflow: hidden;
 }
 
-.mt-sg-map-route {
+.mt-sg-map-road {
   position: absolute;
-  inset: 15% 10%;
-  border-radius: 12px;
-  border: 3px solid rgba(25, 118, 210, 0.5);
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
 }
 
-.mt-sg-map-bus {
+.mt-sg-map-bus-pin {
   position: absolute;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   background: #1976d2;
-  border: 3px solid #fff;
-  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  animation: mt-sg-pulse 2s ease-in-out infinite;
 }
 
-@keyframes mt-sg-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(25, 118, 210, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
+.mt-sg-map-bus-pin--pulse {
+  animation: mt-sg-pin-pulse 2s ease-in-out infinite;
 }
 
-.mt-sg-sheet {
-  background: #fff;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+@keyframes mt-sg-pin-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.4), 0 2px 8px rgba(25, 118, 210, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(25, 118, 210, 0), 0 2px 8px rgba(25, 118, 210, 0.5); }
 }
 
-.mt-sg-sheet-handle {
-  width: 2.5rem;
-  height: 4px;
-  border-radius: 2px;
-  background: #bdbdbd;
-  margin: 0.75rem auto 0;
-}
-
-.mt-sg-stop-marker {
+.mt-sg-map-stop-pin {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
-  background: #1976d2;
-  color: #fff;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  background: #fff;
+  border: 2px solid #757575;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  color: #757575;
 }
 
-.mt-sg-stop-marker--current {
-  background: #009b3a;
-  box-shadow: 0 0 0 3px rgba(0, 155, 58, 0.25);
+.mt-sg-recenter-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #212121;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
 }
 
-.mt-sg-stop-marker--end {
-  background: #d32f2f;
+/* ── Bottom sheet panel ── */
+.mt-sg-panel {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ── MRT schematic ── */
+.mt-sg-mrt-line {
+  height: 4px;
+  border-radius: 2px;
+}
+
+.mt-sg-mrt-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Announcements list ── */
+.mt-sg-announce-item {
+  border-bottom: 1px solid #eeeeee;
+  padding: 1rem;
+}
+
+.mt-sg-announce-tag {
+  color: #5bc0de;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }

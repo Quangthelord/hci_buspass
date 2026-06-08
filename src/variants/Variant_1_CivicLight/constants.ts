@@ -1,40 +1,61 @@
-/** LTA MyTransport.SG design tokens */
+/** MyTransport.SG design tokens (from LTA app reference) */
 export const MT = {
-  ltaGreen: '#009B3A',
-  ltaGreenDark: '#007A2E',
-  ltaGreenLight: '#E8F5E9',
-  stopRed: '#D32F2F',
+  brandBlue: '#1565C0',
+  brandBlueLight: '#42A5F5',
+  yellow: '#FFC107',
+  yellowDark: '#FFB300',
+  yellowHeader: '#FFD54F',
+  orangeAnnounce: '#FFF3E0',
+  orangeText: '#E65100',
+  orangeClock: '#FF9800',
+  serviceGrey: '#424242',
   mapBlue: '#1976D2',
-  bg: '#F5F5F5',
-  surface: '#FFFFFF',
+  linkBlue: '#1565C0',
+  bg: '#FFFFFF',
+  bgGrey: '#F5F5F5',
+  tabInactive: '#EEEEEE',
   text: '#212121',
   textSecondary: '#757575',
+  textMuted: '#9E9E9E',
   divider: '#E0E0E0',
-  loadSeats: '#00A651',
-  loadStanding: '#F9A825',
-  loadLimited: '#E53935',
-  tabInactive: '#9E9E9E',
-  bottomNav: '#FAFAFA',
+  loadSeats: '#4CAF50',
+  loadStanding: '#FFC107',
+  loadLimited: '#F44336',
+  starYellow: '#FFC107',
 } as const
 
 export type LoadLevel = 'seats' | 'standing' | 'limited'
 
-export const LOAD_LABEL: Record<LoadLevel, string> = {
-  seats: 'Còn chỗ ngồi',
-  standing: 'Còn chỗ đứng',
-  limited: 'Đông / ít chỗ',
-}
+export type MtScreen =
+  | 'home'
+  | 'nearYou'
+  | 'liveMap'
+  | 'busRoute'
+  | 'mrt'
+  | 'announcements'
+  | 'journey'
 
-/** HCMC route colours mapped to SG-style service badges (green base + accent stripe) */
-export const HCMC_ROUTE_COLORS: Record<string, string> = {
-  '01': '#009B3A',
-  '02': '#1565C0',
-  '08': '#6A1B9A',
-  '19': '#00838F',
-  '36': '#EF6C00',
-}
+export type TransportMode = 'bus' | 'mrt'
 
 export const VARIANT_ID = 'Variant_1_CivicLight' as const
 
-/** Mock SG-style bus stop code for Bến Thành */
 export const BUS_STOP_CODE = '01001'
+export const BUS_STOP_STREET = 'Phan Chu Trinh'
+export const BUS_STOP_DISTANCE = '120m'
+
+export const ANNOUNCEMENTS = [
+  {
+    id: '1',
+    tag: 'Bus Route Change',
+    title: 'Cập nhật lịch trình tuyến 01 — Bến Thành ↔ Suối Tiên',
+    date: 'Posted 8 Jun 2026 09:15',
+    hasImage: true,
+  },
+  {
+    id: '2',
+    tag: 'Service Update',
+    title: 'Thời gian đến theo lịch nhà xe, có thể thay đổi theo giao thông thực tế',
+    date: 'Posted 1 Jun 2026 14:00',
+    hasImage: false,
+  },
+] as const
