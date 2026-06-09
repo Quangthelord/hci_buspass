@@ -136,7 +136,7 @@ export default function BusPassSignaturePage({
   const timeStr = formatTime24(now)
 
   return (
-    <div className="d6-root d6-map-page d6-map-page--light flex min-h-dvh flex-col font-sans">
+    <div className="d6-root d6-map-page d6-map-page--light d6-map-page--stacked flex min-h-dvh flex-col font-sans">
       <UrgencyArrivalBanner visible={isArriving} />
 
       <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2 sm:gap-3">
@@ -195,8 +195,8 @@ export default function BusPassSignaturePage({
         )}
       </div>
 
-      <div className="d6-map-layout flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="d6-map-stage relative min-h-[clamp(11rem,36vh,16rem)] flex-[7] lg:min-h-0">
+      <div className="d6-map-layout d6-map-layout--stacked flex min-h-0 flex-1 flex-col">
+        <section className="d6-map-stage d6-map-stage--wide relative w-full shrink-0">
           <D6LeafletMap
             route={primaryRoute}
             destinationKeyword={query}
@@ -205,51 +205,51 @@ export default function BusPassSignaturePage({
           />
         </section>
 
-        <aside className="d6-aside d6-aside--panel flex w-full shrink-0 flex-col border-t lg:max-w-[300px] lg:flex-[3] lg:border-l lg:border-t-0">
-          <h2 className="d6-aside-title shrink-0 px-3 pb-1.5 pt-2 font-bold uppercase tracking-wide">
-            Xe sắp đến
-          </h2>
+        <aside className="d6-aside d6-aside--panel d6-aside--below flex w-full shrink-0 flex-col border-t">
+          <div className="d6-arrivals-block px-3 py-2.5">
+            <h2 className="d6-aside-title mb-2 font-bold uppercase tracking-wide">Xe sắp đến</h2>
 
-          <div className="space-y-2 px-3 pb-2 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-            <ArrivalCard
-              route={primaryRoute}
-              destination={getRouteDestination(primaryRoute)}
-              minutes={getArrivalMinutes(primaryRoute)}
-              onTime={primaryRoute.currentDelay === 0}
-              active
-              onSelect={() =>
-                handleInteraction(
-                  `arrival-primary-${primaryRoute.id}`,
-                  () => setSelectedRouteId(primaryRoute.id),
-                  { route: primaryRoute },
-                )
-              }
-            />
+            <div className="space-y-2">
+              <ArrivalCard
+                route={primaryRoute}
+                destination={getRouteDestination(primaryRoute)}
+                minutes={getArrivalMinutes(primaryRoute)}
+                onTime={primaryRoute.currentDelay === 0}
+                active
+                onSelect={() =>
+                  handleInteraction(
+                    `arrival-primary-${primaryRoute.id}`,
+                    () => setSelectedRouteId(primaryRoute.id),
+                    { route: primaryRoute },
+                  )
+                }
+              />
 
-            {showMoreArrivals &&
-              moreArrivals.map((route) => (
-                <ArrivalCard
-                  key={route.id}
-                  route={route}
-                  destination={getRouteDestination(route)}
-                  minutes={getArrivalMinutes(route)}
-                  onTime={route.currentDelay === 0}
-                  onSelect={() =>
-                    handleInteraction(
-                      `arrival-${route.id}`,
-                      () => setSelectedRouteId(route.id),
-                      { route },
-                    )
-                  }
-                />
-              ))}
+              {showMoreArrivals &&
+                moreArrivals.map((route) => (
+                  <ArrivalCard
+                    key={route.id}
+                    route={route}
+                    destination={getRouteDestination(route)}
+                    minutes={getArrivalMinutes(route)}
+                    onTime={route.currentDelay === 0}
+                    onSelect={() =>
+                      handleInteraction(
+                        `arrival-${route.id}`,
+                        () => setSelectedRouteId(route.id),
+                        { route },
+                      )
+                    }
+                  />
+                ))}
+            </div>
           </div>
 
-          <div className="d6-aside-actions kiosk-scroll-pad shrink-0 space-y-1.5 px-3 pb-3">
+          <div className="d6-aside-actions kiosk-scroll-pad flex shrink-0 flex-col gap-2 border-t border-kiosk-border px-3 py-2.5 sm:flex-row">
             {moreArrivals.length > 0 && (
               <button
                 type="button"
-                className="d6-link-btn min-h-11 w-full rounded-lg border-2 px-3 py-2.5 font-bold"
+                className="d6-link-btn min-h-11 flex-1 rounded-lg border-2 px-3 py-2 font-semibold sm:py-2.5"
                 onClick={() =>
                   handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
                 }
@@ -261,14 +261,14 @@ export default function BusPassSignaturePage({
             {onSyncRequest && primaryRoute && (
               <button
                 type="button"
-                className="d6-btn-sync w-full rounded-lg py-3 text-base font-bold"
+                className="d6-btn-sync min-h-11 flex-1 rounded-lg px-3 py-2 font-semibold sm:py-2.5"
                 onClick={() =>
                   handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
                     route: primaryRoute,
                   })
                 }
               >
-                ĐỒNG BỘ VÀO ĐIỆN THOẠI 📱
+                Đồng bộ điện thoại 📱
               </button>
             )}
           </div>

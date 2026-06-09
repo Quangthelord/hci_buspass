@@ -1,6 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Headphones, List, Map, Menu, Volume2, X } from 'lucide-react'
 import { useKiosk } from '../../context/KioskContext'
+import { useKioskPaneEl } from '../../hooks/useKioskPaneEl'
 import { tr } from '../../i18n/translations'
 import type { BpLang, BpScreen } from './constants'
 
@@ -64,6 +66,7 @@ export function BpInteractionMenu({
   onTrack?: (target: string) => void
 }) {
   const { a11y, setA11y } = useKiosk()
+  const kioskPane = useKioskPaneEl()
   const [open, setOpen] = useState(false)
   const [textSize, setTextSize] = useState<BpTextSize>(() =>
     a11y.largeText ? 'large' : 'normal',
@@ -134,8 +137,8 @@ export function BpInteractionMenu({
     { id: 'large', label: isVi ? 'Chữ lớn' : 'Large' },
   ]
 
-  return (
-    <>
+  const menu = (
+    <div className="bp-hamburger-layer" data-bp-menu="true">
       <button
         type="button"
         className="bp-hamburger-btn"
@@ -248,6 +251,9 @@ export function BpInteractionMenu({
           )}
         </section>
       </aside>
-    </>
+    </div>
   )
+
+  if (kioskPane) return createPortal(menu, kioskPane)
+  return menu
 }
