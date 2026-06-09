@@ -10,12 +10,15 @@ export function RouteQrInline({
   stationId,
   lang,
   onExpand,
+  qrSize = 192,
 }: {
   route: BusRouteData
   destination: string
   stationId: string
   lang: 'vi' | 'en'
   onExpand?: () => void
+  /** Kích thước QR (px) — kiosk 1080×1920 khuyến nghị 180–200 */
+  qrSize?: number
 }) {
   const isVi = lang === 'vi'
   const tripUrl = useMemo(
@@ -29,7 +32,6 @@ export function RouteQrInline({
     [route.id, destination, stationId, lang],
   )
 
-  const qrSize = 80
   const qrNode = (
     <QRCodeSVG value={tripUrl} size={qrSize} level="H" includeMargin={false} />
   )
@@ -38,32 +40,34 @@ export function RouteQrInline({
     <button
       type="button"
       onClick={onExpand}
-      className="bp-route-qr-code shrink-0 rounded-lg border border-kiosk-border bg-white p-2 transition hover:border-neon-green"
+      className="bp-route-qr-code rounded-xl border border-kiosk-border bg-white p-3 transition hover:border-neon-green"
       aria-label={isVi ? 'Phóng to mã QR' : 'Enlarge QR code'}
     >
       {qrNode}
     </button>
   ) : (
-    <div className="bp-route-qr-code shrink-0 rounded-lg border border-kiosk-border bg-white p-2">
+    <div className="bp-route-qr-code rounded-xl border border-kiosk-border bg-white p-3">
       {qrNode}
     </div>
   )
 
   return (
-    <div className="bp-route-qr w-full rounded-xl border border-kiosk-border bg-white p-3 shadow-sm">
-      <div className="flex items-start gap-3">
+    <div className="bp-route-qr bp-route-qr--stack w-full rounded-xl border border-kiosk-border bg-white shadow-sm">
+      <div className="bp-route-qr-copy w-full px-4 pt-4 text-left">
+        <p className="flex items-start gap-2 text-base font-bold leading-snug text-gray-900">
+          <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-neon-green" strokeWidth={2.5} />
+          <span className="min-w-0 break-words">
+            {isVi ? 'Quét QR để mang lộ trình theo người' : 'Scan QR to take the route with you'}
+          </span>
+        </p>
+        <p className="mt-2 break-words text-sm leading-relaxed text-gray-700">
+          {isVi
+            ? 'Đưa camera lên quét mã — không cần bấm thêm.'
+            : 'Point your camera at the code — no extra taps.'}
+        </p>
+      </div>
+      <div className="bp-route-qr-visual flex w-full justify-center px-4 pb-5 pt-4">
         {qrBlock}
-        <div className="min-w-[8rem] flex-1">
-          <p className="flex items-center gap-1.5 text-sm font-bold leading-snug text-gray-900">
-            <Smartphone className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
-            {isVi ? 'Quét mang lộ trình về điện thoại' : 'Scan route to your phone'}
-          </p>
-          <p className="mt-1.5 text-xs leading-relaxed text-gray-600">
-            {isVi
-              ? 'Đưa camera lên quét mã — không cần bấm thêm.'
-              : 'Point your camera at the code — no extra taps.'}
-          </p>
-        </div>
       </div>
     </div>
   )

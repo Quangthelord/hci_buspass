@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Search, X } from 'lucide-react'
+import { ChevronRight, Search, X } from 'lucide-react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../data/busRoutes'
 import { formatTime24 } from '../lib/formatVi'
 import { completeTask, logClick, startTask } from '../lib/telemetry'
@@ -184,78 +184,91 @@ export default function BusPassSignaturePage({
       </header>
       )}
 
-      {/* Bản đồ ~40% — full width */}
-      <section className="d6-map-stage d6-map-stage--kiosk relative w-full shrink-0">
-        <D6LeafletMap
-          route={primaryRoute}
-          destinationKeyword={isSearchMode ? query : undefined}
-          urgencyLevel={urgencyLevel}
-          busProgress={0.18 + urgencyLevel * 0.08}
-        />
-      </section>
+      {/* Vùng nhìn (0→~1000px trên frame 1080×1920) — bản đồ + ETA, không bắt chạm */}
+      <div className="d6-kiosk-display-zone">
+        <section className="d6-map-stage d6-map-stage--kiosk relative w-full shrink-0">
+          <D6LeafletMap
+            route={primaryRoute}
+            destinationKeyword={isSearchMode ? query : undefined}
+            urgencyLevel={urgencyLevel}
+            busProgress={0.18 + urgencyLevel * 0.08}
+          />
+        </section>
 
-      {/* Thông tin cốt lõi — ETA lớn */}
-      <section className="d6-arrivals-hero shrink-0 border-b border-kiosk-border bg-kiosk-panel">
-        {isSearchMode && (
-          <div className="d6-search-context mb-2 flex items-center justify-between gap-2 rounded-lg border border-neon-green/30 bg-white px-3 py-2">
-            <p className="text-sm font-semibold text-gray-800">
-              {isVi ? 'Đang tra cứu' : 'Searching'}:{' '}
-              <span className="text-neon-green">{query.trim()}</span>
-            </p>
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-neon-green"
-            >
-              <X className="h-3.5 w-3.5" />
-              {isVi ? 'Xóa' : 'Clear'}
-            </button>
-          </div>
-        )}
+        <section className="d6-arrivals-hero shrink-0 border-b border-kiosk-border bg-kiosk-panel">
+          {isSearchMode && (
+            <div className="d6-search-context mb-2 flex items-center justify-between gap-2 rounded-lg border border-neon-green/30 bg-white px-3 py-2">
+              <p className="d6-search-context-label font-semibold text-gray-800">
+                {isVi ? 'Đang tra cứu' : 'Searching'}:{' '}
+                <span className="text-neon-green">{query.trim()}</span>
+              </p>
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="d6-search-clear flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 font-bold text-neon-green"
+              >
+                <X className="h-3.5 w-3.5" />
+                {isVi ? 'Xóa' : 'Clear'}
+              </button>
+            </div>
+          )}
 
-        <h2 className="d6-section-title mb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-          {isSearchMode
-            ? isVi
-              ? 'Lộ trình gợi ý'
-              : 'Suggested route'
-            : isVi
-              ? 'Xe sắp đến tại trạm này'
-              : 'Arriving at this stop'}
-        </h2>
+          <h2 className="d6-section-title mb-1.5 font-bold uppercase tracking-wider text-gray-500">
+            {isSearchMode
+              ? isVi
+                ? 'Lộ trình gợi ý'
+                : 'Suggested route'
+              : isVi
+                ? 'Xe sắp đến tại trạm này'
+                : 'Arriving at this stop'}
+          </h2>
 
-        <KioskArrivalHero
-          route={primaryRoute}
-          destination={displayDestination}
-          minutes={primaryMinutes}
-          delayMinutes={primaryRoute.currentDelay}
-          active
-          searchMode={isSearchMode}
-          lang={lang}
-          onSelect={() => openRoute(primaryRoute)}
-        />
+          <KioskArrivalHero
+            route={primaryRoute}
+            destination={displayDestination}
+            minutes={primaryMinutes}
+            delayMinutes={primaryRoute.currentDelay}
+            active
+            searchMode={isSearchMode}
+            lang={lang}
+            readOnly={!!onRouteRequest}
+            onSelect={() => openRoute(primaryRoute)}
+          />
 
-        {showMoreArrivals && (
-          <div className="mt-1.5 space-y-1.5">
-            {moreArrivals.map((route) => (
-              <ArrivalCard
-                key={route.id}
-                route={route}
-                destination={getRouteDestination(route)}
-                minutes={getArrivalMinutes(route)}
-                onTime={route.currentDelay === 0}
-                lang={lang}
-                onSelect={() => openRoute(route)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+          {showMoreArrivals && (
+            <div className="mt-1.5 space-y-1.5">
+              {moreArrivals.map((route) => (
+                <ArrivalCard
+                  key={route.id}
+                  route={route}
+                  destination={getRouteDestination(route)}
+                  minutes={getArrivalMinutes(route)}
+                  onTime={route.currentDelay === 0}
+                  lang={lang}
+                  onSelect={() => openRoute(route)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
-      {/* Vùng chạm — vừa tầm tay */}
-      <section className="d6-touch-zone kiosk-scroll-pad mt-auto shrink-0 space-y-2 bg-white">
-        <p className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
+      {/* Vùng chạm (comfort zone ~1000→1700px) — gom nút vừa tầm tay đứng */}
+      <section className="d6-touch-zone d6-touch-zone--comfort kiosk-scroll-pad mt-auto shrink-0 space-y-2 bg-white">
+        <p className="d6-touch-zone-label font-bold uppercase tracking-wider text-gray-400">
           {isVi ? 'Tương tác' : 'Actions'}
         </p>
+
+        {onRouteRequest && (
+          <button
+            type="button"
+            className="d6-touch-primary btn-kiosk flex w-full items-center justify-center gap-2 rounded-xl border-2 border-neon-green bg-neon-green font-bold uppercase tracking-wide text-white transition hover:bg-green-600"
+            onClick={() => openRoute(primaryRoute)}
+          >
+            {isVi ? 'Xem chi tiết tuyến' : 'View route details'}
+            <ChevronRight className="h-5 w-5 shrink-0" strokeWidth={2.5} />
+          </button>
+        )}
 
         <div className="relative">
           <label className="relative block">

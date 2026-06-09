@@ -457,50 +457,50 @@ export function BpRouteScreen({
           </p>
         </header>
 
-        <div className="bp-route-split flex min-h-0 flex-1 flex-col gap-4 min-[840px]:flex-row min-[840px]:gap-5">
-          <div className="bp-route-info flex w-full min-w-0 flex-col gap-3 min-[840px]:w-[45%] min-[840px]:shrink-0">
-            <section className="shrink-0">
-              <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-500">
-                <Clock className="h-3.5 w-3.5 text-neon-green" strokeWidth={2.5} />
+        <div className="bp-route-split flex min-h-0 flex-1 flex-col gap-6 min-[640px]:flex-row min-[640px]:items-start min-[640px]:gap-6">
+          <div className="bp-route-info flex w-full min-w-0 flex-col gap-6 min-[640px]:w-[45%] min-[640px]:max-w-[45%] min-[640px]:shrink-0">
+            <section className="bp-route-panel w-full">
+              <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
+                <Clock className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
                 {isVi ? 'Xe sắp đến' : 'Next arrival'}
               </h2>
-              <p className={`bp-route-eta mt-1 font-black tabular-nums leading-none ${etaClass}`}>
+              <p className={`bp-route-eta mt-2 font-black tabular-nums leading-none ${etaClass}`}>
                 {wait} {isVi ? 'phút' : 'min'}
               </p>
               {route.delayReason && (
                 <p
-                  className={`mt-1 flex items-start gap-1 text-xs font-semibold ${severe ? 'text-red-600' : 'text-amber-700'}`}
+                  className={`mt-2 flex w-full items-start gap-1.5 break-words text-sm font-semibold leading-snug ${severe ? 'text-red-700' : 'text-amber-800'}`}
                 >
-                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
-                  {route.delayReason}
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} />
+                  <span className="min-w-0 flex-1">{route.delayReason}</span>
                 </p>
               )}
             </section>
 
-            <section className="shrink-0">
-              <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-500">
-                <Ticket className="h-3.5 w-3.5 text-neon-green" strokeWidth={2.5} />
+            <section className="bp-route-panel w-full">
+              <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
+                <Ticket className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
                 {isVi ? 'Giá vé' : 'Fare'}
               </h2>
-              <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
-                <span className="bp-fare-badge rounded-md bg-[#f5f5f5] px-3 py-2 text-xs text-gray-700">
+              <div className="mt-2 flex w-full flex-col gap-2">
+                <span className="bp-fare-badge block w-full rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
                   {isVi ? 'Vé thường' : 'Standard'}:{' '}
-                  <strong className="text-sm text-gray-900">7.000₫</strong>
+                  <strong className="text-base text-gray-900">7.000₫</strong>
                 </span>
-                <span className="bp-fare-badge rounded-md bg-[#f5f5f5] px-3 py-2 text-xs text-gray-700">
+                <span className="bp-fare-badge block w-full rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
                   {isVi ? 'Học sinh / SV' : 'Student'}:{' '}
-                  <strong className="text-sm text-gray-900">3.500₫</strong>
+                  <strong className="text-base text-gray-900">3.500₫</strong>
                 </span>
               </div>
             </section>
 
-            <section className="shrink-0 space-y-2">
+            <section className="bp-route-panel w-full">
               <RouteQrInline route={route} destination={dest} stationId={stationId} lang={lang} />
               {onComplete && (
                 <button
                   type="button"
                   onClick={onComplete}
-                  className="w-full rounded-lg border border-kiosk-border py-2 text-xs font-semibold text-gray-600 transition hover:border-neon-green hover:text-neon-green"
+                  className="bp-route-done-btn mt-3 w-full rounded-xl border-2 border-kiosk-border bg-white py-3 text-sm font-semibold text-gray-700 transition hover:border-neon-green hover:text-neon-green"
                 >
                   {isVi ? 'Hoàn tất' : 'Done'}
                 </button>
@@ -508,8 +508,8 @@ export function BpRouteScreen({
             </section>
           </div>
 
-          <div className="bp-route-stops w-full min-w-0 min-[840px]:w-[55%] min-[840px]:border-l min-[840px]:border-[#e8e8e8] min-[840px]:pl-5">
-            <h2 className="mb-3 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+          <div className="bp-route-stops w-full min-w-0 min-[640px]:w-[55%] min-[640px]:max-w-[55%] min-[640px]:flex-1 min-[640px]:border-l min-[640px]:border-[#e8e8e8] min-[640px]:pl-6">
+            <h2 className="bp-route-panel__title mb-4 font-bold uppercase tracking-wide text-gray-600">
               {isVi ? 'Lộ trình chi tiết' : 'Route'}
             </h2>
             <RouteStopTimeline stops={route.stops} stationName={stationName} lang={lang} />

@@ -9,6 +9,7 @@ export function KioskArrivalHero({
   active,
   searchMode,
   lang = 'vi',
+  readOnly = false,
   onSelect,
 }: {
   route: BusRouteData
@@ -18,9 +19,11 @@ export function KioskArrivalHero({
   active?: boolean
   searchMode?: boolean
   lang?: 'vi' | 'en'
+  /** Chỉ hiển thị — không chạm (vùng nhìn trên kiosk). */
+  readOnly?: boolean
   onSelect?: () => void
 }) {
-  const Tag = onSelect ? 'button' : 'div'
+  const Tag = onSelect && !readOnly ? 'button' : 'div'
   const onTime = delayMinutes === 0
   const isVi = lang === 'vi'
 

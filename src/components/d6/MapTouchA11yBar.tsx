@@ -92,13 +92,13 @@ export function MapTouchA11yBar({
   ]
 
   return (
-    <div className="d6-touch-a11y flex flex-wrap gap-2">
+    <div className="d6-touch-a11y grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
       {chips.map((chip) => (
         <button
           key={chip.id}
           type="button"
           onClick={chip.onClick}
-          className={`d6-touch-chip flex min-h-11 items-center gap-1.5 rounded-xl border-2 px-3 py-2 text-sm font-semibold transition ${
+          className={`d6-touch-chip flex items-center justify-center gap-1.5 rounded-xl border-2 px-3 py-2 font-semibold transition ${
             chip.active
               ? 'border-neon-green bg-neon-green text-white'
               : 'border-kiosk-border bg-white text-gray-800'
