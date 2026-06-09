@@ -195,7 +195,7 @@ export default function BusPassSignaturePage({
       </section>
 
       {/* Thông tin cốt lõi — ETA lớn */}
-      <section className="d6-arrivals-hero shrink-0 border-b border-kiosk-border bg-kiosk-panel px-4 py-3">
+      <section className="d6-arrivals-hero shrink-0 border-b border-kiosk-border bg-kiosk-panel">
         {isSearchMode && (
           <div className="d6-search-context mb-2 flex items-center justify-between gap-2 rounded-lg border border-neon-green/30 bg-white px-3 py-2">
             <p className="text-sm font-semibold text-gray-800">
@@ -213,7 +213,7 @@ export default function BusPassSignaturePage({
           </div>
         )}
 
-        <h2 className="d6-section-title mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+        <h2 className="d6-section-title mb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
           {isSearchMode
             ? isVi
               ? 'Lộ trình gợi ý'
@@ -235,7 +235,7 @@ export default function BusPassSignaturePage({
         />
 
         {showMoreArrivals && (
-          <div className="mt-2 space-y-2">
+          <div className="mt-1.5 space-y-1.5">
             {moreArrivals.map((route) => (
               <ArrivalCard
                 key={route.id}
@@ -252,15 +252,15 @@ export default function BusPassSignaturePage({
       </section>
 
       {/* Vùng chạm — vừa tầm tay */}
-      <section className="d6-touch-zone kiosk-scroll-pad mt-auto shrink-0 space-y-3 bg-white px-4 py-3">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+      <section className="d6-touch-zone kiosk-scroll-pad mt-auto shrink-0 space-y-2 bg-white">
+        <p className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
           {isVi ? 'Tương tác' : 'Actions'}
         </p>
 
         <div className="relative">
           <label className="relative block">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neon-green"
+              className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neon-green"
               strokeWidth={2}
             />
             <input
@@ -278,7 +278,7 @@ export default function BusPassSignaturePage({
                 adaptive.recordTouch('search-focus')
               }}
               onBlur={() => setSearchFocused(false)}
-              className="d6-touch-search w-full rounded-xl border-2 border-kiosk-border py-3.5 pl-11 pr-3 text-base font-semibold outline-none focus:border-neon-green"
+              className="d6-touch-search w-full rounded-lg border-2 border-kiosk-border pl-9 pr-3 text-sm font-semibold outline-none focus:border-neon-green"
               autoComplete="off"
             />
           </label>
@@ -325,7 +325,7 @@ export default function BusPassSignaturePage({
         {moreArrivals.length > 0 && (
           <button
             type="button"
-            className="d6-touch-more btn-kiosk flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-kiosk-border bg-kiosk-panel text-base font-bold text-gray-800"
+            className="d6-touch-more btn-kiosk flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-kiosk-border bg-kiosk-panel font-semibold text-gray-800"
             onClick={() =>
               handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
             }

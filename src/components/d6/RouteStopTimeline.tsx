@@ -42,9 +42,9 @@ export function RouteStopTimeline({
                 )}
               </span>
             </div>
-            <div className="bp-route-timeline__body min-w-0 pb-5">
-              <p className="text-sm font-bold text-gray-900">
-                <span className="tabular-nums text-gray-500">{String(i + 1).padStart(2, '0')}.</span>{' '}
+            <div className="bp-route-timeline__body min-w-0 flex-1 pb-4">
+              <p className="text-sm font-bold leading-snug text-gray-900">
+                <span className="tabular-nums text-gray-600">{String(i + 1).padStart(2, '0')}.</span>{' '}
                 {stop.name}
               </p>
               {isCurrent && (

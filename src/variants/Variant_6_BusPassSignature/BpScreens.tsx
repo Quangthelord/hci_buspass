@@ -54,16 +54,16 @@ export function BpHomeScreen({
 
   return (
     <div className="bp-welcome bp-flow welcome-animate flex min-h-full flex-col">
-      <header className="bp-welcome-header flex shrink-0 items-center justify-end border-b border-kiosk-border/60 px-4 py-2.5">
+      <header className="bp-welcome-header flex shrink-0 items-center justify-end border-b border-kiosk-border/60 px-3 py-2">
         <time
-          className="text-2xl font-black tabular-nums text-gray-900"
+          className="text-xl font-bold tabular-nums text-gray-900"
           dateTime={now.toISOString()}
         >
           {formatTime24(now)}
         </time>
       </header>
 
-      <section className="bp-welcome-identity shrink-0 px-4 py-5 text-center">
+      <section className="bp-welcome-identity shrink-0 px-3 py-3 text-center">
         <p className="flex items-center justify-center gap-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">
           <MapPin className="h-3.5 w-3.5 text-neon-green" strokeWidth={2.5} />
           {isVi ? 'Trạm' : 'Station'}
@@ -114,12 +114,12 @@ export function BpHomeScreen({
               key={l.code}
               type="button"
               onClick={() => onLang(l.code)}
-              className="bp-welcome-lang-btn btn-kiosk group flex min-h-[4.5rem] flex-col items-center justify-center gap-1 rounded-2xl border-2 border-neon-green bg-white px-3 py-4 shadow-sm transition hover:border-neon-green hover:bg-neon-green hover:text-white active:scale-[0.98]"
+              className="bp-welcome-lang-btn btn-kiosk group flex min-h-[3.75rem] flex-col items-center justify-center gap-0.5 rounded-xl border-2 border-neon-green bg-white px-2 py-3 shadow-sm transition hover:border-neon-green hover:bg-neon-green hover:text-white active:scale-[0.98]"
             >
-              <span className="text-3xl leading-none" aria-hidden>
+              <span className="text-2xl leading-none" aria-hidden>
                 {l.flag}
               </span>
-              <span className="text-base font-bold leading-tight">{l.label}</span>
+              <span className="text-sm font-bold leading-tight">{l.label}</span>
               <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 group-hover:text-white/80">
                 {l.sub}
               </span>
@@ -132,7 +132,7 @@ export function BpHomeScreen({
         <button
           type="button"
           onClick={onHelp}
-          className="bp-welcome-help-btn btn-kiosk flex min-h-[4rem] w-full items-center justify-center gap-2 rounded-2xl border-2 border-kiosk-border bg-kiosk-panel text-base font-bold text-gray-800 transition hover:border-neon-green hover:bg-white"
+          className="bp-welcome-help-btn btn-kiosk flex min-h-[3rem] w-full items-center justify-center gap-2 rounded-xl border-2 border-kiosk-border bg-kiosk-panel text-sm font-bold text-gray-800 transition hover:border-neon-green hover:bg-white"
         >
           <HelpCircle className="h-5 w-5 text-neon-green" strokeWidth={2.5} />
           {isVi ? 'Trợ giúp / Help' : 'Help / Trợ giúp'}
@@ -293,8 +293,8 @@ export function BpListPanel({
   }, [routes, query])
 
   return (
-    <div className="bp-list bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3">
-      <label className="bp-list-search relative mb-4 block">
+    <div className="bp-list bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-2">
+      <label className="bp-list-search relative mb-2 block">
         <Search
           className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neon-green"
           strokeWidth={2}
@@ -308,8 +308,8 @@ export function BpListPanel({
         />
       </label>
 
-      <header className="mb-3">
-        <h1 className="text-sm font-bold uppercase tracking-wide text-gray-800">
+      <header className="mb-2">
+        <h1 className="text-xs font-bold uppercase tracking-wide text-gray-800">
           {isVi ? 'Danh sách tuyến tại trạm này' : 'Routes at this stop'}
         </h1>
         <p className="mt-0.5 text-xs text-gray-500">[{tr('easyRead', lang)}]</p>
@@ -380,16 +380,16 @@ function ListRouteRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`bp-list-row group w-full rounded-2xl border-2 bg-white p-4 text-left shadow-sm transition active:scale-[0.99] hover:border-neon-green hover:bg-green-50/40 ${
+      className={`bp-list-row group w-full border-2 bg-white text-left shadow-sm transition active:scale-[0.99] hover:border-neon-green hover:bg-green-50/40 ${
         severe ? 'border-amber-300' : 'border-kiosk-border'
       }`}
     >
-      <div className="flex items-start gap-3">
-        <span className="bp-list-route-badge flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neon-green text-lg font-black text-white">
+      <div className="flex items-center gap-2.5">
+        <span className="bp-list-route-badge flex shrink-0 items-center justify-center bg-neon-green font-black text-white">
           {route.id}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-bold text-gray-900">
+          <p className="truncate text-sm font-bold text-gray-900">
             {origin} → {dest}
           </p>
           {route.delayReason && (
@@ -400,13 +400,13 @@ function ListRouteRow({
               {route.delayReason}
             </p>
           )}
-          <p className="mt-2 flex items-center gap-1 text-xs text-gray-500 group-hover:text-neon-green">
-            <ChevronRight className="h-3.5 w-3.5" strokeWidth={2.5} />
+          <p className="mt-1 flex items-center gap-1 text-[10px] text-gray-500 group-hover:text-neon-green">
+            <ChevronRight className="h-3 w-3" strokeWidth={2.5} />
             {isVi ? 'Chạm để xem lộ trình' : 'Tap to view route'}
           </p>
         </div>
         <div className={`shrink-0 text-right ${etaClass}`}>
-          <p className="text-2xl font-black tabular-nums leading-none">
+          <p className="text-xl font-black tabular-nums leading-none">
             {wait}–{waitMax}′
           </p>
           <p className="mt-0.5 text-[10px] font-bold uppercase tracking-wide opacity-80">
@@ -446,73 +446,75 @@ export function BpRouteScreen({
   return (
     <div className="bp-route flex min-h-0 flex-1 flex-col">
       <BpKioskHeader lang={lang} stationName={stationName} onBack={onBack} />
-      <div className="bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3">
-      <header className="bp-route-banner mb-4 flex flex-wrap items-center gap-2 rounded-xl bg-green-50/80 px-4 py-3">
-        <span className="inline-flex items-center gap-1.5 rounded-lg bg-neon-green px-3 py-1 text-sm font-black text-white">
-          <Bus className="h-4 w-4" strokeWidth={2.5} />
-          {isVi ? 'TUYẾN' : 'ROUTE'} {route.id}
-        </span>
-        <span className="text-base font-bold uppercase tracking-wide text-gray-900">
-          {origin} → {dest}
-        </span>
-      </header>
+      <div className="bp-route-scroll bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-2">
+        <header className="bp-route-banner mb-3 shrink-0 rounded-lg bg-green-50/80 px-3 py-2">
+          <span className="inline-flex items-center gap-1 rounded-md bg-neon-green px-2 py-0.5 text-xs font-black text-white">
+            <Bus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            {isVi ? 'TUYẾN' : 'ROUTE'} {route.id}
+          </span>
+          <p className="mt-1.5 text-sm font-bold leading-snug text-gray-900">
+            {origin} → {dest}
+          </p>
+        </header>
 
-      <div className="bp-route-split grid min-h-0 flex-1 gap-6 lg:grid-cols-2 lg:gap-8">
-        <div className="bp-route-info flex flex-col gap-5">
-          <section>
-            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-gray-500">
-              <Clock className="h-4 w-4 text-neon-green" strokeWidth={2.5} />
-              {isVi ? 'Xe sắp đến' : 'Next arrival'}
-            </h2>
-            <p className={`mt-2 text-4xl font-black tabular-nums leading-none ${etaClass}`}>
-              {wait} {isVi ? 'phút' : 'min'}
-            </p>
-            {route.delayReason && (
-              <p
-                className={`mt-2 flex items-start gap-1.5 text-sm font-semibold ${severe ? 'text-red-600' : 'text-amber-700'}`}
-              >
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} />
-                {route.delayReason}
+        <div className="bp-route-split flex min-h-0 flex-1 flex-col gap-4 min-[840px]:flex-row min-[840px]:gap-5">
+          <div className="bp-route-info flex w-full min-w-0 flex-col gap-3 min-[840px]:w-[45%] min-[840px]:shrink-0">
+            <section className="shrink-0">
+              <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                <Clock className="h-3.5 w-3.5 text-neon-green" strokeWidth={2.5} />
+                {isVi ? 'Xe sắp đến' : 'Next arrival'}
+              </h2>
+              <p className={`bp-route-eta mt-1 font-black tabular-nums leading-none ${etaClass}`}>
+                {wait} {isVi ? 'phút' : 'min'}
               </p>
-            )}
-          </section>
+              {route.delayReason && (
+                <p
+                  className={`mt-1 flex items-start gap-1 text-xs font-semibold ${severe ? 'text-red-600' : 'text-amber-700'}`}
+                >
+                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
+                  {route.delayReason}
+                </p>
+              )}
+            </section>
 
-          <section>
-            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-gray-500">
-              <Ticket className="h-4 w-4 text-neon-green" strokeWidth={2.5} />
-              {isVi ? 'Giá vé' : 'Fare'}
+            <section className="shrink-0">
+              <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                <Ticket className="h-3.5 w-3.5 text-neon-green" strokeWidth={2.5} />
+                {isVi ? 'Giá vé' : 'Fare'}
+              </h2>
+              <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
+                <span className="bp-fare-badge rounded-md bg-[#f5f5f5] px-3 py-2 text-xs text-gray-700">
+                  {isVi ? 'Vé thường' : 'Standard'}:{' '}
+                  <strong className="text-sm text-gray-900">7.000₫</strong>
+                </span>
+                <span className="bp-fare-badge rounded-md bg-[#f5f5f5] px-3 py-2 text-xs text-gray-700">
+                  {isVi ? 'Học sinh / SV' : 'Student'}:{' '}
+                  <strong className="text-sm text-gray-900">3.500₫</strong>
+                </span>
+              </div>
+            </section>
+
+            <section className="shrink-0 space-y-2">
+              <RouteQrInline route={route} destination={dest} stationId={stationId} lang={lang} />
+              {onComplete && (
+                <button
+                  type="button"
+                  onClick={onComplete}
+                  className="w-full rounded-lg border border-kiosk-border py-2 text-xs font-semibold text-gray-600 transition hover:border-neon-green hover:text-neon-green"
+                >
+                  {isVi ? 'Hoàn tất' : 'Done'}
+                </button>
+              )}
+            </section>
+          </div>
+
+          <div className="bp-route-stops w-full min-w-0 min-[840px]:w-[55%] min-[840px]:border-l min-[840px]:border-[#e8e8e8] min-[840px]:pl-5">
+            <h2 className="mb-3 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+              {isVi ? 'Lộ trình chi tiết' : 'Route'}
             </h2>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <span className="rounded-lg border-2 border-kiosk-border bg-white px-3 py-2 text-sm font-bold text-gray-900">
-                {isVi ? 'Vé thường' : 'Standard'}: 7.000₫
-              </span>
-              <span className="rounded-lg border-2 border-neon-green/30 bg-green-50/60 px-3 py-2 text-sm font-bold text-neon-green">
-                {isVi ? 'Học sinh / SV' : 'Student'}: 3.500₫
-              </span>
-            </div>
-          </section>
-
-          <div className="mt-auto space-y-3">
-            <RouteQrInline route={route} destination={dest} stationId={stationId} lang={lang} />
-            {onComplete && (
-              <button
-                type="button"
-                onClick={onComplete}
-                className="w-full rounded-xl border-2 border-kiosk-border py-2.5 text-sm font-semibold text-gray-600 transition hover:border-neon-green hover:text-neon-green"
-              >
-                {isVi ? 'Hoàn tất' : 'Done'}
-              </button>
-            )}
+            <RouteStopTimeline stops={route.stops} stationName={stationName} lang={lang} />
           </div>
         </div>
-
-        <div className="bp-route-stops min-h-0 lg:overflow-y-auto">
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-wide text-gray-500">
-            {isVi ? 'Lộ trình' : 'Route'}
-          </h2>
-          <RouteStopTimeline stops={route.stops} stationName={stationName} lang={lang} />
-        </div>
-      </div>
       </div>
     </div>
   )

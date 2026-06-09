@@ -50,7 +50,7 @@ export function BpDashboard({
       ) : (
         <div className="flex min-h-0 flex-1 flex-col">
           <BpListPanel lang={lang} routes={routes} onRoute={onRoute} />
-          <div className="shrink-0 border-t border-kiosk-border bg-white px-4 py-3">
+          <div className="shrink-0 border-t border-kiosk-border bg-white px-3 py-2">
             <MapTouchA11yBar
               lang={lang}
               onHelp={onHelp}

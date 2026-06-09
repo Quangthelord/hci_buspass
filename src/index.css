@@ -1066,8 +1066,8 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
 
 .d6-map-stage--kiosk {
   width: 100%;
-  height: clamp(11rem, 40vh, 16rem);
-  min-height: clamp(11rem, 40vh, 16rem);
+  height: clamp(6.75rem, 28vh, 10rem);
+  min-height: clamp(6.75rem, 28vh, 10rem);
   flex: none;
   background: #eef2f0;
 }
@@ -1076,52 +1076,103 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
   flex: none;
 }
 
+.d6-map-page--kiosk .d6-arrivals-hero {
+  padding: 0.5rem 0.75rem;
+}
+
 .d6-arrival-hero {
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.75rem;
 }
 
 .d6-arrival-hero--active {
   border-color: var(--color-neon-green);
   background: #ffffff;
-  box-shadow: 0 2px 12px rgba(22, 163, 74, 0.12);
+  box-shadow: 0 1px 8px rgba(22, 163, 74, 0.1);
 }
 
 .d6-arrival-hero-eta {
-  min-width: 4.5rem;
+  min-width: 3rem;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.5rem;
 }
 
 .d6-arrival-hero-eta-num {
-  font-size: clamp(2rem, 8vw, 2.75rem);
+  font-size: clamp(1.375rem, 4.5vw, 1.75rem);
 }
 
 .d6-arrival-hero-eta-unit {
-  letter-spacing: 0.06em;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+}
+
+.d6-arrival-hero-label {
+  font-size: 0.625rem;
 }
 
 .d6-arrival-hero-route {
-  font-size: 1.0625rem;
+  font-size: 0.875rem;
+  margin-top: 0.125rem;
 }
 
 .d6-arrival-hero-dest {
+  font-size: 0.8125rem;
+}
+
+.d6-arrival-hero-delay {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.d6-map-page--kiosk .d6-arrival-card {
+  padding: 0.5rem 0.625rem !important;
+  min-height: 2.5rem;
+  border-radius: 0.625rem;
+}
+
+.d6-map-page--kiosk .d6-arrival-route {
+  font-size: 0.8125rem;
+}
+
+.d6-map-page--kiosk .d6-arrival-eta {
   font-size: 0.9375rem;
 }
 
+.d6-map-page--kiosk .d6-eta-dot {
+  width: 7px;
+  height: 7px;
+}
+
 .d6-touch-zone {
-  border-top: 3px solid var(--color-neon-green);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  border-top: 2px solid var(--color-neon-green);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.d6-map-page--kiosk .d6-touch-zone {
+  padding: 0.5rem 0.75rem;
+  gap: 0.5rem;
 }
 
 .d6-touch-search {
-  min-height: 3rem;
+  min-height: 2.375rem;
   background: #ffffff;
+  font-size: 0.875rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
 }
 
 .d6-touch-more {
   letter-spacing: 0.01em;
+  min-height: 2.25rem;
+  font-size: 0.8125rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
 }
 
 .d6-touch-chip {
-  min-height: 2.75rem;
+  min-height: 2rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
 }
 
 body.kiosk-mode .d6-map-page--kiosk {
@@ -1130,12 +1181,12 @@ body.kiosk-mode .d6-map-page--kiosk {
 }
 
 body.kiosk-mode .d6-map-stage--kiosk {
-  height: clamp(10rem, 38vh, 15rem);
-  min-height: clamp(10rem, 38vh, 15rem);
+  height: clamp(6.25rem, 26vh, 9.5rem);
+  min-height: clamp(6.25rem, 26vh, 9.5rem);
 }
 
 body.a11y-large-text .d6-arrival-hero-eta-num {
-  font-size: clamp(2.25rem, 9vw, 3rem) !important;
+  font-size: clamp(1.75rem, 6vw, 2.25rem) !important;
 }
 
 .d6-map-stage-inner {
@@ -1564,8 +1615,8 @@ body.a11y-compact-text .d6-search-input {
 }
 
 .bp-welcome-station {
-  font-size: clamp(1.75rem, 7vw, 2.5rem);
-  letter-spacing: 0.04em;
+  font-size: clamp(1.375rem, 5.5vw, 2rem);
+  letter-spacing: 0.03em;
 }
 
 .bp-welcome-lang-btn:hover .text-\[10px\],
@@ -1615,29 +1666,77 @@ body.a11y-large-text .bp-mode .grid.grid-cols-2 .bp-mode-card {
 
 /* List Mode — hàng ngang full-width, dễ đọc */
 .bp-list-row {
-  min-height: 5.5rem;
+  min-height: 3.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
 }
 
 .bp-list-route-badge {
-  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+  box-shadow: 0 1px 6px rgba(22, 163, 74, 0.2);
+  height: 2.25rem;
+  width: 2.25rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
 }
 
 .bp-list-search input {
-  min-height: 3rem;
+  min-height: 2.375rem;
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.bp-list .flex.flex-col.gap-3 {
+  gap: 0.5rem;
 }
 
 body.a11y-large-text .bp-list-row {
-  min-height: 6.5rem !important;
+  min-height: 5rem !important;
 }
 
-body.a11y-large-text .bp-list-row .text-2xl {
-  font-size: 1.75rem !important;
+body.a11y-large-text .bp-list-row .text-xl {
+  font-size: 1.5rem !important;
 }
 
 /* Route detail — split info + timeline */
 .bp-route-split {
-  border-top: 1px solid #e8e8e8;
-  padding-top: 1rem;
+  border-top: none;
+  padding-top: 0;
+}
+
+.bp-route-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+.bp-route-info {
+  overflow: visible;
+}
+
+.bp-route-qr .flex {
+  flex-wrap: nowrap;
+}
+
+.bp-route-qr-code {
+  flex-shrink: 0;
+}
+
+.bp-fare-badge strong {
+  font-weight: 800;
+}
+
+.bp-route-timeline__item--past .bp-route-timeline__body p {
+  color: #374151;
+}
+
+.bp-screen--route {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bp-route {
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .bp-route-timeline {
@@ -1735,8 +1834,12 @@ body.a11y-large-text .bp-list-row .text-2xl {
   }
 }
 
-body.a11y-large-text .bp-route-info .text-4xl {
-  font-size: 2.5rem !important;
+body.a11y-large-text .bp-route-info .text-3xl {
+  font-size: 2rem !important;
+}
+
+.bp-route-info .bp-route-eta {
+  font-size: clamp(1.5rem, 5vw, 1.875rem);
 }
 
 /* QR sync — focus zone */
@@ -1759,7 +1862,7 @@ body.a11y-large-text .bp-qr-code {
 }
 
 .bp-kiosk-header {
-  min-height: 3.25rem;
+  min-height: auto;
 }
 
 .bp-screen--dashboard,
