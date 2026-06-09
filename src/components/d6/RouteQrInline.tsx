@@ -56,19 +56,15 @@ export function RouteQrInline({
   if (layout === 'dock') {
     return (
       <div className="bp-route-qr bp-route-qr--dock w-full">
-        <div className="bp-route-qr-dock-inner flex w-full min-w-0 flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
-          <div className="bp-route-qr-copy w-full min-w-0 flex-1 break-words sm:text-left">
-            <p className="flex w-full items-start justify-center gap-2 text-base font-bold leading-snug text-gray-900 sm:justify-start">
-              <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-neon-green" strokeWidth={2.5} />
-              <span className="min-w-0 flex-1 break-words">
-                {isVi
-                  ? 'Quét QR để mang lộ trình theo người — Không cần bấm thêm.'
-                  : 'Scan QR to take the route with you — no extra taps needed.'}
-              </span>
-            </p>
-          </div>
-          <div className="bp-route-qr-visual flex shrink-0 justify-center">{qrBlock}</div>
-        </div>
+        <p className="bp-route-qr-dock-text flex w-full items-start gap-2 text-base font-bold leading-snug text-gray-900">
+          <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-neon-green" strokeWidth={2.5} />
+          <span className="min-w-0 flex-1 break-words">
+            {isVi
+              ? 'Quét QR để mang lộ trình theo người — Không cần bấm thêm.'
+              : 'Scan QR to take the route with you — no extra taps needed.'}
+          </span>
+        </p>
+        <div className="bp-route-qr-visual flex w-full items-center justify-center">{qrBlock}</div>
       </div>
     )
   }

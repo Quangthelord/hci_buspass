@@ -510,7 +510,7 @@ export function BpRouteScreen({
         </section>
 
         {/* ── Bottom 1/3: vùng QR full-width ── */}
-        <section className="bp-route-bottom bottom-qr-section flex min-h-0 w-full flex-1 shrink-0 flex-col justify-center border-t border-[#e0e0e0] bg-[#f9f9f9] box-border p-6">
+        <section className="bp-route-bottom bottom-qr-section flex w-full shrink-0 flex-col gap-3 border-t border-[#e0e0e0] bg-[#f9f9f9] box-border p-6">
           <RouteQrInline
             route={route}
             destination={dest}

@@ -1835,9 +1835,10 @@ body.a11y-large-text .bp-list-row .text-xl {
 
 .bp-route-bottom {
   flex: 1 1 0;
-  min-height: clamp(10rem, 33vh, 22rem);
+  min-height: clamp(13rem, 34vh, 24rem);
   width: 100%;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .bp-route-split {
@@ -1885,13 +1886,16 @@ body.a11y-large-text .bp-list-row .text-xl {
 .bp-route-qr--dock {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
   width: 100%;
   overflow: visible;
+  --bp-route-qr-size: clamp(9.375rem, 16vmin, 11.25rem);
 }
 
-.bp-route-qr-dock-inner {
-  width: 100%;
-  min-width: 0;
+.bp-route-qr-dock-text {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .bp-route-qr-copy {
@@ -1902,26 +1906,30 @@ body.a11y-large-text .bp-list-row .text-xl {
 
 .bp-route-qr-visual {
   flex: none;
+  width: 100%;
+  min-height: var(--bp-route-qr-size, 10.5rem);
+  padding: 0.25rem 0;
 }
 
 .bp-route-qr-code {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--bp-route-qr-size, 10.5rem);
-  height: var(--bp-route-qr-size, 10.5rem);
   flex-shrink: 0;
   box-sizing: border-box;
+  background: #ffffff;
 }
 
-.bp-route-qr--dock {
-  --bp-route-qr-size: clamp(9.375rem, 16vmin, 11.25rem);
+.bp-route-qr--dock .bp-route-qr-code {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .bp-route-qr-code svg {
   display: block;
-  width: 100% !important;
-  height: 100% !important;
+  flex-shrink: 0;
 }
 
 .bp-fare-badge {
@@ -2064,8 +2072,18 @@ body.a11y-large-text .bp-route-info .text-3xl {
 
   body.kiosk-mode .bp-route-bottom {
     flex: 1 1 0;
-    min-height: clamp(12rem, 33vh, 20rem);
+    min-height: clamp(14rem, 33vh, 22rem);
     padding: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  body.kiosk-mode .bp-route-qr--dock {
+    --bp-route-qr-size: clamp(10rem, 14vmin, 11.25rem);
+  }
+
+  body.kiosk-mode .bp-route-qr--dock .bp-route-qr-dock-text {
+    font-size: clamp(1.0625rem, 2.4vmin, 1.375rem);
+    line-height: 1.45;
   }
 
   body.kiosk-mode .bp-route-split {
@@ -2107,15 +2125,6 @@ body.a11y-large-text .bp-route-info .text-3xl {
 
   body.kiosk-mode .bp-fare-badge strong {
     font-size: clamp(1.25rem, 2.8vmin, 1.625rem);
-  }
-
-  body.kiosk-mode .bp-route-qr--dock {
-    --bp-route-qr-size: clamp(9.375rem, 15vmin, 11.25rem);
-  }
-
-  body.kiosk-mode .bp-route-qr--dock .bp-route-qr-copy p {
-    font-size: clamp(1.125rem, 2.6vmin, 1.5rem);
-    line-height: 1.45;
   }
 
   body.kiosk-mode .bp-route-stops .bp-route-timeline__body p {
