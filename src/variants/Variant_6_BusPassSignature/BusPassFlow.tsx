@@ -1,25 +1,13 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../../data/busRoutes'
 import { completeTask, logClick, startTask } from '../../lib/telemetry'
-import {
-  findTaskRoute,
-  matchesTaskDestination,
-  TASK_DESTINATION,
-  TASK_ROUTE_ID,
-} from '../../lib/taskGoal'
+import { findTaskRoute, matchesTaskDestination } from '../../lib/taskGoal'
 import { useMobileScroll } from '../../hooks/useMobileScroll'
-import BusPassSignaturePage from '../../app/page'
+import { useKioskIdleReset } from '../../hooks/useKioskIdleReset'
 import type { BpLang, BpScreen } from './constants'
 import { VARIANT_ID } from './constants'
-import {
-  BpHelpScreen,
-  BpHomeScreen,
-  BpListScreen,
-  BpModeScreen,
-  BpQrScreen,
-  BpRouteScreen,
-} from './BpScreens'
-import { BpInteractionMenu } from './BpInteractionMenu'
+import { BpHelpScreen, BpHomeScreen, BpQrScreen, BpRouteScreen } from './BpScreens'
+import { BpDashboard } from './BpDashboard'
 
 export function BusPassFlow({
   stationId = 'ben-thanh',
@@ -32,16 +20,15 @@ export function BusPassFlow({
 
   const [screen, setScreen] = useState<BpScreen>('home')
   const [lang, setLang] = useState<BpLang>('vi')
+  const [dashboardView, setDashboardView] = useState<'map' | 'list'>('map')
   const [selectedRoute, setSelectedRoute] = useState<BusRouteData | null>(null)
   const [destination, setDestination] = useState('')
   const taskStarted = useRef(false)
   const taskDone = useRef(false)
+  const helpReturnScreen = useRef<BpScreen>('map')
 
   const liveRoutes = useLiveBusRoutes()
-  const stationName =
-    busRoutesData.station.id === stationId
-      ? busRoutesData.station.name
-      : busRoutesData.station.name
+  const stationName = busRoutesData.station.name
 
   const stationRoutes = useMemo(
     () => liveRoutes.filter((r) => r.stops[0]?.name === stationName),
@@ -72,113 +59,104 @@ export function BusPassFlow({
     tryComplete(route)
   }
 
+  function getRouteDest(route: BusRouteData) {
+    return route.stops[route.stops.length - 1]?.name ?? ''
+  }
+
+  const goHome = useCallback(() => {
+    setScreen('home')
+    setSelectedRoute(null)
+    setDestination('')
+    setDashboardView('map')
+  }, [])
+
   const goRoute = (route: BusRouteData) => {
     track(`route-${route.id}`)
     pickRoute(route, getRouteDest(route))
     setScreen('route')
   }
 
-  const goSync = (route?: BusRouteData) => {
+  const goThanks = (route?: BusRouteData) => {
     const r = route ?? selectedRoute ?? findTaskRoute(liveRoutes)
     if (!r) return
-    track(`sync-${r.id}`)
-    pickRoute(r, destination || TASK_DESTINATION)
+    track(`sync-done-${r.id}`)
+    pickRoute(r, destination || getRouteDest(r))
     setScreen('qr')
   }
 
-  function getRouteDest(route: BusRouteData) {
-    return route.stops[route.stops.length - 1]?.name ?? ''
-  }
+  useKioskIdleReset(screen === 'map', goHome, 90_000)
+  useKioskIdleReset(screen === 'route', goHome, 60_000)
+  useKioskIdleReset(screen === 'help', goHome, 120_000)
 
-  const goHome = () => {
-    setScreen('home')
-    setSelectedRoute(null)
-    setDestination('')
-  }
-
-  const menuProps = {
-    lang,
-    screen,
-    onHelp: () => setScreen('help'),
-    onList: () => setScreen('list'),
-    onMap: () => setScreen('map'),
-    onTrack: track,
-  }
+  useEffect(() => {
+    if ((screen === 'route' || screen === 'qr') && !selectedRoute) {
+      setScreen('map')
+    }
+  }, [screen, selectedRoute])
 
   let content: ReactNode = null
   let screenClass = 'bp-screen bp-screen--scroll d6-root flex min-h-dvh flex-col font-sans'
 
   if (screen === 'home') {
+    screenClass = 'bp-screen bp-screen--welcome d6-root flex min-h-dvh flex-col font-sans'
+    const routeIds = (stationRoutes.length > 0 ? stationRoutes : liveRoutes).map((r) => r.id)
     content = (
       <BpHomeScreen
         lang={lang}
         stationName={stationName}
-        routeCount={stationRoutes.length || liveRoutes.length}
+        routeIds={routeIds}
         onLang={(l) => {
           track(`lang-${l}`)
           setLang(l)
-          setScreen('mode')
+          setScreen('map')
         }}
         onHelp={() => {
           track('help-from-home')
+          helpReturnScreen.current = 'home'
           setScreen('help')
         }}
       />
     )
-  } else if (screen === 'mode') {
+  } else if (screen === 'map') {
+    screenClass = 'bp-screen bp-screen--dashboard d6-root flex min-h-dvh flex-col font-sans'
     content = (
-      <BpModeScreen
+      <BpDashboard
         lang={lang}
-        onBack={goHome}
-        onMap={() => {
-          track('mode-map')
-          setScreen('map')
-        }}
-        onList={() => {
-          track('mode-list')
-          setScreen('list')
-        }}
-        onTrip={() => {
-          track('mode-trip-suoi-tien')
-          setDestination(TASK_DESTINATION)
-          const taskRoute = findTaskRoute(liveRoutes)
-          if (taskRoute) {
-            setSelectedRoute(taskRoute)
-            setScreen('map')
-          } else {
-            setScreen('map')
-          }
-        }}
-      />
-    )
-  } else if (screen === 'list') {
-    screenClass = 'bp-screen bp-screen--scroll d6-root relative flex min-h-dvh flex-col font-sans'
-    content = (
-      <BpListScreen
-        lang={lang}
+        stationName={stationName}
+        stationId={stationId}
+        userId={userId}
         routes={stationRoutes.length > 0 ? stationRoutes : liveRoutes}
+        viewMode={dashboardView}
+        onViewModeChange={setDashboardView}
         onRoute={goRoute}
-        onMap={() => setScreen('map')}
-        onBack={() => setScreen('mode')}
+        onHelp={() => {
+          helpReturnScreen.current = 'map'
+          setScreen('help')
+        }}
+        onBack={goHome}
       />
     )
   } else if (screen === 'route' && selectedRoute) {
+    screenClass = 'bp-screen bp-screen--route d6-root flex min-h-dvh flex-col font-sans'
     content = (
       <BpRouteScreen
         lang={lang}
         route={selectedRoute}
         stationName={stationName}
-        onSync={() => goSync(selectedRoute)}
+        stationId={stationId}
+        onComplete={() => goThanks(selectedRoute)}
         onBack={() => setScreen('map')}
       />
     )
   } else if (screen === 'qr' && selectedRoute) {
+    screenClass = 'bp-screen bp-screen--qr d6-root flex min-h-dvh flex-col font-sans'
     content = (
       <BpQrScreen
         lang={lang}
         route={selectedRoute}
         destination={destination || getRouteDest(selectedRoute)}
         stationId={stationId}
+        stationName={stationName}
         onBack={() => setScreen('route')}
         onDone={() => {
           track('qr-done')
@@ -188,35 +166,34 @@ export function BusPassFlow({
       />
     )
   } else if (screen === 'help') {
-    content = <BpHelpScreen lang={lang} onBack={() => setScreen('mode')} />
-  } else {
-    screenClass = 'bp-screen bp-screen--scroll relative flex min-h-dvh flex-col'
+    screenClass = 'bp-screen bp-screen--help d6-root flex min-h-dvh flex-col font-sans'
     content = (
-      <BusPassSignaturePage
+      <BpHelpScreen
+        lang={lang}
+        stationName={stationName}
+        onBack={() => setScreen(helpReturnScreen.current)}
+      />
+    )
+  } else {
+    screenClass = 'bp-screen bp-screen--dashboard d6-root flex min-h-dvh flex-col font-sans'
+    content = (
+      <BpDashboard
+        lang={lang}
+        stationName={stationName}
         stationId={stationId}
         userId={userId}
-        initialRouteId={selectedRoute?.id ?? TASK_ROUTE_ID}
-        initialDestination={destination || undefined}
-        onSyncRequest={(route) => {
-          pickRoute(route, destination || TASK_DESTINATION)
-          setScreen('route')
+        routes={stationRoutes.length > 0 ? stationRoutes : liveRoutes}
+        viewMode={dashboardView}
+        onViewModeChange={setDashboardView}
+        onRoute={goRoute}
+        onHelp={() => {
+          helpReturnScreen.current = 'map'
+          setScreen('help')
         }}
-        onDestinationPick={(dest, route) => {
-          setDestination(dest)
-          if (route) setSelectedRoute(route)
-          if (dest === TASK_DESTINATION) {
-            const taskRoute = route ?? findTaskRoute(liveRoutes)
-            if (taskRoute) tryComplete(taskRoute)
-          }
-        }}
+        onBack={goHome}
       />
     )
   }
 
-  return (
-    <div className={screenClass}>
-      {content}
-      <BpInteractionMenu {...menuProps} />
-    </div>
-  )
+  return <div className={screenClass}>{content}</div>
 }

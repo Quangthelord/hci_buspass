@@ -10,8 +10,8 @@ import 'leaflet/dist/leaflet.css'
 const OSM_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
 
-/** Bản đồ sáng — đồng bộ tone kiosk trắng/xanh lá */
-const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+/** Bản đồ tối giản — ít chi tiết, nổi bật tuyến xe bus */
+const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 
 function stationIcon() {
   return L.divIcon({
@@ -52,7 +52,7 @@ function FitRoute({ positions }: { positions: [number, number][] }) {
   const map = useMap()
   useEffect(() => {
     if (positions.length >= 2) {
-      map.fitBounds(L.latLngBounds(positions), { padding: [48, 48], maxZoom: 14 })
+      map.fitBounds(L.latLngBounds(positions), { padding: [36, 36], maxZoom: 15 })
     }
   }, [map, positions])
   return null
@@ -111,7 +111,7 @@ export function D6LeafletMap({
           <Minus className="h-4 w-4" />
         </MapBtn>
         <MapBtn
-          onClick={() => map?.fitBounds(L.latLngBounds(visiblePositions), { padding: [48, 48] })}
+          onClick={() => map?.fitBounds(L.latLngBounds(visiblePositions), { padding: [36, 36], maxZoom: 15 })}
           aria-label="Căn tuyến"
         >
           <Compass className="h-4 w-4" />

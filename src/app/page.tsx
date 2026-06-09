@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../data/busRoutes'
 import { formatTime24 } from '../lib/formatVi'
 import { completeTask, logClick, startTask } from '../lib/telemetry'
@@ -15,6 +15,9 @@ import { useAdaptiveMode } from '../lib/useAdaptiveMode'
 import { useUrgencyPulse } from '../lib/useUrgencyPulse'
 import { D6LeafletMap } from '../components/d6/D6LeafletMap'
 import { ArrivalCard } from '../components/d6/ArrivalCard'
+import { KioskArrivalHero } from '../components/d6/KioskArrivalHero'
+import { MapQrSyncCard } from '../components/d6/MapQrSyncCard'
+import { MapTouchA11yBar } from '../components/d6/MapTouchA11yBar'
 import { SeniorModePrompt } from '../components/d6/SeniorModePrompt'
 import { UrgencyArrivalBanner } from '../components/d6/UrgencyArrivalBanner'
 import { filterLocations } from '../variants/Variant_4_MetroMinimal/locations'
@@ -26,8 +29,13 @@ export interface BusPassSignatureProps {
   userId?: string
   initialRouteId?: string
   initialDestination?: string
+  hideHeader?: boolean
+  lang?: 'vi' | 'en'
+  onRouteRequest?: (route: BusRouteData) => void
   onSyncRequest?: (route: BusRouteData) => void
   onDestinationPick?: (destination: string, route?: BusRouteData) => void
+  onHelpRequest?: () => void
+  onListRequest?: () => void
 }
 
 function getArrivalMinutes(route: BusRouteData): number {
@@ -39,13 +47,19 @@ export default function BusPassSignaturePage({
   userId = 'participant-01',
   initialRouteId,
   initialDestination,
+  hideHeader = false,
+  lang = 'vi',
+  onRouteRequest,
   onSyncRequest,
   onDestinationPick,
+  onHelpRequest,
+  onListRequest,
 }: BusPassSignatureProps) {
   useDayNightTheme()
 
   const [now, setNow] = useState(new Date())
   const [query, setQuery] = useState(initialDestination ?? '')
+  const [searchFocused, setSearchFocused] = useState(false)
   const [selectedRouteId, setSelectedRouteId] = useState(initialRouteId ?? TASK_ROUTE_ID)
   const [showMoreArrivals, setShowMoreArrivals] = useState(false)
   const taskStarted = useRef(false)
@@ -56,24 +70,24 @@ export default function BusPassSignaturePage({
   const { recordMisclick } = adaptive
   const { level: urgencyLevel, isArriving } = useUrgencyPulse(true, selectedRouteId)
 
-  const stationName =
-    busRoutesData.station.id === stationId
-      ? busRoutesData.station.name
-      : busRoutesData.station.name
+  const stationName = busRoutesData.station.name
+  const isSearchMode = query.trim().length > 0
 
   const arrivals = useMemo(
     () =>
-      [...liveRoutes.filter((r) => r.stops[0]?.name === busRoutesData.station.name)]
-        .sort((a, b) => getArrivalMinutes(a) - getArrivalMinutes(b)),
+      [...liveRoutes.filter((r) => r.stops[0]?.name === busRoutesData.station.name)].sort(
+        (a, b) => getArrivalMinutes(a) - getArrivalMinutes(b),
+      ),
     [liveRoutes],
   )
 
   const primaryRoute =
-    liveRoutes.find((r) => r.id === selectedRouteId) ??
-    arrivals[0] ??
-    liveRoutes[0]
+    liveRoutes.find((r) => r.id === selectedRouteId) ?? arrivals[0] ?? liveRoutes[0]
 
   const moreArrivals = arrivals.filter((r) => r.id !== primaryRoute?.id)
+  const displayDestination = isSearchMode
+    ? query.trim()
+    : getRouteDestination(primaryRoute)
 
   const suggestions = useMemo(() => filterLocations(query).slice(0, 5), [query])
 
@@ -125,155 +139,214 @@ export default function BusPassSignaturePage({
     if (goal) tryCompleteTask(goal.route)
   }
 
+  const clearSearch = () => {
+    handleInteraction('search-clear', () => {
+      setQuery('')
+      setSelectedRouteId(arrivals[0]?.id ?? TASK_ROUTE_ID)
+    })
+  }
+
   if (!primaryRoute) {
     return (
-      <div className="d6-root flex min-h-dvh items-center justify-center font-sans">
-        <p className="font-bold">Đang tải dữ liệu tuyến…</p>
+      <div className="d6-root flex min-h-0 flex-1 items-center justify-center font-sans">
+        <p className="font-bold">{lang === 'vi' ? 'Đang tải dữ liệu tuyến…' : 'Loading routes…'}</p>
       </div>
     )
   }
 
   const timeStr = formatTime24(now)
+  const primaryMinutes = getArrivalMinutes(primaryRoute)
+  const isVi = lang === 'vi'
+
+  const openRoute = (route: BusRouteData) => {
+    if (onRouteRequest) {
+      handleInteraction(`open-route-${route.id}`, () => onRouteRequest(route), { route })
+    } else {
+      handleInteraction(`arrival-${route.id}`, () => setSelectedRouteId(route.id), { route })
+    }
+  }
 
   return (
-    <div className="d6-root d6-map-page d6-map-page--light d6-map-page--stacked flex min-h-dvh flex-col font-sans">
+    <div className="d6-root d6-map-page d6-map-page--light d6-map-page--kiosk flex min-h-0 flex-1 flex-col font-sans">
       <UrgencyArrivalBanner visible={isArriving} />
 
-      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2 sm:gap-3">
-        <div>
-          <p className="d6-header-label font-bold uppercase tracking-wide">Trạm</p>
-          <h1 className="d6-station-name font-bold">{stationName}</h1>
-        </div>
-        <time className="d6-clock font-bold tabular-nums" dateTime={now.toISOString()}>
+      {!hideHeader && (
+      <header className="d6-kiosk-header flex shrink-0 items-center justify-between gap-3 border-b border-kiosk-border bg-white px-4 py-2.5">
+        <time className="d6-kiosk-clock text-2xl font-black tabular-nums text-gray-900" dateTime={now.toISOString()}>
           {timeStr}
         </time>
+        <div className="text-right">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            {isVi ? 'Trạm' : 'Stop'}
+          </p>
+          <p className="text-lg font-bold leading-tight text-neon-green">{stationName}</p>
+        </div>
       </header>
+      )}
 
-      <div className="d6-search-strip relative z-20 shrink-0 border-b px-3 py-2">
-        <label className="d6-search-label relative block">
-          <Search
-            className="d6-search-icon pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-            strokeWidth={2}
-          />
-          <input
-            type="search"
-            value={query}
-            placeholder="Bạn muốn đến đâu?"
-            onChange={(e) => {
-              ensureTaskStart()
-              adaptive.recordTouch('search-input')
-              setQuery(e.target.value)
-              trackClick('search-input', true)
-            }}
-            onFocus={() => adaptive.recordTouch('search-focus')}
-            className="d6-search-input w-full rounded-lg border-2 py-2.5 pl-10 pr-3 font-semibold outline-none"
-            autoComplete="off"
-          />
-        </label>
-        {query.trim() && suggestions.length > 0 && (
-          <ul className="d6-suggestions-dropdown absolute left-3 right-3 top-full z-30 mt-1 max-h-40 overflow-y-auto rounded-lg border-2 shadow-lg">
-            {suggestions.map((loc) => (
-              <li key={loc}>
-                <button
-                  type="button"
-                  className="d6-suggestion-btn w-full px-4 py-3 text-left font-semibold"
-                  onClick={() => {
-                    handleInteraction(`destination-${loc}`, () => setQuery(loc))
-                    const taskRoute = loc === TASK_DESTINATION ? findTaskRoute(liveRoutes) : undefined
-                    if (taskRoute) {
-                      setSelectedRouteId(taskRoute.id)
-                      tryCompleteTask(taskRoute)
-                    }
-                    onDestinationPick?.(loc, taskRoute)
-                  }}
-                >
-                  {loc}
-                </button>
-              </li>
-            ))}
-          </ul>
+      {/* Bản đồ ~40% — full width */}
+      <section className="d6-map-stage d6-map-stage--kiosk relative w-full shrink-0">
+        <D6LeafletMap
+          route={primaryRoute}
+          destinationKeyword={isSearchMode ? query : undefined}
+          urgencyLevel={urgencyLevel}
+          busProgress={0.18 + urgencyLevel * 0.08}
+        />
+      </section>
+
+      {/* Thông tin cốt lõi — ETA lớn */}
+      <section className="d6-arrivals-hero shrink-0 border-b border-kiosk-border bg-kiosk-panel px-4 py-3">
+        {isSearchMode && (
+          <div className="d6-search-context mb-2 flex items-center justify-between gap-2 rounded-lg border border-neon-green/30 bg-white px-3 py-2">
+            <p className="text-sm font-semibold text-gray-800">
+              {isVi ? 'Đang tra cứu' : 'Searching'}:{' '}
+              <span className="text-neon-green">{query.trim()}</span>
+            </p>
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-neon-green"
+            >
+              <X className="h-3.5 w-3.5" />
+              {isVi ? 'Xóa' : 'Clear'}
+            </button>
+          </div>
         )}
-      </div>
 
-      <div className="d6-map-layout d6-map-layout--stacked flex min-h-0 flex-1 flex-col">
-        <section className="d6-map-stage d6-map-stage--wide relative w-full shrink-0">
-          <D6LeafletMap
-            route={primaryRoute}
-            destinationKeyword={query}
-            urgencyLevel={urgencyLevel}
-            busProgress={0.18 + urgencyLevel * 0.08}
-          />
-        </section>
+        <h2 className="d6-section-title mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+          {isSearchMode
+            ? isVi
+              ? 'Lộ trình gợi ý'
+              : 'Suggested route'
+            : isVi
+              ? 'Xe sắp đến tại trạm này'
+              : 'Arriving at this stop'}
+        </h2>
 
-        <aside className="d6-aside d6-aside--panel d6-aside--below flex w-full shrink-0 flex-col border-t">
-          <div className="d6-arrivals-block px-3 py-2.5">
-            <h2 className="d6-aside-title mb-2 font-bold uppercase tracking-wide">Xe sắp đến</h2>
+        <KioskArrivalHero
+          route={primaryRoute}
+          destination={displayDestination}
+          minutes={primaryMinutes}
+          delayMinutes={primaryRoute.currentDelay}
+          active
+          searchMode={isSearchMode}
+          lang={lang}
+          onSelect={() => openRoute(primaryRoute)}
+        />
 
-            <div className="space-y-2">
+        {showMoreArrivals && (
+          <div className="mt-2 space-y-2">
+            {moreArrivals.map((route) => (
               <ArrivalCard
-                route={primaryRoute}
-                destination={getRouteDestination(primaryRoute)}
-                minutes={getArrivalMinutes(primaryRoute)}
-                onTime={primaryRoute.currentDelay === 0}
-                active
-                onSelect={() =>
-                  handleInteraction(
-                    `arrival-primary-${primaryRoute.id}`,
-                    () => setSelectedRouteId(primaryRoute.id),
-                    { route: primaryRoute },
-                  )
-                }
+                key={route.id}
+                route={route}
+                destination={getRouteDestination(route)}
+                minutes={getArrivalMinutes(route)}
+                onTime={route.currentDelay === 0}
+                lang={lang}
+                onSelect={() => openRoute(route)}
               />
-
-              {showMoreArrivals &&
-                moreArrivals.map((route) => (
-                  <ArrivalCard
-                    key={route.id}
-                    route={route}
-                    destination={getRouteDestination(route)}
-                    minutes={getArrivalMinutes(route)}
-                    onTime={route.currentDelay === 0}
-                    onSelect={() =>
-                      handleInteraction(
-                        `arrival-${route.id}`,
-                        () => setSelectedRouteId(route.id),
-                        { route },
-                      )
-                    }
-                  />
-                ))}
-            </div>
+            ))}
           </div>
+        )}
+      </section>
 
-          <div className="d6-aside-actions kiosk-scroll-pad flex shrink-0 flex-col gap-2 border-t border-kiosk-border px-3 py-2.5 sm:flex-row">
-            {moreArrivals.length > 0 && (
-              <button
-                type="button"
-                className="d6-link-btn min-h-11 flex-1 rounded-lg border-2 px-3 py-2 font-semibold sm:py-2.5"
-                onClick={() =>
-                  handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
-                }
-              >
-                {showMoreArrivals ? 'Ẩn bớt' : 'Xem thêm chuyến'}
-              </button>
-            )}
+      {/* Vùng chạm — vừa tầm tay */}
+      <section className="d6-touch-zone kiosk-scroll-pad mt-auto shrink-0 space-y-3 bg-white px-4 py-3">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+          {isVi ? 'Tương tác' : 'Actions'}
+        </p>
 
-            {onSyncRequest && primaryRoute && (
-              <button
-                type="button"
-                className="d6-btn-sync min-h-11 flex-1 rounded-lg px-3 py-2 font-semibold sm:py-2.5"
-                onClick={() =>
-                  handleInteraction('sync-phone', () => onSyncRequest(primaryRoute), {
-                    route: primaryRoute,
-                  })
-                }
-              >
-                Đồng bộ điện thoại 📱
-              </button>
-            )}
-          </div>
-        </aside>
-      </div>
+        <div className="relative">
+          <label className="relative block">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neon-green"
+              strokeWidth={2}
+            />
+            <input
+              type="search"
+              value={query}
+              placeholder={isVi ? 'Tìm tuyến / điểm đến khác…' : 'Search route or destination…'}
+              onChange={(e) => {
+                ensureTaskStart()
+                adaptive.recordTouch('search-input')
+                setQuery(e.target.value)
+                trackClick('search-input', true)
+              }}
+              onFocus={() => {
+                setSearchFocused(true)
+                adaptive.recordTouch('search-focus')
+              }}
+              onBlur={() => setSearchFocused(false)}
+              className="d6-touch-search w-full rounded-xl border-2 border-kiosk-border py-3.5 pl-11 pr-3 text-base font-semibold outline-none focus:border-neon-green"
+              autoComplete="off"
+            />
+          </label>
+          {(searchFocused || isSearchMode) && query.trim() && suggestions.length > 0 && (
+            <ul className="absolute bottom-full left-0 right-0 z-30 mb-1 max-h-36 overflow-y-auto rounded-xl border-2 border-kiosk-border bg-white shadow-lg">
+              {suggestions.map((loc) => (
+                <li key={loc}>
+                  <button
+                    type="button"
+                    className="w-full border-b border-gray-100 px-4 py-3 text-left text-sm font-semibold last:border-0 hover:bg-green-50"
+                    onClick={() => {
+                      handleInteraction(`destination-${loc}`, () => setQuery(loc))
+                      const taskRoute = loc === TASK_DESTINATION ? findTaskRoute(liveRoutes) : undefined
+                      if (taskRoute) {
+                        setSelectedRouteId(taskRoute.id)
+                        tryCompleteTask(taskRoute)
+                      }
+                      onDestinationPick?.(loc, taskRoute)
+                      setSearchFocused(false)
+                    }}
+                  >
+                    {loc}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {onSyncRequest && !onRouteRequest && (
+          <MapQrSyncCard
+            route={primaryRoute}
+            destination={displayDestination}
+            stationId={stationId}
+            lang={lang}
+            onTap={() =>
+              handleInteraction('qr-sync-card', () => onSyncRequest(primaryRoute), {
+                route: primaryRoute,
+              })
+            }
+          />
+        )}
+
+        {moreArrivals.length > 0 && (
+          <button
+            type="button"
+            className="d6-touch-more btn-kiosk flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-kiosk-border bg-kiosk-panel text-base font-bold text-gray-800"
+            onClick={() =>
+              handleInteraction('more-arrivals', () => setShowMoreArrivals((v) => !v))
+            }
+          >
+            {showMoreArrivals
+              ? isVi
+                ? '▲ Ẩn bớt chuyến'
+                : '▲ Show fewer'
+              : isVi
+                ? '▼ Xem thêm chuyến'
+                : '▼ More arrivals'}
+          </button>
+        )}
+
+        <MapTouchA11yBar
+          lang={lang}
+          onHelp={() => onHelpRequest?.()}
+          onList={() => onListRequest?.()}
+          onTrack={(t) => trackClick(t, true)}
+        />
+      </section>
 
       <SeniorModePrompt
         visible={adaptive.showPrompt}

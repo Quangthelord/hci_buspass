@@ -1050,6 +1050,94 @@ body.d6-night .d6-suggestions-dropdown .d6-suggestion-btn:focus-visible {
   box-shadow: 0 2px 10px rgba(34, 197, 94, 0.28);
 }
 
+/* ── Kiosk map layout (Variant E) ── */
+.d6-map-page--kiosk {
+  overflow: visible;
+  background: var(--color-bg-kiosk);
+}
+
+.d6-kiosk-header {
+  min-height: 3.25rem;
+}
+
+.d6-kiosk-clock {
+  font-variant-numeric: tabular-nums;
+}
+
+.d6-map-stage--kiosk {
+  width: 100%;
+  height: clamp(11rem, 40vh, 16rem);
+  min-height: clamp(11rem, 40vh, 16rem);
+  flex: none;
+  background: #eef2f0;
+}
+
+.d6-arrivals-hero {
+  flex: none;
+}
+
+.d6-arrival-hero {
+  padding: 0.875rem 1rem;
+}
+
+.d6-arrival-hero--active {
+  border-color: var(--color-neon-green);
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(22, 163, 74, 0.12);
+}
+
+.d6-arrival-hero-eta {
+  min-width: 4.5rem;
+}
+
+.d6-arrival-hero-eta-num {
+  font-size: clamp(2rem, 8vw, 2.75rem);
+}
+
+.d6-arrival-hero-eta-unit {
+  letter-spacing: 0.06em;
+}
+
+.d6-arrival-hero-route {
+  font-size: 1.0625rem;
+}
+
+.d6-arrival-hero-dest {
+  font-size: 0.9375rem;
+}
+
+.d6-touch-zone {
+  border-top: 3px solid var(--color-neon-green);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.d6-touch-search {
+  min-height: 3rem;
+  background: #ffffff;
+}
+
+.d6-touch-more {
+  letter-spacing: 0.01em;
+}
+
+.d6-touch-chip {
+  min-height: 2.75rem;
+}
+
+body.kiosk-mode .d6-map-page--kiosk {
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+body.kiosk-mode .d6-map-stage--kiosk {
+  height: clamp(10rem, 38vh, 15rem);
+  min-height: clamp(10rem, 38vh, 15rem);
+}
+
+body.a11y-large-text .d6-arrival-hero-eta-num {
+  font-size: clamp(2.25rem, 9vw, 3rem) !important;
+}
+
 .d6-map-stage-inner {
   min-height: 100%;
 }
@@ -1464,6 +1552,236 @@ body.a11y-compact-text .d6-search-input {
 .bp-screen--scroll {
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* Trang chào mừng kiosk — Variant E */
+.bp-screen--welcome {
+  background: var(--color-bg-kiosk, #f7f5f0);
+}
+
+.bp-welcome {
+  min-height: 100%;
+}
+
+.bp-welcome-station {
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  letter-spacing: 0.04em;
+}
+
+.bp-welcome-lang-btn:hover .text-\[10px\],
+.bp-welcome-lang-btn:hover span {
+  color: inherit;
+}
+
+.bp-welcome-lang-btn {
+  min-height: 4.5rem;
+}
+
+@media (min-width: 480px) {
+  .bp-welcome-lang-btn {
+    min-height: 5rem;
+  }
+
+  .bp-welcome-help-btn {
+    min-height: 4.5rem;
+  }
+}
+
+body.a11y-large-text .bp-welcome-station {
+  font-size: clamp(2rem, 8vw, 2.75rem) !important;
+}
+
+body.a11y-large-text .bp-welcome-lang-btn {
+  min-height: 5rem !important;
+}
+
+body.a11y-large-text .bp-welcome-help-btn {
+  min-height: 4.75rem !important;
+}
+
+/* Trang chọn phương thức tra cứu */
+.bp-mode-card:focus-visible {
+  outline: 3px solid var(--color-neon-green);
+  outline-offset: 2px;
+}
+
+body.a11y-large-text .bp-mode-card {
+  min-height: 5.5rem !important;
+}
+
+body.a11y-large-text .bp-mode .grid.grid-cols-2 .bp-mode-card {
+  min-height: 8.5rem !important;
+}
+
+/* List Mode — hàng ngang full-width, dễ đọc */
+.bp-list-row {
+  min-height: 5.5rem;
+}
+
+.bp-list-route-badge {
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+.bp-list-search input {
+  min-height: 3rem;
+}
+
+body.a11y-large-text .bp-list-row {
+  min-height: 6.5rem !important;
+}
+
+body.a11y-large-text .bp-list-row .text-2xl {
+  font-size: 1.75rem !important;
+}
+
+/* Route detail — split info + timeline */
+.bp-route-split {
+  border-top: 1px solid #e8e8e8;
+  padding-top: 1rem;
+}
+
+.bp-route-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bp-route-timeline__item {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.bp-route-timeline__track {
+  position: relative;
+  display: flex;
+  width: 1.75rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bp-route-timeline__line {
+  position: absolute;
+  top: 1.25rem;
+  bottom: -0.25rem;
+  width: 2px;
+  background: #e0e0e0;
+}
+
+.bp-route-timeline__item--past .bp-route-timeline__line {
+  background: rgba(22, 163, 74, 0.35);
+}
+
+.bp-route-timeline__item--current .bp-route-timeline__line {
+  background: linear-gradient(to bottom, #16a34a 0%, #e0e0e0 100%);
+}
+
+.bp-route-timeline__node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 1.25rem;
+  width: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 2px solid #e0e0e0;
+  background: white;
+}
+
+.bp-route-timeline__dot {
+  height: 0.375rem;
+  width: 0.375rem;
+  border-radius: 9999px;
+  background: #bdbdbd;
+}
+
+.bp-route-timeline__item--past .bp-route-timeline__node {
+  border-color: rgba(22, 163, 74, 0.5);
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.bp-route-timeline__item--past .bp-route-timeline__dot {
+  background: #16a34a;
+}
+
+.bp-route-timeline__item--current .bp-route-timeline__node {
+  height: 1.75rem;
+  width: 1.75rem;
+  border: 3px solid #16a34a;
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
+  animation: bp-route-pulse 2s ease-in-out infinite;
+}
+
+.bp-route-timeline__item--dest .bp-route-timeline__node {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-color: rgba(22, 163, 74, 0.45);
+  background: #f0fdf4;
+}
+
+.bp-route-timeline__item--dest.bp-route-timeline__item--current .bp-route-timeline__node {
+  background: #16a34a;
+}
+
+@keyframes bp-route-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(22, 163, 74, 0.08);
+  }
+}
+
+body.a11y-large-text .bp-route-info .text-4xl {
+  font-size: 2.5rem !important;
+}
+
+/* QR sync — focus zone */
+.bp-qr-hero {
+  animation: bp-qr-glow 3s ease-in-out infinite;
+}
+
+@keyframes bp-qr-glow {
+  0%,
+  100% {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    box-shadow: 0 4px 32px rgba(22, 163, 74, 0.15);
+  }
+}
+
+body.a11y-large-text .bp-qr-code {
+  max-width: 20rem !important;
+}
+
+.bp-kiosk-header {
+  min-height: 3.25rem;
+}
+
+.bp-screen--dashboard,
+.bp-screen--route,
+.bp-screen--qr,
+.bp-screen--help {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bp-dashboard {
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.bp-dashboard .d6-map-page--kiosk {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ── Variant E: mobile / điện thoại — scale + cuộn toàn trang ── */

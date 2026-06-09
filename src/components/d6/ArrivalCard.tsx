@@ -7,6 +7,7 @@ export function ArrivalCard({
   minutes,
   onTime,
   active,
+  lang = 'vi',
   onSelect,
 }: {
   route: BusRouteData
@@ -14,9 +15,11 @@ export function ArrivalCard({
   minutes: number
   onTime: boolean
   active?: boolean
+  lang?: 'vi' | 'en'
   onSelect?: () => void
 }) {
   const Tag = onSelect ? 'button' : 'div'
+  const isVi = lang === 'vi'
 
   return (
     <Tag
@@ -36,7 +39,7 @@ export function ArrivalCard({
               onTime ? 'd6-status-pill--ontime' : 'd6-status-pill--delayed'
             }`}
           >
-            {onTime ? 'Đúng lịch ✓' : formatDelayStatus(route.currentDelay)}
+            {onTime ? (isVi ? 'Đúng lịch ✓' : 'On time ✓') : formatDelayStatus(route.currentDelay)}
           </span>
         </div>
         <p className="d6-arrival-eta flex shrink-0 items-center gap-1.5 font-bold tabular-nums">
