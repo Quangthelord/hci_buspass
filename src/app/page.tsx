@@ -10,7 +10,6 @@ import {
   TASK_DESTINATION,
   TASK_ROUTE_ID,
 } from '../lib/taskGoal'
-import { useMobileScroll } from '../hooks/useMobileScroll'
 import { useDayNightTheme } from '../lib/useDayNightTheme'
 import { useAdaptiveMode } from '../lib/useAdaptiveMode'
 import { useUrgencyPulse } from '../lib/useUrgencyPulse'
@@ -43,7 +42,6 @@ export default function BusPassSignaturePage({
   onSyncRequest,
   onDestinationPick,
 }: BusPassSignatureProps) {
-  useMobileScroll()
   useDayNightTheme()
 
   const [now, setNow] = useState(new Date())
@@ -141,7 +139,7 @@ export default function BusPassSignaturePage({
     <div className="d6-root d6-map-page d6-map-page--light flex min-h-dvh flex-col font-sans">
       <UrgencyArrivalBanner visible={isArriving} />
 
-      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-3 border-b px-3 py-2">
+      <header className="d6-header d6-header--compact flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2 sm:gap-3">
         <div>
           <p className="d6-header-label font-bold uppercase tracking-wide">Trạm</p>
           <h1 className="d6-station-name font-bold">{stationName}</h1>
@@ -198,7 +196,7 @@ export default function BusPassSignaturePage({
       </div>
 
       <div className="d6-map-layout flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="d6-map-stage relative min-h-[52vh] flex-[7] lg:min-h-0">
+        <section className="d6-map-stage relative min-h-[clamp(11rem,36vh,16rem)] flex-[7] lg:min-h-0">
           <D6LeafletMap
             route={primaryRoute}
             destinationKeyword={query}
@@ -212,7 +210,7 @@ export default function BusPassSignaturePage({
             Xe sắp đến
           </h2>
 
-          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-2">
+          <div className="space-y-2 px-3 pb-2 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
             <ArrivalCard
               route={primaryRoute}
               destination={getRouteDestination(primaryRoute)}
@@ -247,7 +245,7 @@ export default function BusPassSignaturePage({
               ))}
           </div>
 
-          <div className="d6-aside-actions shrink-0 space-y-1.5 px-3 pb-3">
+          <div className="d6-aside-actions kiosk-scroll-pad shrink-0 space-y-1.5 px-3 pb-3">
             {moreArrivals.length > 0 && (
               <button
                 type="button"

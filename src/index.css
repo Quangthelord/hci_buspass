@@ -62,6 +62,13 @@ body.kiosk-mode {
   user-select: none;
 }
 
+body.kiosk-mode.mobile-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Real touch kiosk — hide cursor; laptop/mouse keeps normal pointer */
 @media (hover: none) and (pointer: coarse) {
   body.kiosk-mode,
@@ -398,6 +405,13 @@ body.mobile-scroll,
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   -ms-touch-action: pan-y;
+}
+
+.kiosk-variant-root.mobile-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-scroll-pad {
@@ -1278,8 +1292,255 @@ body.d6-night .d6-link-btn {
   min-height: 44px;
 }
 
-.bp-flow-chrome {
+/* Menu 3 gạch — góc phải mọi trang Variant E */
+.bp-hamburger-btn {
+  position: fixed;
+  top: max(0.625rem, env(safe-area-inset-top, 0px));
+  right: max(0.625rem, env(safe-area-inset-right, 0px));
+  z-index: 56;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  border: 3px solid var(--color-neon-green);
+  background: #ffffff;
+  color: var(--color-neon-green);
+  box-shadow:
+    0 2px 8px rgba(22, 163, 74, 0.25),
+    0 0 0 2px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.bp-hamburger-btn:hover,
+.bp-hamburger-btn:focus-visible {
+  background: var(--color-neon-green);
+  color: #ffffff;
+  transform: scale(1.04);
+}
+
+.bp-hamburger-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 54;
+  border: none;
+  background: rgba(15, 23, 42, 0.35);
+  cursor: pointer;
+}
+
+.bp-hamburger-panel {
+  position: fixed;
+  top: calc(max(0.625rem, env(safe-area-inset-top, 0px)) + 3.35rem);
+  right: max(0.625rem, env(safe-area-inset-right, 0px));
+  z-index: 55;
+  width: min(calc(100vw - 1.25rem), 20rem);
+  max-height: min(calc(100dvh - 5rem), 32rem);
+  overflow-y: auto;
+  border-radius: 1rem;
+  border: 2px solid var(--color-neon-green);
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.5rem) scale(0.96);
+  transform-origin: top right;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+  pointer-events: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bp-hamburger-panel--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
   pointer-events: auto;
+}
+
+/* Variant E — màn hình con BusPass flow */
+.bp-screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  padding-top: calc(max(env(safe-area-inset-top, 0px), 0.5rem) + 3.25rem);
+}
+
+body.a11y-compact-text .bp-flow,
+body.a11y-compact-text .d6-root {
+  font-size: 14px;
+}
+
+body.a11y-compact-text .bp-flow h1 {
+  font-size: 1.125rem;
+}
+
+body.a11y-compact-text .d6-station-name {
+  font-size: 1rem !important;
+}
+
+body.a11y-compact-text .d6-arrival-eta {
+  font-size: 1.125rem !important;
+}
+
+body.a11y-compact-text .bp-flow .btn-kiosk,
+body.a11y-compact-text .d6-search-input {
+  min-height: 40px;
+}
+
+.bp-screen--scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── Variant E: mobile / điện thoại — scale + cuộn toàn trang ── */
+@media (max-width: 767px), ((hover: none) and (pointer: coarse) and (max-width: 1023px)) {
+  .kiosk-bezel-outer {
+    padding: 0;
+    min-height: 100dvh;
+    align-items: stretch;
+  }
+
+  .kiosk-bezel-screen--portrait,
+  .kiosk-bezel-screen--landscape {
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.kiosk-mode .kiosk-variant-root {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cho phép nội dung cao hơn viewport → cuộn được */
+  body.kiosk-mode .kiosk-variant-root .min-h-dvh,
+  body.kiosk-mode .kiosk-variant-root .h-dvh,
+  body.kiosk-mode .kiosk-variant-root .d6-root {
+    height: auto !important;
+    min-height: 100% !important;
+  }
+
+  .bp-flow {
+    --bp-title: clamp(1.25rem, 5vw, 1.75rem);
+    --bp-body: clamp(0.9375rem, 3.8vw, 1.0625rem);
+    --bp-caption: clamp(0.8125rem, 3.2vw, 0.9375rem);
+    --bp-space-x: clamp(1rem, 4vw, 1.5rem);
+    --bp-space-y: clamp(0.875rem, 3.5vw, 1.25rem);
+    --bp-btn: clamp(2.75rem, 11vw, 3rem);
+    font-size: var(--bp-body);
+  }
+
+  .bp-flow .btn-kiosk {
+    min-height: var(--bp-btn);
+    font-size: clamp(0.9375rem, 3.8vw, 1.0625rem);
+  }
+
+  .bp-flow h1 {
+    font-size: var(--bp-title);
+  }
+
+  .bp-flow h2 {
+    font-size: clamp(1.0625rem, 4.2vw, 1.25rem);
+  }
+
+  .kiosk-scroll-pad {
+    padding-bottom: max(5.5rem, calc(env(safe-area-inset-bottom, 0px) + 4.5rem));
+  }
+
+  .bp-screen--scroll .bp-flow.kiosk-scroll-pad {
+    flex: none;
+    min-height: auto;
+  }
+
+  .bp-hamburger-btn {
+    top: max(0.625rem, env(safe-area-inset-top, 0px));
+    right: max(0.625rem, env(safe-area-inset-right, 0px));
+  }
+
+  .bp-hamburger-panel {
+    top: calc(max(0.625rem, env(safe-area-inset-top, 0px)) + 3.35rem);
+    right: max(0.625rem, env(safe-area-inset-right, 0px));
+  }
+
+  .variant-home-btn {
+    bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
+  }
+
+  /* Trang bản đồ — xếp dọc, cuộn toàn trang */
+  body.kiosk-mode .d6-map-page {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 100% !important;
+  }
+
+  body.kiosk-mode .d6-map-page .d6-map-layout {
+    flex: none;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  body.kiosk-mode .d6-map-page .d6-map-stage {
+    flex: none;
+    min-height: clamp(11rem, 36vh, 16rem);
+    max-height: 42vh;
+  }
+
+  body.kiosk-mode .d6-map-page .d6-aside--panel {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    border-left: none;
+    border-top: 1px solid #d4c5b0;
+  }
+
+  body.kiosk-mode .d6-map-page .d6-aside .min-h-0.flex-1 {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .d6-header--compact .d6-station-name {
+    font-size: clamp(1rem, 4.2vw, 1.125rem);
+  }
+
+  .d6-header--compact .d6-clock {
+    font-size: clamp(0.9375rem, 3.8vw, 1.0625rem);
+  }
+
+  .d6-arrival-eta {
+    font-size: clamp(1.25rem, 5.5vw, 1.375rem);
+  }
+
+  .d6-arrival-route {
+    font-size: clamp(0.875rem, 3.6vw, 0.9375rem);
+  }
+
+  .d6-search-input {
+    font-size: clamp(0.9375rem, 3.8vw, 1rem);
+    min-height: var(--bp-btn, 44px);
+  }
+
+  .bp-route-panel {
+    overflow: visible !important;
+    flex: none !important;
+  }
+
+  .bp-qr-code {
+    width: min(240px, 72vw) !important;
+    height: min(240px, 72vw) !important;
+  }
 }
 
 /* Neon map */

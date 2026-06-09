@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../../data/busRoutes'
 import { completeTask, logClick, startTask } from '../../lib/telemetry'
 import {
@@ -12,8 +12,6 @@ import BusPassSignaturePage from '../../app/page'
 import type { BpLang, BpScreen } from './constants'
 import { VARIANT_ID } from './constants'
 import {
-  BpAccessibilityScreen,
-  BpFlowChrome,
   BpHelpScreen,
   BpHomeScreen,
   BpListScreen,
@@ -21,6 +19,7 @@ import {
   BpQrScreen,
   BpRouteScreen,
 } from './BpScreens'
+import { BpInteractionMenu } from './BpInteractionMenu'
 
 export function BusPassFlow({
   stationId = 'ben-thanh',
@@ -97,135 +96,102 @@ export function BusPassFlow({
     setDestination('')
   }
 
+  const menuProps = {
+    lang,
+    screen,
+    onHelp: () => setScreen('help'),
+    onList: () => setScreen('list'),
+    onMap: () => setScreen('map'),
+    onTrack: track,
+  }
+
+  let content: ReactNode = null
+  let screenClass = 'bp-screen bp-screen--scroll d6-root flex min-h-dvh flex-col font-sans'
+
   if (screen === 'home') {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpHomeScreen
-          lang={lang}
-          stationName={stationName}
-          routeCount={stationRoutes.length || liveRoutes.length}
-          onLang={(l) => {
-            track(`lang-${l}`)
-            setLang(l)
-            setScreen('mode')
-          }}
-          onHelp={() => {
-            track('help-from-home')
-            setScreen('help')
-          }}
-        />
-      </div>
+    content = (
+      <BpHomeScreen
+        lang={lang}
+        stationName={stationName}
+        routeCount={stationRoutes.length || liveRoutes.length}
+        onLang={(l) => {
+          track(`lang-${l}`)
+          setLang(l)
+          setScreen('mode')
+        }}
+        onHelp={() => {
+          track('help-from-home')
+          setScreen('help')
+        }}
+      />
     )
-  }
-
-  if (screen === 'mode') {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpModeScreen
-          lang={lang}
-          onBack={goHome}
-          onMap={() => {
-            track('mode-map')
+  } else if (screen === 'mode') {
+    content = (
+      <BpModeScreen
+        lang={lang}
+        onBack={goHome}
+        onMap={() => {
+          track('mode-map')
+          setScreen('map')
+        }}
+        onList={() => {
+          track('mode-list')
+          setScreen('list')
+        }}
+        onTrip={() => {
+          track('mode-trip-suoi-tien')
+          setDestination(TASK_DESTINATION)
+          const taskRoute = findTaskRoute(liveRoutes)
+          if (taskRoute) {
+            setSelectedRoute(taskRoute)
             setScreen('map')
-          }}
-          onList={() => {
-            track('mode-list')
-            setScreen('list')
-          }}
-          onTrip={() => {
-            track('mode-trip-suoi-tien')
-            setDestination(TASK_DESTINATION)
-            const taskRoute = findTaskRoute(liveRoutes)
-            if (taskRoute) {
-              setSelectedRoute(taskRoute)
-              setScreen('map')
-            } else {
-              setScreen('map')
-            }
-          }}
-        />
-        <BpFlowChrome
-          lang={lang}
-          onHelp={() => setScreen('help')}
-          onA11y={() => setScreen('accessibility')}
-          onList={() => setScreen('list')}
-        />
-      </div>
+          } else {
+            setScreen('map')
+          }
+        }}
+      />
     )
-  }
-
-  if (screen === 'list') {
-    return (
-      <div className="d6-root relative flex min-h-dvh flex-col font-sans">
-        <BpListScreen
-          lang={lang}
-          routes={stationRoutes.length > 0 ? stationRoutes : liveRoutes}
-          onRoute={goRoute}
-          onMap={() => setScreen('map')}
-          onBack={() => setScreen('mode')}
-        />
-        <BpFlowChrome
-          lang={lang}
-          onHelp={() => setScreen('help')}
-          onA11y={() => setScreen('accessibility')}
-          onList={() => setScreen('list')}
-        />
-      </div>
+  } else if (screen === 'list') {
+    screenClass = 'bp-screen bp-screen--scroll d6-root relative flex min-h-dvh flex-col font-sans'
+    content = (
+      <BpListScreen
+        lang={lang}
+        routes={stationRoutes.length > 0 ? stationRoutes : liveRoutes}
+        onRoute={goRoute}
+        onMap={() => setScreen('map')}
+        onBack={() => setScreen('mode')}
+      />
     )
-  }
-
-  if (screen === 'route' && selectedRoute) {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpRouteScreen
-          lang={lang}
-          route={selectedRoute}
-          stationName={stationName}
-          onSync={() => goSync(selectedRoute)}
-          onBack={() => setScreen(screen === 'route' ? 'map' : 'list')}
-        />
-      </div>
+  } else if (screen === 'route' && selectedRoute) {
+    content = (
+      <BpRouteScreen
+        lang={lang}
+        route={selectedRoute}
+        stationName={stationName}
+        onSync={() => goSync(selectedRoute)}
+        onBack={() => setScreen('map')}
+      />
     )
-  }
-
-  if (screen === 'qr' && selectedRoute) {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpQrScreen
-          lang={lang}
-          route={selectedRoute}
-          destination={destination || getRouteDest(selectedRoute)}
-          stationId={stationId}
-          onBack={() => setScreen('route')}
-          onDone={() => {
-            track('qr-done')
-            tryComplete(selectedRoute)
-            goHome()
-          }}
-        />
-      </div>
+  } else if (screen === 'qr' && selectedRoute) {
+    content = (
+      <BpQrScreen
+        lang={lang}
+        route={selectedRoute}
+        destination={destination || getRouteDest(selectedRoute)}
+        stationId={stationId}
+        onBack={() => setScreen('route')}
+        onDone={() => {
+          track('qr-done')
+          tryComplete(selectedRoute)
+          goHome()
+        }}
+      />
     )
-  }
-
-  if (screen === 'help') {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpHelpScreen lang={lang} onBack={() => setScreen('mode')} />
-      </div>
-    )
-  }
-
-  if (screen === 'accessibility') {
-    return (
-      <div className="d6-root flex min-h-dvh flex-col font-sans">
-        <BpAccessibilityScreen lang={lang} onBack={() => setScreen('mode')} />
-      </div>
-    )
-  }
-
-  /* Map mode — Visual-Centric (Trang 3A) */
-  return (
-    <div className="relative flex min-h-dvh flex-col">
+  } else if (screen === 'help') {
+    content = <BpHelpScreen lang={lang} onBack={() => setScreen('mode')} />
+  } else {
+    screenClass = 'bp-screen bp-screen--scroll relative flex min-h-dvh flex-col'
+    content = (
       <BusPassSignaturePage
         stationId={stationId}
         userId={userId}
@@ -244,12 +210,13 @@ export function BusPassFlow({
           }
         }}
       />
-      <BpFlowChrome
-        lang={lang}
-        onHelp={() => setScreen('help')}
-        onA11y={() => setScreen('accessibility')}
-        onList={() => setScreen('list')}
-      />
+    )
+  }
+
+  return (
+    <div className={screenClass}>
+      {content}
+      <BpInteractionMenu {...menuProps} />
     </div>
   )
 }
