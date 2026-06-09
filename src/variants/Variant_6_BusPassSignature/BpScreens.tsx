@@ -446,75 +446,88 @@ export function BpRouteScreen({
   return (
     <div className="bp-route flex min-h-0 flex-1 flex-col">
       <BpKioskHeader lang={lang} stationName={stationName} onBack={onBack} />
-      <div className="bp-route-scroll bp-flow kiosk-scroll-pad flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-2">
-        <header className="bp-route-banner mb-3 shrink-0 rounded-lg bg-green-50/80 px-3 py-2">
-          <span className="inline-flex items-center gap-1 rounded-md bg-neon-green px-2 py-0.5 text-xs font-black text-white">
-            <Bus className="h-3.5 w-3.5" strokeWidth={2.5} />
-            {isVi ? 'TUYẾN' : 'ROUTE'} {route.id}
-          </span>
-          <p className="mt-1.5 text-sm font-bold leading-snug text-gray-900">
-            {origin} → {dest}
-          </p>
-        </header>
 
-        <div className="bp-route-split flex min-h-0 flex-1 flex-col gap-6 min-[640px]:flex-row min-[640px]:items-start min-[640px]:gap-6">
-          <div className="bp-route-info flex w-full min-w-0 flex-col gap-6 min-[640px]:w-[45%] min-[640px]:max-w-[45%] min-[640px]:shrink-0">
-            <section className="bp-route-panel w-full">
-              <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
-                <Clock className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
-                {isVi ? 'Xe sắp đến' : 'Next arrival'}
-              </h2>
-              <p className={`bp-route-eta mt-2 font-black tabular-nums leading-none ${etaClass}`}>
-                {wait} {isVi ? 'phút' : 'min'}
+      <div className="bp-route-main flex min-h-0 w-full flex-1 flex-col box-border">
+        {/* ── Top 2/3: thông tin + timeline ── */}
+        <section className="bp-route-top top-info-section flex min-h-0 w-full flex-[2] flex-col overflow-hidden box-border">
+          <div className="bp-route-top-scroll flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto p-6">
+            <header className="bp-route-banner mb-4 shrink-0 rounded-lg bg-green-50/80 px-4 py-3">
+              <span className="inline-flex items-center gap-1 rounded-md bg-neon-green px-2.5 py-1 text-xs font-black text-white">
+                <Bus className="h-3.5 w-3.5" strokeWidth={2.5} />
+                {isVi ? 'TUYẾN' : 'ROUTE'} {route.id}
+              </span>
+              <p className="mt-2 text-sm font-bold leading-snug text-gray-900">
+                {origin} → {dest}
               </p>
-              {route.delayReason && (
-                <p
-                  className={`mt-2 flex w-full items-start gap-1.5 break-words text-sm font-semibold leading-snug ${severe ? 'text-red-700' : 'text-amber-800'}`}
-                >
-                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} />
-                  <span className="min-w-0 flex-1">{route.delayReason}</span>
-                </p>
-              )}
-            </section>
+            </header>
 
-            <section className="bp-route-panel w-full">
-              <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
-                <Ticket className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
-                {isVi ? 'Giá vé' : 'Fare'}
-              </h2>
-              <div className="mt-2 flex w-full flex-col gap-2">
-                <span className="bp-fare-badge block w-full rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
-                  {isVi ? 'Vé thường' : 'Standard'}:{' '}
-                  <strong className="text-base text-gray-900">7.000₫</strong>
-                </span>
-                <span className="bp-fare-badge block w-full rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
-                  {isVi ? 'Học sinh / SV' : 'Student'}:{' '}
-                  <strong className="text-base text-gray-900">3.500₫</strong>
-                </span>
+            <div className="bp-route-split flex min-h-0 flex-1 flex-col gap-6 min-[640px]:flex-row min-[640px]:items-start">
+              <div className="bp-route-info flex w-full min-w-0 flex-col gap-6 min-[640px]:w-[45%] min-[640px]:max-w-[45%] min-[640px]:shrink-0">
+                <section className="bp-route-panel w-full">
+                  <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
+                    <Clock className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
+                    {isVi ? 'Xe sắp đến' : 'Next arrival'}
+                  </h2>
+                  <p className={`bp-route-eta mt-2 font-black tabular-nums leading-none ${etaClass}`}>
+                    {wait} {isVi ? 'phút' : 'min'}
+                  </p>
+                  {route.delayReason && (
+                    <p
+                      className={`mt-2 flex w-full items-start gap-1.5 break-words text-sm font-semibold leading-snug ${severe ? 'text-red-700' : 'text-amber-800'}`}
+                    >
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} />
+                      <span className="min-w-0 flex-1 break-words">{route.delayReason}</span>
+                    </p>
+                  )}
+                </section>
+
+                <section className="bp-route-panel w-full">
+                  <h2 className="bp-route-panel__title flex items-center gap-1.5 font-bold uppercase tracking-wide text-gray-600">
+                    <Ticket className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={2.5} />
+                    {isVi ? 'Giá vé' : 'Fare'}
+                  </h2>
+                  <div className="mt-2 flex w-full flex-col gap-2">
+                    <span className="bp-fare-badge block w-full break-words rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
+                      {isVi ? 'Vé thường' : 'Standard'}:{' '}
+                      <strong className="text-base text-gray-900">7.000₫</strong>
+                    </span>
+                    <span className="bp-fare-badge block w-full break-words rounded-lg bg-[#f0f0f0] px-4 py-3 text-sm text-gray-800">
+                      {isVi ? 'Học sinh / SV' : 'Student'}:{' '}
+                      <strong className="text-base text-gray-900">3.500₫</strong>
+                    </span>
+                  </div>
+                </section>
               </div>
-            </section>
 
-            <section className="bp-route-panel w-full">
-              <RouteQrInline route={route} destination={dest} stationId={stationId} lang={lang} />
-              {onComplete && (
-                <button
-                  type="button"
-                  onClick={onComplete}
-                  className="bp-route-done-btn mt-3 w-full rounded-xl border-2 border-kiosk-border bg-white py-3 text-sm font-semibold text-gray-700 transition hover:border-neon-green hover:text-neon-green"
-                >
-                  {isVi ? 'Hoàn tất' : 'Done'}
-                </button>
-              )}
-            </section>
+              <div className="bp-route-stops w-full min-w-0 min-[640px]:w-[55%] min-[640px]:max-w-[55%] min-[640px]:flex-1 min-[640px]:border-l min-[640px]:border-[#e8e8e8] min-[640px]:pl-6">
+                <h2 className="bp-route-panel__title mb-4 font-bold uppercase tracking-wide text-gray-600">
+                  {isVi ? 'Lộ trình chi tiết' : 'Route'}
+                </h2>
+                <RouteStopTimeline stops={route.stops} stationName={stationName} lang={lang} />
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div className="bp-route-stops w-full min-w-0 min-[640px]:w-[55%] min-[640px]:max-w-[55%] min-[640px]:flex-1 min-[640px]:border-l min-[640px]:border-[#e8e8e8] min-[640px]:pl-6">
-            <h2 className="bp-route-panel__title mb-4 font-bold uppercase tracking-wide text-gray-600">
-              {isVi ? 'Lộ trình chi tiết' : 'Route'}
-            </h2>
-            <RouteStopTimeline stops={route.stops} stationName={stationName} lang={lang} />
-          </div>
-        </div>
+        {/* ── Bottom 1/3: vùng QR full-width ── */}
+        <section className="bp-route-bottom bottom-qr-section flex min-h-0 w-full flex-1 shrink-0 flex-col justify-center border-t border-[#e0e0e0] bg-[#f9f9f9] box-border p-6">
+          <RouteQrInline
+            route={route}
+            destination={dest}
+            stationId={stationId}
+            lang={lang}
+            layout="dock"
+          />
+          {onComplete && (
+            <button
+              type="button"
+              onClick={onComplete}
+              className="bp-route-done-btn mt-4 w-full shrink-0 rounded-xl border-2 border-kiosk-border bg-white py-3 text-sm font-semibold text-gray-700 transition hover:border-neon-green hover:text-neon-green"
+            >
+              {isVi ? 'Hoàn tất' : 'Done'}
+            </button>
+          )}
+        </section>
       </div>
     </div>
   )

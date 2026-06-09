@@ -1,3 +1,4 @@
+import { Bus } from 'lucide-react'
 import type { BusRouteData } from '../../data/busRoutes'
 import { formatRouteLabel } from '../../lib/formatVi'
 
@@ -31,8 +32,10 @@ export function KioskArrivalHero({
     <Tag
       type={onSelect ? 'button' : undefined}
       onClick={onSelect}
-      className={`d6-arrival-hero w-full border-2 text-left transition-colors ${
-        active ? 'd6-arrival-hero--active' : 'border-kiosk-border bg-white'
+      className={`d6-arrival-hero w-full rounded-xl border text-left transition-colors ${
+        active
+          ? 'd6-arrival-hero--active border-kiosk-border bg-[#f5f5f5]'
+          : 'border-kiosk-border bg-[#f5f5f5]'
       }`}
     >
       <div className="flex items-center justify-between gap-2">
@@ -66,7 +69,8 @@ export function KioskArrivalHero({
             </p>
           )}
         </div>
-        <div className="d6-arrival-hero-eta flex shrink-0 flex-col items-center justify-center bg-neon-green/10">
+        <div className="d6-arrival-hero-eta flex shrink-0 flex-col items-center justify-center rounded-xl bg-white px-3 py-2 shadow-sm">
+          <Bus className="d6-arrival-hero-eta-icon mb-0.5 text-neon-green" strokeWidth={2.5} />
           <span className="d6-arrival-hero-eta-num font-black tabular-nums leading-none text-neon-green">
             {minutes}
           </span>

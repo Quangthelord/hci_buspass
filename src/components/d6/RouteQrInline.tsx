@@ -10,17 +10,21 @@ export function RouteQrInline({
   stationId,
   lang,
   onExpand,
-  qrSize = 192,
+  layout = 'stack',
+  qrSize,
 }: {
   route: BusRouteData
   destination: string
   stationId: string
   lang: 'vi' | 'en'
   onExpand?: () => void
-  /** Kích thước QR (px) — kiosk 1080×1920 khuyến nghị 180–200 */
+  /** stack = thẻ dọc; dock = vùng QR cố định 1/3 màn hình */
+  layout?: 'stack' | 'dock'
   qrSize?: number
 }) {
   const isVi = lang === 'vi'
+  const size = qrSize ?? (layout === 'dock' ? 168 : 192)
+
   const tripUrl = useMemo(
     () =>
       buildTripUrl({
@@ -32,9 +36,7 @@ export function RouteQrInline({
     [route.id, destination, stationId, lang],
   )
 
-  const qrNode = (
-    <QRCodeSVG value={tripUrl} size={qrSize} level="H" includeMargin={false} />
-  )
+  const qrNode = <QRCodeSVG value={tripUrl} size={size} level="H" includeMargin={false} />
 
   const qrBlock = onExpand ? (
     <button
@@ -51,6 +53,26 @@ export function RouteQrInline({
     </div>
   )
 
+  if (layout === 'dock') {
+    return (
+      <div className="bp-route-qr bp-route-qr--dock w-full">
+        <div className="bp-route-qr-dock-inner flex w-full min-w-0 flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <div className="bp-route-qr-copy w-full min-w-0 flex-1 break-words sm:text-left">
+            <p className="flex w-full items-start justify-center gap-2 text-base font-bold leading-snug text-gray-900 sm:justify-start">
+              <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-neon-green" strokeWidth={2.5} />
+              <span className="min-w-0 flex-1 break-words">
+                {isVi
+                  ? 'Quét QR để mang lộ trình theo người — Không cần bấm thêm.'
+                  : 'Scan QR to take the route with you — no extra taps needed.'}
+              </span>
+            </p>
+          </div>
+          <div className="bp-route-qr-visual flex shrink-0 justify-center">{qrBlock}</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bp-route-qr bp-route-qr--stack w-full rounded-xl border border-kiosk-border bg-white shadow-sm">
       <div className="bp-route-qr-copy w-full px-4 pt-4 text-left">
@@ -66,9 +88,7 @@ export function RouteQrInline({
             : 'Point your camera at the code — no extra taps.'}
         </p>
       </div>
-      <div className="bp-route-qr-visual flex w-full justify-center px-4 pb-5 pt-4">
-        {qrBlock}
-      </div>
+      <div className="bp-route-qr-visual flex w-full justify-center px-4 pb-5 pt-4">{qrBlock}</div>
     </div>
   )
 }

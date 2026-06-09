@@ -10,8 +10,9 @@ import 'leaflet/dist/leaflet.css'
 const OSM_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
 
-/** Bản đồ tối giản — ít chi tiết, nổi bật tuyến xe bus */
+/** Bản đồ tối giản — nổi bật tuyến xe bus */
 const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+const TILE_LIGHT_LABELS = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
 
 function stationIcon() {
   return L.divIcon({
@@ -73,11 +74,14 @@ export function D6LeafletMap({
   destinationKeyword,
   urgencyLevel = 0,
   busProgress = 0.22,
+  labeledBasemap = false,
 }: {
   route: BusRouteData
   destinationKeyword?: string
   urgencyLevel?: UrgencyLevel
   busProgress?: number
+  /** Hiện nhãn đường/địa danh trên bản đồ kiosk */
+  labeledBasemap?: boolean
 }) {
   const [map, setMap] = useState<L.Map | null>(null)
   const onMapReady = useCallback((m: L.Map) => setMap(m), [])
@@ -126,7 +130,7 @@ export function D6LeafletMap({
         attributionControl
       >
         <MapRefBridge onMap={onMapReady} />
-        <TileLayer url={TILE_LIGHT} attribution={OSM_ATTR} maxZoom={19} />
+        <TileLayer url={labeledBasemap ? TILE_LIGHT_LABELS : TILE_LIGHT} attribution={OSM_ATTR} maxZoom={19} />
         <FitRoute positions={visiblePositions} />
 
         {visiblePositions.length >= 2 && (
