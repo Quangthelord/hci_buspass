@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronRight, Search, X } from 'lucide-react'
 import { busRoutesData, useLiveBusRoutes, type BusRouteData } from '../data/busRoutes'
 import { formatTime24 } from '../lib/formatVi'
@@ -13,6 +13,7 @@ import {
 import { useDayNightTheme } from '../lib/useDayNightTheme'
 import { useAdaptiveMode } from '../lib/useAdaptiveMode'
 import { useUrgencyPulse } from '../lib/useUrgencyPulse'
+import { getMapFocusMode } from '../lib/mapRouteView'
 import { D6LeafletMap } from '../components/d6/D6LeafletMap'
 import { ArrivalCard } from '../components/d6/ArrivalCard'
 import { KioskArrivalHero } from '../components/d6/KioskArrivalHero'
@@ -42,6 +43,8 @@ function getArrivalMinutes(route: BusRouteData): number {
   return route.stops[0].nextArrival + route.currentDelay
 }
 
+const MAP_IDLE_RESET_MS = 30_000
+
 export default function BusPassSignaturePage({
   stationId = 'ben-thanh',
   userId = 'participant-01',
@@ -61,14 +64,16 @@ export default function BusPassSignaturePage({
   const [query, setQuery] = useState(initialDestination ?? '')
   const [searchFocused, setSearchFocused] = useState(false)
   const [selectedRouteId, setSelectedRouteId] = useState(initialRouteId ?? TASK_ROUTE_ID)
-  const [showMoreArrivals, setShowMoreArrivals] = useState(false)
+  const [mapFocusId, setMapFocusId] = useState<string | null>(null)
+  const [fullRouteView, setFullRouteView] = useState(false)
+  const [showMoreArrivals, setShowMoreArrivals] = useState(Boolean(onRouteRequest))
+  const mapIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const taskStarted = useRef(false)
   const taskDone = useRef(false)
 
   const liveRoutes = useLiveBusRoutes()
   const adaptive = useAdaptiveMode(VARIANT_ID)
   const { recordMisclick } = adaptive
-  const { level: urgencyLevel, isArriving } = useUrgencyPulse(true, selectedRouteId)
 
   const stationName = busRoutesData.station.name
   const isSearchMode = query.trim().length > 0
@@ -83,6 +88,32 @@ export default function BusPassSignaturePage({
 
   const primaryRoute =
     liveRoutes.find((r) => r.id === selectedRouteId) ?? arrivals[0] ?? liveRoutes[0]
+
+  const defaultRouteId = arrivals[0]?.id ?? TASK_ROUTE_ID
+  const mapRoute =
+    liveRoutes.find((r) => r.id === (mapFocusId ?? defaultRouteId)) ?? primaryRoute
+  const mapFocusMode = mapFocusId === null ? 'default' : getMapFocusMode(mapRoute)
+
+  const resetMapToDefault = useCallback(() => {
+    setMapFocusId(null)
+    setFullRouteView(false)
+    setSelectedRouteId(defaultRouteId)
+  }, [defaultRouteId])
+
+  const bumpMapIdleTimer = useCallback(() => {
+    if (mapIdleTimer.current) clearTimeout(mapIdleTimer.current)
+    if (mapFocusId === null) return
+    mapIdleTimer.current = setTimeout(resetMapToDefault, MAP_IDLE_RESET_MS)
+  }, [mapFocusId, resetMapToDefault])
+
+  useEffect(() => {
+    bumpMapIdleTimer()
+    return () => {
+      if (mapIdleTimer.current) clearTimeout(mapIdleTimer.current)
+    }
+  }, [mapFocusId, bumpMapIdleTimer])
+
+  const { isArriving } = useUrgencyPulse(true, mapFocusId ?? selectedRouteId)
 
   const moreArrivals = arrivals.filter((r) => r.id !== primaryRoute?.id)
   const displayDestination = isSearchMode
@@ -121,7 +152,7 @@ export default function BusPassSignaturePage({
     if (!matchesTaskDestination(route)) return
     completeTask(VARIANT_ID, true, {
       seniorModeActivated: adaptive.seniorMode,
-      urgencyLevelAtComplete: urgencyLevel,
+      urgencyLevelAtComplete: 0,
     })
     taskDone.current = true
   }
@@ -143,10 +174,12 @@ export default function BusPassSignaturePage({
     handleInteraction('search-clear', () => {
       setQuery('')
       setSelectedRouteId(arrivals[0]?.id ?? TASK_ROUTE_ID)
+      setMapFocusId(null)
+      setFullRouteView(false)
     })
   }
 
-  if (!primaryRoute) {
+  if (!primaryRoute || !mapRoute) {
     return (
       <div className="d6-root flex min-h-0 flex-1 items-center justify-center font-sans">
         <p className="font-bold">{lang === 'vi' ? 'Đang tải dữ liệu tuyến…' : 'Loading routes…'}</p>
@@ -158,13 +191,34 @@ export default function BusPassSignaturePage({
   const primaryMinutes = getArrivalMinutes(primaryRoute)
   const isVi = lang === 'vi'
 
-  const openRoute = (route: BusRouteData) => {
+  const focusRouteOnMap = (route: BusRouteData) => {
+    handleInteraction(`map-focus-${route.id}`, () => {
+      setMapFocusId(route.id)
+      setSelectedRouteId(route.id)
+      setFullRouteView(false)
+    })
+  }
+
+  const openRouteDetail = (route: BusRouteData) => {
     if (onRouteRequest) {
       handleInteraction(`open-route-${route.id}`, () => onRouteRequest(route), { route })
     } else {
-      handleInteraction(`arrival-${route.id}`, () => setSelectedRouteId(route.id), { route })
+      handleInteraction(`arrival-${route.id}`, () => {
+        setSelectedRouteId(route.id)
+        setMapFocusId(route.id)
+      }, { route })
     }
   }
+
+  const onCardSelect = (route: BusRouteData) => {
+    if (onRouteRequest) focusRouteOnMap(route)
+    else openRouteDetail(route)
+  }
+
+  const detailRoute = liveRoutes.find((r) => r.id === (mapFocusId ?? selectedRouteId)) ?? primaryRoute
+
+  const isMapFocused = (routeId: string) =>
+    mapFocusId === routeId || (mapFocusId === null && routeId === primaryRoute.id)
 
   return (
     <div className="d6-root d6-map-page d6-map-page--light d6-map-page--kiosk d6-map-page--scroll flex min-h-0 flex-1 flex-col font-sans">
@@ -187,11 +241,21 @@ export default function BusPassSignaturePage({
       {/* Bản đồ lớn — cuộn dọc toàn trang (layout ảnh mẫu) */}
       <section className="d6-map-stage d6-map-stage--kiosk relative w-full shrink-0">
         <D6LeafletMap
-          route={primaryRoute}
+          route={mapRoute}
+          focusMode={mapFocusMode}
+          fullRouteView={fullRouteView}
+          onFullRouteToggle={
+            onRouteRequest
+              ? () => {
+                  trackClick('map-full-route-toggle', true)
+                  setFullRouteView((v) => !v)
+                  bumpMapIdleTimer()
+                }
+              : undefined
+          }
           destinationKeyword={isSearchMode ? query : undefined}
-          urgencyLevel={urgencyLevel}
-          busProgress={0.18 + urgencyLevel * 0.08}
           labeledBasemap
+          lang={lang}
         />
       </section>
 
@@ -228,11 +292,11 @@ export default function BusPassSignaturePage({
           destination={displayDestination}
           minutes={primaryMinutes}
           delayMinutes={primaryRoute.currentDelay}
-          active
+          active={isMapFocused(primaryRoute.id)}
           searchMode={isSearchMode}
           lang={lang}
           readOnly={!!onRouteRequest}
-          onSelect={() => openRoute(primaryRoute)}
+          onSelect={() => onCardSelect(primaryRoute)}
         />
 
         {showMoreArrivals && (
@@ -244,8 +308,9 @@ export default function BusPassSignaturePage({
                 destination={getRouteDestination(route)}
                 minutes={getArrivalMinutes(route)}
                 onTime={route.currentDelay === 0}
+                active={isMapFocused(route.id)}
                 lang={lang}
-                onSelect={() => openRoute(route)}
+                onSelect={() => onCardSelect(route)}
               />
             ))}
           </div>
@@ -261,7 +326,7 @@ export default function BusPassSignaturePage({
           <button
             type="button"
             className="d6-touch-primary btn-kiosk flex w-full items-center justify-center gap-2 rounded-xl border-2 border-neon-green bg-neon-green font-bold uppercase tracking-wide text-white transition hover:bg-green-600"
-            onClick={() => openRoute(primaryRoute)}
+            onClick={() => openRouteDetail(detailRoute)}
           >
             {isVi ? 'Xem chi tiết tuyến' : 'View route details'}
             <ChevronRight className="h-5 w-5 shrink-0" strokeWidth={2.5} />

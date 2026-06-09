@@ -1393,6 +1393,97 @@ body.a11y-large-text .d6-arrival-hero-eta-num {
   animation: d6-station-pulse 2.4s ease-in-out infinite;
 }
 
+.d6-map-station--kiosk {
+  width: 48px;
+  height: 48px;
+}
+
+.d6-map-station--kiosk .d6-map-station-core {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.22);
+}
+
+.d6-map-station--kiosk::before {
+  width: 38px;
+  height: 38px;
+}
+
+.d6-map-station-label {
+  position: absolute;
+  bottom: -1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #15803d;
+}
+
+.d6-map-stop--dim {
+  opacity: 0.55;
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.d6-map-bus--live {
+  animation: d6-bus-live-pulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.25);
+}
+
+.d6-map-bus--smooth {
+  box-shadow:
+    0 0 0 6px rgba(34, 197, 94, 0.2),
+    0 0 0 12px rgba(34, 197, 94, 0.08);
+  border-color: #22c55e;
+}
+
+.d6-map-bus--delayed {
+  border-color: #ea580c;
+  background: #fff7ed;
+  color: #c2410c;
+  animation: d6-bus-delayed-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes d6-bus-live-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.25);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.12);
+  }
+}
+
+@keyframes d6-bus-delayed-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.leaflet-tooltip.d6-bus-tooltip {
+  border: 1px solid #bbf7d0;
+  background: rgba(255, 255, 255, 0.96);
+  color: #15803d;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.d6-map-full-route-btn {
+  max-width: calc(100% - 3.5rem);
+}
+
 .d6-map-stop {
   width: 10px;
   height: 10px;
